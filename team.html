@@ -7,12 +7,13 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: 'Orbitron', sans-serif;
-      margin: 0;
-      background-color: #000;
-      color: white;
-    }
+      body {
+  font-family: 'Orbitron', sans-serif;
+  margin: 0;
+  background: url('team.png') no-repeat center center fixed;
+  background-size: cover;
+  color: white;
+}
 
     .glass {
       background: rgba(0, 255, 255, 0.07);
@@ -111,13 +112,13 @@
 
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 text-center">
       <div class="glass p-6 rounded-lg">
-        <img src="https://via.placeholder.com/120" alt="Team Member" class="mx-auto mb-4 rounded-full border border-cyan-400" />
+        <img src="avikam.jpg" alt="Team Member" width="200" class="mx-auto mb-4 rounded-full border border-cyan-400" />
         <h2 class="text-xl text-cyan-300 font-bold">Avikam Deol</h2>
         <p class="text-sm text-gray-300">Founder & CEO</p>
       </div>
 
       <div class="glass p-6 rounded-lg">
-        <img src="https://via.placeholder.com/120" alt="Team Member" class="mx-auto mb-4 rounded-full border border-cyan-400" />
+        <img src="hemant.png" alt="Team Member" width="180" class="mx-auto mb-4 rounded-full border border-cyan-400" />
         <h2 class="text-xl text-cyan-300 font-bold">Hemant Sharma</h2>
         <p class="text-sm text-gray-300">Co-Founder</p>
       </div>
@@ -136,7 +137,7 @@
   </button>
   <div class="chatbot-box" id="chatbotBox">
     <div style="height: 300px; overflow-y: auto; margin-bottom: 8px; background: #111; padding: 5px; border-radius: 5px;" id="chatLog">
-      <div><b>Bot:</b> Hello! Ask me anything about Xploreon 🚀</div>
+      <div><b>Voyager:</b> Hello! Ask me anything about Xplorers 🚀</div>
     </div>
     <textarea id="userInput" placeholder="Type your message..."></textarea>
     <button onclick="sendMessage()" style="margin-top: 6px; width: 100%; background: #00ffe0; color: black; font-weight: bold; border: none; border-radius: 5px; padding: 6px;">Send</button>
@@ -180,7 +181,7 @@
 
       const data = await response.json();
       const botReply = data.choices?.[0]?.message?.content || 'Sorry, something went wrong.';
-      chatLog.innerHTML += `<div><b>Bot:</b> ${botReply}</div>`;
+      chatLog.innerHTML += `<div><b>Voyager:</b> ${botReply}</div>`;
       chatLog.scrollTop = chatLog.scrollHeight;
     }
   </script>
