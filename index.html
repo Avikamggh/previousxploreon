@@ -1,7 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+<!-- Favicon -->
+<link rel="icon" href="x.png" type="image/png">
+
+<!-- Open Graph / Social Sharing -->
+<meta property="og:title" content="Xploreon – Igniting Interplanetary Innovation" />
+<meta property="og:description" content="Explore space-tech and AI breakthroughs. Join Xploreon and shape the future of interplanetary life." />
+<meta property="og:image" content="x.png" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://xploreon.netlify.app/" />
+
+<!-- Twitter Preview -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Xploreon – Igniting Interplanetary Innovation" />
+<meta name="twitter:description" content="Explore space-tech and AI breakthroughs. Join Xploreon and shape the future of interplanetary life." />
+<meta name="twitter:image" content="x.png" />
+
+
+  
+
+<meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Xploreon | Home</title>
   <script src="https://cdn.tailwindcss.com"></script>
@@ -125,9 +144,28 @@
         right: 15px;
       }
     }
+
+    .glow {
+      animation: pulseGlow 2s infinite alternate;
+    }
+
+    @keyframes pulseGlow {
+      0% { box-shadow: 0 0 8px #00ffe0; }
+      100% { box-shadow: 0 0 20px #00ffe0; }
+    }
   </style>
 </head>
 <body>
+<!-- Responsive Centered Button (behind mobile menu) -->
+<div class="fixed top-[90px] left-1/2 transform -translate-x-1/2 w-[90%] max-w-[320px] text-center px-2 z-30">
+  <a href="https://physicsexplorer.netlify.app" target="_blank"
+     class="block bg-cyan-400 text-black font-bold text-sm md:text-base py-2 px-4 rounded-full shadow-md hover:bg-cyan-300 transition glow whitespace-nowrap overflow-hidden text-ellipsis">
+    🧠 For Physics, reach out here
+  </a>
+</div>
+
+
+
 
   <!-- Navbar -->
   <nav class="w-full flex justify-between items-center px-4 py-4 glass fixed top-0 z-50">
@@ -183,8 +221,6 @@
       const box = document.getElementById('chatbotBox');
       const rocket = document.getElementById('rocketIcon');
       box.style.display = box.style.display === 'block' ? 'none' : 'block';
-      
-      // Add rotation effect
       rocket.classList.add('rotating');
       setTimeout(() => rocket.classList.remove('rotating'), 600);
     }
@@ -216,5 +252,6 @@
       chatLog.scrollTop = chatLog.scrollHeight;
     }
   </script>
+
 </body>
 </html>
