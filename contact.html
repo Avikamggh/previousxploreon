@@ -8,12 +8,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
   <style>
      body {
-  font-family: 'Orbitron', sans-serif;
-  margin: 0;
-  background: url('contact.png') no-repeat center center fixed;
-  background-size: cover;
-  color: white;
-}
+      font-family: 'Orbitron', sans-serif;
+      margin: 0;
+      background: url('contact.png') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+    }
     .glass {
       background: rgba(0, 255, 255, 0.07);
       backdrop-filter: blur(12px);
@@ -78,7 +78,6 @@
 </head>
 <body>
 
-
   <!-- Navbar -->
   <nav class="w-full flex justify-between items-center px-4 py-4 glass fixed top-0 z-50">
     <a href="index.html" class="text-2xl glow-text">Xploreon</a>
@@ -105,7 +104,7 @@
     <p class="text-lg text-cyan-200 mb-6">We'd love to hear from you. Fill out the form or reach us on social media!</p>
     
     <!-- Contact Form -->
-    <form id="contact-form" class="glass p-6 rounded-xl space-y-4 text-left shadow-lg">
+    <form action="mailto:xploreonteam@gmail.com" method="POST" enctype="multipart/form-data" class="glass p-6 rounded-xl space-y-4 text-left shadow-lg">
       <input type="text" name="user_name" placeholder="Your Name" class="w-full bg-black text-white p-3 border border-cyan-400 rounded outline-none" required />
       <input type="email" name="user_email" placeholder="Your Email" class="w-full bg-black text-white p-3 border border-cyan-400 rounded outline-none" required />
       <textarea name="message" placeholder="Your Message" rows="5" class="w-full bg-black text-white p-3 border border-cyan-400 rounded outline-none" required></textarea>
@@ -125,30 +124,7 @@
     <button onclick="sendMessage()" style="margin-top: 6px; width: 100%; background: #00ffe0; color: black; font-weight: bold; border: none; border-radius: 5px; padding: 6px;">Send</button>
   </div>
 
-  <!-- EmailJS Integration -->
-  <script type="module">
-  import emailjs from 'https://cdn.emailjs.com/dist/email.min.js';
-</script>
-
   <script>
-    // Initialize EmailJS with your Public Key
-    emailjs.init("W5q1BAHIIZ443blpp"); // Replace with your actual User ID
-
-    // Form submission event
-    document.getElementById('contact-form').addEventListener('submit', function(event) {
-        event.preventDefault();  // Prevents the default form submission
-
-        // Send the form data to EmailJS
-        emailjs.sendForm("service_h8cgzpr", "template_4rcdkskv", this)  // Replace with your Service ID and Template ID
-            .then(function(response) {
-                console.log("Success:", response);
-                alert("Message sent successfully!");
-            }, function(error) {
-                console.log("Failed:", error);
-                alert("Failed to send message. Please try again.");
-            });
-    });
-
     // JavaScript for toggling the mobile menu
     const toggle = document.getElementById('menuToggle');
     const mobileMenu = document.getElementById('mobileMenu');
