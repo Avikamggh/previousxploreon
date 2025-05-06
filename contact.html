@@ -126,7 +126,10 @@
   </div>
 
   <!-- EmailJS Integration -->
-  <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+  <script type="module">
+  import emailjs from 'https://cdn.emailjs.com/dist/email.min.js';
+</script>
+
   <script>
     // Initialize EmailJS with your Public Key
     emailjs.init("W5q1BAHIIZ443blpp"); // Replace with your actual User ID
