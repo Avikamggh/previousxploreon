@@ -3,6 +3,7 @@
 <head>
 <!-- Favicon -->
 <link rel="icon" href="x.png" type="image/png">
+<link rel="manifest" href="manifest.json" />
 
 <!-- Open Graph / Social Sharing -->
 <meta property="og:title" content="Xploreon – Igniting Interplanetary Innovation" />
@@ -15,7 +16,7 @@
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Xploreon – Igniting Interplanetary Innovation" />
 <meta name="twitter:description" content="Explore space-tech and AI breakthroughs. Join Xploreon and shape the future of interplanetary life." />
-<meta name="twitter:image" content="x.webp" />
+<meta name="twitter:image" content="x.png" />
 
 
   
@@ -34,7 +35,7 @@
     }
 
     .background-section {
-      background-image: url('xploreon.webp');
+      background-image: url('xploreon.png');
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
@@ -252,6 +253,37 @@
       chatLog.scrollTop = chatLog.scrollHeight;
     }
   </script>
+
+<!-- Install App Button -->
+<button id="installButton" style="position: fixed; bottom: 20px; left: 20px; padding: 10px 20px; background-color: #00ffe0; color: black; border: none; border-radius: 8px; font-weight: bold; z-index: 999; display: none;">
+  Install Xploreon 🚀
+</button>
+
+<script>
+  let deferredPrompt;
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    document.getElementById('installButton').style.display = 'block';
+  });
+
+  document.getElementById('installButton').addEventListener('click', async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'accepted') {
+        console.log('User accepted the install prompt');
+      } else {
+        console.log('User dismissed the install prompt');
+      }
+      deferredPrompt = null;
+      document.getElementById('installButton').style.display = 'none';
+    }
+  });
+</script>
+
+
 
 </body>
 </html>
