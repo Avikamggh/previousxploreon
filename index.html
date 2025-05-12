@@ -154,6 +154,7 @@
       0% { box-shadow: 0 0 8px #00ffe0; }
       100% { box-shadow: 0 0 20px #00ffe0; }
     }
+
   </style>
 </head>
 <body>
@@ -176,7 +177,6 @@
       <li><a href="mission.html">Mission</a></li>
       <li><a href="tech.html">Tech</a></li>
       <li><a href="team.html">Team</a></li>
-      <li><a href="news.html">News</a></li>
       <li><a href="competition.html">Competition</a></li>
       <li><a href="contact.html">Contact</a></li>
     </ul>
@@ -187,7 +187,6 @@
     <li><a href="mission.html" class="block py-2">Mission</a></li>
     <li><a href="tech.html" class="block py-2">Tech</a></li>
     <li><a href="team.html" class="block py-2">Team</a></li>
-    <li><a href="news.html" class="block py-2">News</a></li>
     <li><a href="competition.html" class="block py-2">Competition</a></li>
     <li><a href="contact.html" class="block py-2">Contact</a></li>
   </ul>
@@ -285,6 +284,140 @@
       document.getElementById('installButton').style.display = 'none';
     }
   });
+</script>
+
+<!-- Cookie Consent Styles -->
+<style>
+  #cookieConsent {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    width: 280px;
+    background: rgba(0, 0, 0, 0.85);
+    color: white;
+    padding: 14px;
+    border-radius: 12px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 12px;
+    display: none;
+    z-index: 1000;
+    box-shadow: 0 0 10px rgba(0,255,255,0.5);
+  }
+</style>
+
+<!-- Cookie Consent Box -->
+<div id="cookieConsent">
+  <div>We use cookies to enhance your experience.</div>
+  <div style="margin-top: 10px; display: flex; justify-content: space-between;">
+    <button onclick="acceptCookies()" style="
+      padding: 6px 12px;
+      background-color: #00ffe0;
+      border: none;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: bold;
+      cursor: pointer;
+      color: black;">Accept</button>
+    <button onclick="openCustomize()" style="
+      padding: 6px 12px;
+      background: transparent;
+      border: 1px solid #00ffe0;
+      color: #00ffe0;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: bold;
+      cursor: pointer;">Customize</button>
+  </div>
+</div>
+
+<!-- Customize Modal -->
+<div id="customizeModal" style="
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.8);
+  z-index: 1001;
+  color: white;
+  font-family: 'Orbitron', sans-serif;
+  padding: 40px;
+  box-sizing: border-box;
+  overflow-y: auto;">
+  <div style="max-width: 420px; margin: auto; background: rgba(0,255,255,0.05); padding: 20px; border-radius: 12px; border: 1px solid #00ffe0;">
+    <h2 style="color: #00ffe0; font-size: 18px; margin-bottom: 10px;">Customize Cookies</h2>
+    <p style="margin-bottom: 16px; font-size: 13px;">Choose which types of cookies to allow:</p>
+
+    <label><input type="checkbox" checked disabled> Essential Cookies</label><br>
+    <label><input type="checkbox" id="analyticsCookies"> Analytics Cookies</label><br>
+    <label><input type="checkbox" id="adsCookies"> Advertising Cookies</label><br><br>
+
+    <button onclick="savePreferences()" style="
+      margin-top: 10px;
+      padding: 8px 20px;
+      border: none;
+      border-radius: 50px;
+      font-weight: bold;
+      background: #00ffe0;
+      color: black;
+      cursor: pointer;">
+      Save
+    </button>
+    <button onclick="closeCustomize()" style="
+      margin-left: 10px;
+      padding: 8px 20px;
+      border: 1px solid #00ffe0;
+      border-radius: 50px;
+      font-weight: bold;
+      background: transparent;
+      color: #00ffe0;
+      cursor: pointer;">
+      Cancel
+    </button>
+  </div>
+</div>
+
+<!-- Cookie Consent Scripts -->
+<script>
+  let autoAcceptTimeout;
+
+  window.onload = () => {
+    if (!localStorage.getItem('cookiesAccepted')) {
+      document.getElementById('cookieConsent').style.display = 'block';
+      autoAcceptTimeout = setTimeout(() => {
+        acceptCookies();
+      }, 15000); // Auto-accept in 15 seconds
+    }
+  };
+
+  function acceptCookies() {
+    clearTimeout(autoAcceptTimeout);
+    localStorage.setItem('cookiesAccepted', 'true');
+    document.getElementById('cookieConsent').style.display = 'none';
+  }
+
+  function openCustomize() {
+    clearTimeout(autoAcceptTimeout);
+    document.getElementById('customizeModal').style.display = 'block';
+  }
+
+  function closeCustomize() {
+    document.getElementById('customizeModal').style.display = 'none';
+  }
+
+  function savePreferences() {
+    const analytics = document.getElementById('analyticsCookies').checked;
+    const ads = document.getElementById('adsCookies').checked;
+    const preferences = {
+      essential: true,
+      analytics,
+      ads
+    };
+    localStorage.setItem('cookiePreferences', JSON.stringify(preferences));
+    localStorage.setItem('cookiesAccepted', 'true');
+    document.getElementById('cookieConsent').style.display = 'none';
+    document.getElementById('customizeModal').style.display = 'none';
+  }
 </script>
 
 
