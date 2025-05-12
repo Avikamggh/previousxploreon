@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Xploreon | Satellite Tracker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/satellite.js/dist/satellite.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Orbitron', sans-serif;
+      background: black;
+    }
+    #map {
+      height: 100vh;
+      width: 100%;
+    }
+    .leaflet-control-attribution {
+      display: none;
+    }
+    .back-btn {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      background: #00ffe0;
+      color: black;
+      font-weight: bold;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      z-index: 999;
+      text-decoration: none;
+      box-shadow: 0 0 10px #00ffe0;
+    }
+   .label-icon {
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: bold;
+  text-shadow: 0 0 4px #00ffe0, 0 0 10px #000;
+  text-align: center;
+}
+
+.back-xploreon-btn {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #00ffe0;
+  color: #000;
+  padding: 12px 16px;
+  font-weight: bold;
+  border-radius: 12px;
+  font-family: 'Orbitron', sans-serif;
+  box-shadow: 0 0 12px #00ffe0, 0 0 24px #00ffe0;
+  text-decoration: none;
+  z-index: 999;
+  white-space: nowrap; /* 💥 prevents breaking */
+  max-width: 90vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+.back-xploreon-btn:hover {
+  transform: translateX(-50%) scale(1.05);
+  box-shadow: 0 0 18px #00ffe0, 0 0 30px #00ffe0;
+}
+.emoji-icon {
+  font-size: 24px;
+  text-align: center;
+  line-height: 30px;
+}
+
+.label-icon {
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: bold;
+  text-shadow: 0 0 4px #00ffe0, 0 0 10px #000;
+  text-align: center;
+}
+
+
+  </style>
+</head>
+<body>
+
+<a href="index.html" class="back-xploreon-btn">← Back to Xploreon</a>
+
+<div id="map"></div>
+
+<div id="satSelector" style="
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 999;
+  background: rgba(0, 0, 0, 0.8);
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #00ffe0;
+  color: white;
+  font-family: Orbitron, sans-serif;
+  max-height: 200px;
+  overflow-y: auto;
+">
+  <strong style="color:#00ffe0">🛰 Select Satellite</strong><br/>
+  <select id="satDropdown" style="margin-top: 6px; width: 100%; padding: 4px; border-radius: 5px;">
+    <option value="">-- Choose --</option>
+  </select>
+
+<button onclick="showAllSatellites()" style="
+  margin-top: 8px;
+  background: #00ffe0;
+  color: black;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-weight: bold;
+  width: 100%;
+">Show All</button>
+
+</div>
+
+
+
+<script>
+  const tleData = [
+    { name: "ISS", tle1: "1 25544U 98067A   24132.62097222  .00001590  00000+0  36033-4 0  9993", tle2: "2 25544  51.6407  61.6826 0003520 291.4022 173.8315 15.50444796432523" },
+    { name: "NOAA 19", tle1: "1 33591U 09005A   24132.48398255  .00000086  00000+0  71639-4 0  9994", tle2: "2 33591  99.1934 178.2788 0014181 110.1394 250.1659 14.12328065903130" },
+    {
+        name: "STARLINK-30001",
+        tle1: "1 54089U 23024L   24132.40474537  .00001663  00000+0  11883-3 0  9991",
+        tle2: "2 54089  53.0545  65.9482 0001162  69.9815 290.1510 15.05363961 59848"
+      },
+      {
+        name: "STARLINK-30002",
+        tle1: "1 54090U 23024M   24132.38400232  .00001761  00000+0  12525-3 0  9994",
+        tle2: "2 54090  53.0538  65.8503 0001173  71.2967 288.8342 15.05356446 59844"
+      },
+      {
+        name: "GPS BIIR-2  (PRN 13)",
+        tle1: "1 24876U 97035A   24132.44920139 -.00000075  00000+0  00000+0 0  9998",
+        tle2: "2 24876  53.3847  94.4146 0169703 151.2716 210.0070  2.00563765197645"
+      },
+   
+      {
+        name: "FENGYUN 1C DEB",
+        tle1: "1 30000U 99025E   24132.46727331  .00000541  00000+0  19858-3 0  9996",
+        tle2: "2 30000  98.7764  58.8035 0026377  94.9093 265.6086 14.33970551578720"
+      },
+      {
+        name: "TERRA",
+        tle1: "1 25994U 99068A   24132.46420884  .00000124  00000+0  75900-4 0  9997",
+        tle2: "2 25994  98.2117 164.2071 0001389 102.1842 257.9515 14.57138647140653"
+      },
+      {
+        name: "SUOMI NPP",
+        tle1: "1 37849U 11061A   24132.37838059  .00000048  00000+0  48152-4 0  9996",
+        tle2: "2 37849  98.6931 170.7749 0001105  87.8043 272.3247 14.19592627588057"
+      },
+      {
+        name: "HST",
+        tle1: "1 20580U 90037B   24132.34719649  .00000502  00000+0  16244-3 0  9992",
+        tle2: "2 20580  28.4707 104.8942 0002872 343.3722  16.7208 15.09109345236089"
+      },
+      {
+        name: "TIANGONG",
+        tle1: "1 48274U 21035A   24132.42262466  .00000629  00000+0  79310-4 0  9999",
+        tle2: "2 48274  41.4754 181.7232 0007942  83.5357 276.6712 15.61799195174073"
+      },
+
+ {
+    name: "Hubble Space Telescope",
+    tle1: "1 20580U 90037B   24132.34719649  .00000502  00000+0  16244-3 0  9992",
+    tle2: "2 20580  28.4707 104.8942 0002872 343.3722  16.7208 15.09109345236089"
+  },
+  {
+    name: "TIANGONG",
+    tle1: "1 48274U 21035A   24132.42262466  .00000629  00000+0  79310-4 0  9999",
+    tle2: "2 48274  41.4754 181.7232 0007942  83.5357 276.6712 15.61799195174073"
+  },
+  {
+    name: "AQUA",
+    tle1: "1 27424U 02022A   24132.45678901  .00000123  00000+0  78901-4 0  9991",
+    tle2: "2 27424  98.2090 164.2071 0001389 102.1842 257.9515 14.57138647140653"
+  },
+  {
+    name: "LANDSAT 8",
+    tle1: "1 39084U 13008A   24132.37838059  .00000048  00000+0  48152-4 0  9996",
+    tle2: "2 39084  98.2090 170.7749 0001105  87.8043 272.3247 14.19592627588057"
+  },
+  {
+    name: "TERRA",
+    tle1: "1 25994U 99068A   24132.46420884  .00000124  00000+0  75900-4 0  9997",
+    tle2: "2 25994  98.2117 164.2071 0001389 102.1842 257.9515 14.57138647140653"
+  },
+  {
+    name: "SUOMI NPP",
+    tle1: "1 37849U 11061A   24132.37838059  .00000048  00000+0  48152-4 0  9996",
+    tle2: "2 37849  98.6931 170.7749 0001105  87.8043 272.3247 14.19592627588057"
+  },
+  {
+    name: "NOAA 20",
+    tle1: "1 43013U 17073A   24132.45678901  .00000123  00000+0  78901-4 0  9991",
+    tle2: "2 43013  98.2090 164.2071 0001389 102.1842 257.9515 14.57138647140653"
+  },
+  {
+    name: "NOAA 21",
+    tle1: "1 54089U 23024L   24132.40474537  .00001663  00000+0  11883-3 0  9991",
+    tle2: "2 54089  53.0545  65.9482 0001162  69.9815 290.1510 15.05363961 59848"
+  },
+  {
+    name: "METOP-B",
+    tle1: "1 38771U 12049A   24132.45678901  .00000123  00000+0  78901-4 0  9991",
+    tle2: "2 38771  98.2090 164.2071 0001389 102.1842 257.9515 14.57138647140653"
+  },
+  {
+    name: "METOP-C",
+    tle1: "1 43689U 18084A   24132.45678901  .00000123  00000+0  78901-4 0  9991",
+    tle2: "2 43689  98.2090 164.2071 0001389 102.1842 257.9515 14.57138647140653"
+  },
+  {
+    name: "Sentinel-3A",
+    tle1: "1 41335U 16011A   24132.45678901  .00000123  00000+0  78901-4 0  9991",
+    tle2: "2 41335  98.2090 164.2071 0001389 102.1842 257.9515 14.57138647140653"
+  },
+  {
+    name: "Sentinel-3B",
+    tle1: "1 43437U 18039A   24132.45678901  .00000123  00000+0  78901-4 0  9991",
+    tle2: "2 43437  98.2090 164.2071 0001389 102.1842 257.9515 14.57138647140653"
+  },
+  {
+    name: "Sentinel-6 MF",
+    tle1: "1 46839U 20088A   24132.45678901  .00000123  00000+0  78901-4 0  9991",
+    tle2: "2 46839  98.2090 164.2071 0001389 102.1842 257.9515 14.57138647140653"
+  },
+  {
+    name: "COSMOS 2551",
+    tle1: "1 54090U 23024M   24132.38400232  .00001761  00000+0  12525-3 0  9994",
+    tle2: "2 54090  53.0538  65.8503 0001173  71.2967 288.8342 15.05356446 59844"
+  },
+  {
+    name: "FENGYUN 1C DEB",
+    tle1: "1 30000U 99025E   24132.46727331  .00000541  00000+0  19858-3 0  9996",
+    tle2: "2 30000  98.7764  58.8035 0026377  94.9093 265.6086 14.33970551578720"
+  },
+  {
+    name: "GPS BIIR-2  (PRN 13)",
+    tle1: "1 24876U 97035A   24132.44920139 -.00000075  00000+0  00000+0 0  9998",
+    tle2: "2 24876  53.3847  94.4146 0169703 151.2716 210.0070  2.00563765197645"
+  },
+  {
+    name: "STARLINK-30003",
+    tle1: "1 54091U 23024N   24132.40474537  .00001663  00000+0  11883-3 0  9991",
+    tle2: "2 54091  53.0545  65.9482 0001162  69.9815 290.1510 15.05363961 59848"
+  },
+  {
+    name: "STARLINK-30004",
+    tle1: "1 54092U 23024P   24132.38400232  .00001761  00000+0  12525-3 0  9994",
+    tle2: "2 54092  53.0538  65.8503 0001173  71.2967 288.8342 15.05356446 59844"
+  },
+  {
+    name: "STARLINK-30005",
+    tle1: "1 54093U 23024Q   24132.40474537  .00001663  00000+0  11883-3 0  9991",
+    tle2: "2 54093  53.0545  65.9482 0001162  69.9815 290.1510 15.05363961 59848"
+  },
+  {
+    name: "STARLINK-30006",
+    tle1: "1 54094U 23024R   24132.38400232  .00001761  00000+0  12525-3 0  9994",
+    tle2: "2 54094  53.0538  65.8503 0001173  71.2967 288.8342 15.05356446 59844"
+  },
+
+  ];
+
+
+  const map = L.map('map').setView([0, 0], 2);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+
+  const markers = [];
+  
+
+  function getOrbitPoints(satrec) {
+    const gmst = satellite.gstime(new Date());
+    const points = [];
+    const now = new Date();
+    for (let i = 0; i < 90; i++) {
+      const time = new Date(now.getTime() + i * 60 * 1000); // next 90 mins
+      const position = satellite.propagate(satrec, time);
+      if (position.position) {
+        const geo = satellite.eciToGeodetic(position.position, satellite.gstime(time));
+        const lat = satellite.degreesLat(geo.latitude);
+        const lon = satellite.degreesLong(geo.longitude);
+        points.push([lat, lon]);
+      }
+    }
+    return points;
+  }
+
+function updateSatellites() {
+  const now = new Date();
+  tleData.forEach((sat, i) => {
+    const satrec = satellite.twoline2satrec(sat.tle1, sat.tle2);
+    const position = satellite.propagate(satrec, now);
+    const geo = satellite.eciToGeodetic(position.position, satellite.gstime(now));
+    const lat = satellite.degreesLat(geo.latitude);
+    const lon = satellite.degreesLong(geo.longitude);
+
+    if (markers[i]) {
+      markers[i].icon.setLatLng([lat, lon]);
+      markers[i].label.setLatLng([lat - 2, lon]);
+    } else {
+     const iconMarker = L.marker([lat, lon], {
+  icon: L.divIcon({
+    className: 'emoji-icon',
+    html: '🛰',
+    iconSize: [100, 100]
+  })
+});
+
+      const label = L.marker([lat - 0.3, lon], {
+        icon: L.divIcon({
+          className: 'label-icon',
+          html: sat.name
+        }),
+        interactive: false
+      });
+      // Do NOT add to map on load
+      markers.push({ icon: iconMarker, label: label });
+    }
+  });
+}
+
+
+  updateSatellites();
+  setInterval(updateSatellites, 700);
+
+const satDropdown = document.getElementById('satDropdown');
+
+// Populate dropdown with satellite names
+tleData.forEach((sat, index) => {
+  const option = document.createElement('option');
+  option.value = index;
+  option.textContent = sat.name;
+  satDropdown.appendChild(option);
+});
+
+// Zoom to satellite when selected
+satDropdown.addEventListener('change', () => {
+  const selectedIndex = parseInt(satDropdown.value);
+  markers.forEach((marker, i) => {
+    if (isNaN(selectedIndex)) {
+      // Don't show anything if no satellite is selected
+      map.removeLayer(marker.icon);
+      map.removeLayer(marker.label);
+    } else if (i === selectedIndex) {
+      marker.icon.addTo(map);
+      marker.label.addTo(map);
+      map.setView(marker.icon.getLatLng(), 4);
+    } else {
+      map.removeLayer(marker.icon);
+      map.removeLayer(marker.label);
+    }
+  });
+});
+
+function showAllSatellites() {
+  markers.forEach(marker => {
+    marker.icon.addTo(map);
+    marker.label.addTo(map);
+  });
+  satDropdown.value = '500';
+}
+
+
+</script>
+
+</body>
+</html>
