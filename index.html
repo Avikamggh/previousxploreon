@@ -243,8 +243,7 @@ async function sendMessage() {
   chatLog.innerHTML += `<div><b>You:</b> ${userMessage}</div>`;
   input.value = '';
 
-  const response = await fetch('https://openrouter.xyz/api/v1/chat/completions
-', {
+  const response = await fetch('https://openrouter.xyz/api/v1/chat/completions', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
