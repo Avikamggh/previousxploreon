@@ -89,63 +89,7 @@
       box-shadow: 0 0 20px #00f0ff, 0 0 30px #0077ff;
     }
 
-    .chatbot-toggle {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background-color: transparent;
-      border: none;
-      cursor: pointer;
-      z-index: 50;
-    }
-
-    .chatbot-toggle img.rotating {
-      animation: spin 0.6s ease forwards;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    .chatbot-box {
-      position: fixed;
-      bottom: 100px;
-      right: 20px;
-      width: 90vw;
-      max-width: 340px;
-      height: 60vh;
-      max-height: 500px;
-      background: rgba(0, 0, 0, 0.85);
-      border: 1px solid #00ffe0;
-      border-radius: 10px;
-      padding: 10px;
-      display: none;
-      z-index: 49;
-      color: white;
-      box-sizing: border-box;
-    }
-
-    .chatbot-box textarea {
-      width: 100%;
-      height: 70px;
-      background: #111;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      padding: 8px;
-      resize: none;
-    }
-
-    @media (max-width: 600px) {
-      .chatbot-box {
-        width: 90vw;
-        height: 65vh;
-        bottom: 90px;
-        right: 15px;
-      }
-    }
-
+ 
     .glow {
       animation: pulseGlow 2s infinite alternate;
     }
@@ -206,7 +150,13 @@
     <a href="mission.html" class="futuristic-button">Explore Our Mission</a>
   </section>
 
-  
+  <script>
+const toggle = document.getElementById('menuToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+    toggle.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+</script>
   
   <!--Start of Tawk.to Script-->
 <script type="text/javascript">
