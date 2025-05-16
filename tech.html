@@ -140,7 +140,7 @@
   </button>
   <div class="chatbot-box" id="chatbotBox">
     <div style="height: 300px; overflow-y: auto; margin-bottom: 8px; background: #111; padding: 5px; border-radius: 5px;" id="chatLog">
-      <div><b>Bot:</b> Hello! Ask me anything about Xploreon 🚀</div>
+      <div><b>Voyager:</b> Hello! Ask me anything about Xploreon 🚀</div>
     </div>
     <textarea id="userInput" placeholder="Type your message..."></textarea>
     <button onclick="sendMessage()" style="margin-top: 6px; width: 100%; background: #00ffe0; color: black; font-weight: bold; border: none; border-radius: 5px; padding: 6px;">Send</button>
@@ -184,7 +184,7 @@
 
       const data = await response.json();
       const botReply = data.choices?.[0]?.message?.content || 'Sorry, something went wrong.';
-      chatLog.innerHTML += `<div><b>Bot:</b> ${botReply}</div>`;
+      chatLog.innerHTML += `<div><b>Voyager:</b> ${botReply}</div>`;
       chatLog.scrollTop = chatLog.scrollHeight;
     }
   </script>
