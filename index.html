@@ -243,11 +243,11 @@ async function sendMessage() {
   chatLog.innerHTML += `<div><b>You:</b> ${userMessage}</div>`;
   input.value = '';
 
-  const response = await fetch('https://openrouter.xyz/api/v1/chat/completions', {
+  const response = await fetch('https://api.together.xyz/v1/chat/completions', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer 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'  // Replace this
+      'Authorization': 'Bearer a1b05f431e0f3e5c89fbacb13aad61fd5fcca866647ee7ad80816d7f1204a087'  // Replace this
     },
     body: JSON.stringify({
       model: 'meta-llama/llama-3-8b-instruct:free', // Or update to current free model
