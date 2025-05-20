@@ -26,6 +26,17 @@
       color: #00ffe0;
       text-shadow: 0 0 15px #00ffe0, 0 0 30px #00ffe0;
     }
+.glow-tm {
+  text-shadow: 0 0 6px #00ffe0, 0 0 10px #00ffe0;
+  font-weight: bold;
+  margin-left: 2px;
+  animation: pulseTM 1.5s infinite alternate;
+}
+
+@keyframes pulseTM {
+  from { opacity: 0.7; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
    
   </style>
 </head>
@@ -33,7 +44,10 @@
 
     <!-- Navbar -->
   <nav class="w-full flex justify-between items-center px-4 py-4 glass fixed top-0 z-50">
-    <a href="index.html" class="text-2xl glow-text">Xploreon</a>
+      <a href="index.html" class="text-2xl glow-text">
+  Xploreon<sup class="text-cyan-400 text-sm glow-tm">™</sup>
+</a>
+
     <button id="menuToggle" class="md:hidden text-white text-2xl">☰</button>
     <ul class="hidden md:flex space-x-6 text-white text-sm md:text-base">
       <li><a href="mission.html">Mission</a></li>
@@ -81,13 +95,13 @@
       <a href="https://x.com/XploreonXn" target="_blank">
         <img src="twitter.jpg" alt="Twitter" class="w-8 h-8 hover:scale-110 transition" />
       </a>
-      <a href="https://www.instagram.com/avikamdeol/?__pwa=1" target="_blank">
+      <a href="https://www.instagram.com/xploreon_/?__pwa=1" target="_blank">
         <img src="insta.jpeg" alt="Instagram" class="w-8 h-8 hover:scale-110 transition" />
       </a>
       <a href="https://chat.whatsapp.com/GFLgsYvEaRoIp076gqWx5N" target="_blank">
         <img src="whatsapp-logo.png" alt="WhatsApp" class="w-8 h-8 hover:scale-110 transition" />
       </a>
-      <a href="https://www.linkedin.com/in/avikam-deol-979745349/" target="_blank">
+      <a href="https://www.linkedin.com/in/xploreon/" target="_blank">
         <img src="linkedin.png" alt="LinkedIn" class="w-8 h-8 hover:scale-110 transition" />
       </a>
     </div>
