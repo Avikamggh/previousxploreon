@@ -467,13 +467,43 @@ body {
         <button class="nav-button" onclick="scrollSection('aerospace', 1)">›</button>
       </div>
       <div id="aerospace" class="scroll-container">
-        <!-- Placeholder for future aerospace engineers -->
-        <div class="team-card p-6 flex flex-col items-center text-center justify-center border-dashed border-2 border-cyan-500 bg-transparent">
-          <div class="text-6xl mb-4">➕</div>
-          <h3 class="text-xl font-bold text-cyan-300 mb-2">Coming Soon</h3>
-          <div class="role-tag">Aerospace Engineers</div>
-          <p class="text-sm text-gray-300 mt-4 text-center">
-            This section will feature our talented aerospace engineers working on cutting-edge propulsion, spacecraft design, and mission planning.
+        <!-- Vishard -->
+        <div class="team-card p-6 flex flex-col items-center text-center" onclick="openPopup('popup-vishard')">
+          <img src="vishard.png" alt="Vishard" class="team-image mb-4" />
+          <h3 class="text-xl font-bold text-cyan-300 mb-2">Vishard</h3>
+          <div class="role-tag">Aerospace Engineer</div>
+          <p class="text-sm text-gray-300 mt-4 flex-1 leading-relaxed">
+            Working on advanced rocket propulsion systems and launch vehicle design at Silver Oak University, Ahmedabad.
+          </p>
+        </div>
+
+        <!-- Priyansh Patel -->
+        <div class="team-card p-6 flex flex-col items-center text-center" onclick="openPopup('popup-priyansh')">
+          <img src="priyansh.png" alt="Priyansh Patel" class="team-image mb-4" />
+          <h3 class="text-xl font-bold text-cyan-300 mb-2">Priyansh Patel</h3>
+          <div class="role-tag">Aerospace Engineer</div>
+          <p class="text-sm text-gray-300 mt-4 flex-1 leading-relaxed">
+            Developing spacecraft structural systems and mission trajectory analysis for next-generation launch projects.
+          </p>
+        </div>
+
+        <!-- Harshil Purohit -->
+        <div class="team-card p-6 flex flex-col items-center text-center" onclick="openPopup('popup-harshil')">
+          <img src="harshil.png" alt="Harshil Purohit" class="team-image mb-4" />
+          <h3 class="text-xl font-bold text-cyan-300 mb-2">Harshil Purohit</h3>
+          <div class="role-tag">Aerospace Engineer</div>
+          <p class="text-sm text-gray-300 mt-4 flex-1 leading-relaxed">
+            Contributing to rocket engine design and aerodynamics optimization for Xploreon's launch vehicle initiatives.
+          </p>
+        </div>
+
+        <!-- Neil -->
+        <div class="team-card p-6 flex flex-col items-center text-center" onclick="openPopup('popup-neil')">
+          <img src="neil.png" alt="Neil" class="team-image mb-4" />
+          <h3 class="text-xl font-bold text-cyan-300 mb-2">Neil</h3>
+          <div class="role-tag">Aerospace Engineer</div>
+          <p class="text-sm text-gray-300 mt-4 flex-1 leading-relaxed">
+            Focusing on space mission planning and satellite deployment systems for future aerospace projects.
           </p>
         </div>
       </div>
@@ -523,7 +553,7 @@ body {
   </div>
 </main>
 
-<!-- Popups (existing popup HTML remains the same) -->
+<!-- Popups -->
 <div id="popup-avikam" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 hidden backdrop-blur-sm">
   <div class="bg-gradient-to-br from-gray-800 via-gray-900 to-black text-white p-8 rounded-3xl max-w-lg w-full mx-4 relative border-2 border-cyan-300 shadow-2xl shadow-cyan-500/20 backdrop-filter backdrop-blur-xl">
     <div class="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-transparent to-blue-500/10 rounded-3xl"></div>
@@ -728,6 +758,99 @@ body {
           I oversee the Xploreon website, WhatsApp community (<b>Xploreon: Space & Tech</b>),
           and engaging quizzes featured on the website.
           Join us to learn, participate, and earn certificates!
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- New Aerospace Engineers Popups -->
+<div id="popup-vishard" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 hidden backdrop-blur-sm">
+  <div class="bg-gradient-to-br from-gray-800 via-gray-900 to-black text-white p-8 rounded-3xl max-w-lg w-full mx-4 relative border-2 border-cyan-300 shadow-2xl shadow-cyan-500/20 backdrop-filter backdrop-blur-xl">
+    <div class="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-transparent to-blue-500/10 rounded-3xl"></div>
+    <button onclick="closePopup('popup-vishard')" class="absolute top-4 right-4 text-cyan-300 text-3xl hover:text-white transition-all duration-300 hover:rotate-90 z-10">×</button>
+    
+    <div class="relative z-10">
+      <div class="flex items-center mb-6">
+        <img src="vishard.png" alt="Vishard" class="w-20 h-20 rounded-full border-3 border-cyan-400 mr-4 shadow-lg" />
+        <div>
+          <h3 class="text-2xl font-bold mb-1 bg-gradient-to-r from-cyan-400 to-cyan-300 bg-clip-text text-transparent">Vishard</h3>
+          <p class="text-cyan-300 font-semibold">Aerospace Engineer</p>
+        </div>
+      </div>
+      
+      <div class="bg-gradient-to-r from-cyan-500/20 to-blue-500/20 p-4 rounded-2xl border border-cyan-400/30">
+        <p class="text-sm text-gray-200 leading-relaxed">
+          Vishard is an Aerospace Engineer at Xploreon, currently studying at Silver Oak University, Ahmedabad. He is actively working on advanced rocket propulsion systems and launch vehicle design as part of Xploreon's ambitious space exploration projects. His focus includes developing innovative propulsion technologies and contributing to the engineering excellence that will power our next-generation aerospace missions.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="popup-priyansh" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 hidden backdrop-blur-sm">
+  <div class="bg-gradient-to-br from-gray-800 via-gray-900 to-black text-white p-8 rounded-3xl max-w-lg w-full mx-4 relative border-2 border-cyan-300 shadow-2xl shadow-cyan-500/20 backdrop-filter backdrop-blur-xl">
+    <div class="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-transparent to-blue-500/10 rounded-3xl"></div>
+    <button onclick="closePopup('popup-priyansh')" class="absolute top-4 right-4 text-cyan-300 text-3xl hover:text-white transition-all duration-300 hover:rotate-90 z-10">×</button>
+    
+    <div class="relative z-10">
+      <div class="flex items-center mb-6">
+        <img src="priyansh.png" alt="Priyansh Patel" class="w-20 h-20 rounded-full border-3 border-cyan-400 mr-4 shadow-lg" />
+        <div>
+          <h3 class="text-2xl font-bold mb-1 bg-gradient-to-r from-cyan-400 to-cyan-300 bg-clip-text text-transparent">Priyansh Patel</h3>
+          <p class="text-cyan-300 font-semibold">Aerospace Engineer</p>
+        </div>
+      </div>
+      
+      <div class="bg-gradient-to-r from-cyan-500/20 to-blue-500/20 p-4 rounded-2xl border border-cyan-400/30">
+        <p class="text-sm text-gray-200 leading-relaxed">
+          Priyansh Patel is an Aerospace Engineer at Xploreon from Silver Oak University, Ahmedabad. He specializes in developing spacecraft structural systems and mission trajectory analysis for our next-generation launch projects. His expertise contributes to the foundational engineering work that enables Xploreon's vision of advancing space exploration through innovative aerospace solutions.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="popup-harshil" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 hidden backdrop-blur-sm">
+  <div class="bg-gradient-to-br from-gray-800 via-gray-900 to-black text-white p-8 rounded-3xl max-w-lg w-full mx-4 relative border-2 border-cyan-300 shadow-2xl shadow-cyan-500/20 backdrop-filter backdrop-blur-xl">
+    <div class="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-transparent to-blue-500/10 rounded-3xl"></div>
+    <button onclick="closePopup('popup-harshil')" class="absolute top-4 right-4 text-cyan-300 text-3xl hover:text-white transition-all duration-300 hover:rotate-90 z-10">×</button>
+    
+    <div class="relative z-10">
+      <div class="flex items-center mb-6">
+        <img src="harshil.png" alt="Harshil Purohit" class="w-20 h-20 rounded-full border-3 border-cyan-400 mr-4 shadow-lg" />
+        <div>
+          <h3 class="text-2xl font-bold mb-1 bg-gradient-to-r from-cyan-400 to-cyan-300 bg-clip-text text-transparent">Harshil Purohit</h3>
+          <p class="text-cyan-300 font-semibold">Aerospace Engineer</p>
+        </div>
+      </div>
+      
+      <div class="bg-gradient-to-r from-cyan-500/20 to-blue-500/20 p-4 rounded-2xl border border-cyan-400/30">
+        <p class="text-sm text-gray-200 leading-relaxed">
+          Harshil Purohit is an Aerospace Engineer at Xploreon, studying at Silver Oak University, Ahmedabad. He contributes to rocket engine design and aerodynamics optimization for Xploreon's launch vehicle initiatives. His work focuses on enhancing the performance and efficiency of aerospace systems, playing a crucial role in our mission to advance space exploration technology.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="popup-neil" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 hidden backdrop-blur-sm">
+  <div class="bg-gradient-to-br from-gray-800 via-gray-900 to-black text-white p-8 rounded-3xl max-w-lg w-full mx-4 relative border-2 border-cyan-300 shadow-2xl shadow-cyan-500/20 backdrop-filter backdrop-blur-xl">
+    <div class="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-transparent to-blue-500/10 rounded-3xl"></div>
+    <button onclick="closePopup('popup-neil')" class="absolute top-4 right-4 text-cyan-300 text-3xl hover:text-white transition-all duration-300 hover:rotate-90 z-10">×</button>
+    
+    <div class="relative z-10">
+      <div class="flex items-center mb-6">
+        <img src="neil.png" alt="Neil" class="w-20 h-20 rounded-full border-3 border-cyan-400 mr-4 shadow-lg" />
+        <div>
+          <h3 class="text-2xl font-bold mb-1 bg-gradient-to-r from-cyan-400 to-cyan-300 bg-clip-text text-transparent">Neil</h3>
+          <p class="text-cyan-300 font-semibold">Aerospace Engineer</p>
+        </div>
+      </div>
+      
+      <div class="bg-gradient-to-r from-cyan-500/20 to-blue-500/20 p-4 rounded-2xl border border-cyan-400/30">
+        <p class="text-sm text-gray-200 leading-relaxed">
+          Neil is an Aerospace Engineer at Xploreon from Silver Oak University, Ahmedabad. He focuses on space mission planning and satellite deployment systems for future aerospace projects. His expertise in mission architecture and orbital mechanics contributes to Xploreon's strategic approach to space exploration and satellite technology development.
         </p>
       </div>
     </div>
