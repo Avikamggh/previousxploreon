@@ -1,43 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- Favicon -->
 <link rel="icon" href="x.webp" type="image/png">  
-
 <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Xploreon | Team</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
-  <style>
-      body {
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Xploreon | Team</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+body {
   font-family: 'Orbitron', sans-serif;
   margin: 0;
-  background: url('team.webp') no-repeat center center fixed;
-  background-size: cover;
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
   color: white;
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 
-    .glass {
-      background: rgba(0, 255, 255, 0.07);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(0, 255, 255, 0.2);
-    }
+.glass {
+  background: rgba(0, 255, 255, 0.07);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 255, 255, 0.2);
+}
 
-    .glow-text {
-      color: #00ffe0;
-      text-shadow: 0 0 15px #00ffe0, 0 0 30px #00ffe0;
-    }
+.glow-text {
+  color: #00ffe0;
+  text-shadow: 0 0 15px #00ffe0, 0 0 30px #00ffe0;
+}
 
-    
-    @media (max-width: 600px) {
-      .chatbot-box {
-        width: 90vw;
-        height: 65vh;
-        bottom: 90px;
-        right: 15px;
-      }
-    }
 .glow-tm {
   text-shadow: 0 0 6px #00ffe0, 0 0 10px #00ffe0;
   font-weight: bold;
@@ -50,246 +40,701 @@
   to { opacity: 1; transform: scale(1); }
 }
 
-  </style>
+.team-card {
+  background: linear-gradient(145deg, rgba(15, 25, 45, 0.9), rgba(25, 35, 65, 0.9));
+  border: 2px solid rgba(0, 255, 255, 0.3);
+  border-radius: 20px;
+  min-width: 320px;
+  max-width: 320px;
+  height: 450px;
+  backdrop-filter: blur(15px);
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+  scroll-snap-align: start;
+  flex-shrink: 0;
+  cursor: pointer; /* Added cursor pointer for clickability */
+}
+
+.team-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.1), transparent);
+  transition: left 0.5s ease;
+}
+
+.team-card:hover::before {
+  left: 100%;
+}
+
+.team-card:hover {
+  transform: translateY(-10px) scale(1.02);
+  border-color: rgba(0, 255, 255, 0.6);
+  box-shadow: 0 20px 40px rgba(0, 255, 255, 0.2);
+}
+
+.founder-card {
+  background: linear-gradient(145deg, rgba(255, 215, 0, 0.1), rgba(0, 255, 255, 0.1));
+  border: 3px solid #ffd700;
+  box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+}
+
+.founder-card:hover {
+  box-shadow: 0 0 50px rgba(255, 215, 0, 0.5);
+  border-color: #ffd700;
+}
+
+.scroll-container {
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  gap: 20px;
+  padding: 20px 0;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  justify-content: flex-start;
+}
+
+@media (min-width: 1024px) {
+  .scroll-container {
+    justify-content: center;
+  }
+  
+  .department-section:has(.scroll-container .team-card:nth-child(-n+3):last-child) .nav-button {
+    display: none;
+  }
+  
+  .scroll-container:has(.team-card:nth-child(4)) {
+    justify-content: flex-start;
+  }
+}
+
+.scroll-container::-webkit-scrollbar {
+  display: none;
+}
+
+.nav-button {
+  background: rgba(0, 255, 255, 0.2);
+  border: 2px solid rgba(0, 255, 255, 0.5);
+  color: #00ffe0;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.nav-button:hover {
+  background: rgba(0, 255, 255, 0.3);
+  transform: scale(1.1);
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+}
+
+.department-section {
+  margin-bottom: 60px;
+}
+
+.department-title {
+  font-size: 2.5rem;
+  background: linear-gradient(45deg, #00ffe0, #0080ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-align: center;
+  margin-bottom: 30px;
+  font-weight: 700;
+  position: relative;
+}
+
+.department-title::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 3px;
+  background: linear-gradient(45deg, #00ffe0, #0080ff);
+  border-radius: 2px;
+}
+
+.team-image {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 3px solid rgba(0, 255, 255, 0.5);
+  transition: all 0.3s ease;
+  object-fit: cover;
+}
+
+.team-card:hover .team-image {
+  border-color: #00ffe0;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+}
+
+.role-tag {
+  background: linear-gradient(45deg, rgba(0, 255, 255, 0.2), rgba(0, 128, 255, 0.2));
+  border: 1px solid rgba(0, 255, 255, 0.3);
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-size: 0.8rem;
+  margin-top: 10px;
+  display: inline-block;
+}
+
+#tawk-bubble, .tawk-chatbox {
+  z-index: 9999 !important;
+}
+
+@media (max-width: 768px) {
+  .team-card {
+    min-width: 280px;
+    max-width: 280px;
+    height: 380px;
+  }
+  
+  .department-title {
+    font-size: 1.8rem;
+  }
+  
+  .scroll-container {
+    padding: 15px 0;
+    gap: 15px;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  .nav-button {
+    width: 45px;
+    height: 45px;
+    font-size: 1.4rem;
+  }
+  
+  main {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+  
+  .team-image {
+    width: 100px;
+    height: 100px;
+  }
+  
+  h1 {
+    font-size: 2.5rem !important;
+    margin-bottom: 2rem !important;
+  }
+  
+  .nav-button {
+    position: sticky;
+    z-index: 10;
+  }
+  
+  .department-section .nav-button {
+    display: flex !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .team-card {
+    min-width: 260px;
+    max-width: 260px;
+    height: 360px;
+    padding: 0.875rem;
+  }
+  
+  .department-title {
+    font-size: 1.4rem;
+  }
+  
+  .nav-button {
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+  }
+  
+  h1 {
+    font-size: 1.75rem !important;
+  }
+  
+  .scroll-container {
+    gap: 12px;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+  
+  main {
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
+  }
+  
+  .team-image {
+    width: 90px;
+    height: 90px;
+  }
+  
+  .team-card h3 {
+    font-size: 1.125rem;
+  }
+  
+  .team-card p {
+    font-size: 0.8rem;
+    line-height: 1.4;
+  }
+  
+  .role-tag {
+    font-size: 0.75rem;
+    padding: 6px 12px;
+  }
+}
+
+@media (max-width: 360px) {
+  .team-card {
+    min-width: 240px;
+    max-width: 240px;
+    height: 340px;
+    padding: 0.75rem;
+  }
+  
+  .scroll-container {
+    gap: 10px;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+  
+  h1 {
+    font-size: 1.5rem !important;
+  }
+  
+  .department-title {
+    font-size: 1.2rem;
+  }
+  
+  .team-image {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .team-card h3 {
+    font-size: 1rem;
+  }
+  
+  .team-card p {
+    font-size: 0.75rem;
+    line-height: 1.3;
+  }
+}
+
+.bg-gray-900 {
+  margin: 1rem;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+</style>
 </head>
 <body>
 
-    <!-- Navbar -->
-  <nav class="w-full flex justify-between items-center px-4 py-4 glass fixed top-0 z-50">
-    <a href="index.html" class="text-2xl glow-text">
-  Xploreon<sup class="text-cyan-400 text-sm glow-tm">™</sup>
-</a>
-
-    <button id="menuToggle" class="md:hidden text-white text-2xl">☰</button>
-    <ul class="hidden md:flex space-x-6 text-white text-sm md:text-base">
-      <li><a href="mission.html">Mission</a></li>
-      <li><a href="tech.html">Tech</a></li>
-      <li><a href="team.html">Team</a></li>
-      <li><a href="news.html">News</a></li>
-      <li><a href="tracker.html">Satellite Tracker</a></li>
-      <li><a href="competition.html">Competition</a></li>
-      <li><a href="contact.html">Contact</a></li>
-    </ul>
-  </nav>
-
-  <!-- Mobile menu -->
-  <ul id="mobileMenu" class="md:hidden hidden flex-col bg-black bg-opacity-90 text-white p-4 fixed w-full top-16 left-0 z-40">
-    <li><a href="mission.html" class="block py-2">Mission</a></li>
-    <li><a href="tech.html" class="block py-2">Tech</a></li>
-    <li><a href="team.html" class="block py-2">Team</a></li>
-    <li><a href="news.html" class="block py-2">News</a></li>
-    <li><a href="tracker.html" class="block py-2">Satellite Tracker</a></li>
-    <li><a href="competition.html" class="block py-2">Competition</a></li>
-    <li><a href="contact.html" class="block py-2">Contact</a></li>
+<!-- Navbar -->
+<nav class="w-full flex justify-between items-center px-4 py-4 glass fixed top-0 z-50">
+  <a href="index.html" class="text-2xl glow-text">
+    Xploreon<sup class="text-cyan-400 text-sm glow-tm">™</sup>
+  </a>
+  <button id="menuToggle" class="md:hidden text-white text-2xl">☰</button>
+  <ul class="hidden md:flex space-x-6 text-white text-sm md:text-base">
+    <li><a href="mission.html">Mission</a></li>
+    <li><a href="tech.html">Tech</a></li>
+    <li><a href="team.html">Team</a></li>
+    <li><a href="news.html">News</a></li>
+    <li><a href="tracker.html">Satellite Tracker</a></li>
+    <li><a href="competition.html">Competition</a></li>
+    <li><a href="contact.html">Contact</a></li>
   </ul>
+</nav>
 
-  <!-- Team Content -->
-  <main class="pt-32 px-6 max-w-6xl mx-auto text-center">
-    <h1 class="text-4xl md:text-5xl glow-text mb-10">Meet Our Team</h1>
+<!-- Mobile menu -->
+<ul id="mobileMenu" class="md:hidden hidden flex-col bg-black bg-opacity-95 text-white p-4 fixed w-full top-16 left-0 z-40 backdrop-blur-lg border-b border-cyan-400">
+  <li><a href="mission.html" class="block py-3 px-2 hover:text-cyan-400 transition-colors">Mission</a></li>
+  <li><a href="tech.html" class="block py-3 px-2 hover:text-cyan-400 transition-colors">Tech</a></li>
+  <li><a href="team.html" class="block py-3 px-2 hover:text-cyan-400 transition-colors">Team</a></li>
+  <li><a href="news.html" class="block py-3 px-2 hover:text-cyan-400 transition-colors">News</a></li>
+  <li><a href="tracker.html" class="block py-3 px-2 hover:text-cyan-400 transition-colors">Satellite Tracker</a></li>
+  <li><a href="competition.html" class="block py-3 px-2 hover:text-cyan-400 transition-colors">Competition</a></li>
+  <li><a href="contact.html" class="block py-3 px-2 hover:text-cyan-400 transition-colors">Contact</a></li>
+</ul>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 text-center">
-  <div class="glass p-6 rounded-lg">
-  <img src="a.png" alt="Team Member" width="200" class="mx-auto mb-4 rounded-full border border-cyan-400" />
-  <h2 class="text-xl text-cyan-300 font-bold">Avikam Deol</h2>
-  <p class="text-sm text-gray-300">Founder & CEO Xploreon</p>
+<!-- Main Content -->
+<main class="pt-32 px-6 max-w-7xl mx-auto">
+  <h1 class="text-5xl md:text-6xl glow-text mb-16 text-center font-bold">Meet Our Team</h1>
 
-  <button onclick="openPopup('popup-avikam')" class="mt-4 text-sm text-cyan-400 underline hover:text-cyan-300">
-    Read More
-  </button>
-</div>
+  <!-- Leadership Section -->
+  <div class="department-section">
+    <h2 class="department-title">🌟 LEADERSHIP</h2>
+    <div class="relative">
+      <div class="flex items-center justify-between mb-4">
+        <button class="nav-button" onclick="scrollSection('leadership', -1)">‹</button>
+        <button class="nav-button" onclick="scrollSection('leadership', 1)">›</button>
+      </div>
+      <div id="leadership" class="scroll-container">
+        <!-- Founder Card -->
+        <div class="team-card founder-card p-6 flex flex-col items-center text-center" onclick="openPopup('popup-avikam')">
+          <img src="avikam.webp" alt="Avikam Deol" class="team-image mb-4" />
+          <h3 class="text-xl font-bold text-yellow-300 mb-2">Avikam Deol</h3>
+          <div class="role-tag text-yellow-300 border-yellow-400">Founder & CEO</div>
+          <p class="text-sm text-gray-300 mt-4 flex-1 leading-relaxed">
+            Visionary leader driving Xploreon's mission in space exploration and deep-tech innovation.
+          </p>
+        </div>
 
-<div id="popup-avikam" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 hidden">
-  <div class="bg-gray-900 text-white p-6 rounded-lg max-w-sm w-full relative border border-cyan-300">
-    <button onclick="closePopup('popup-avikam')" class="absolute top-2 right-3 text-cyan-300 text-xl">×</button>
-    <h3 class="text-xl font-bold mb-2 text-cyan-300">Avikam Deol</h3>
-    <p class="text-sm text-gray-300">
-      As the Founder and CEO of Xploreon, he leads the company’s vision to push the boundaries of space exploration and deep-tech innovation. With a passion for astrophysics, engineering, and AI, he began building Xploreon to make advanced science more accessible and impactful. Despite being a young founder, he has already led the development of simulations, educational tools, and early-stage R&D projects under the brand. His hands-on approach, from designing technology to building community, reflects a bold and future-forward mindset. Under his leadership, Xploreon is emerging as a platform where big ideas meet real execution—shaping the next generation of space-tech from the ground up.
-    </p>
+        <!-- Director Card -->
+        <div class="team-card p-6 flex flex-col items-center text-center" onclick="openPopup('popup-Aadi')">
+          <img src="aadi.webp" alt="Aaditya Agrawal" class="team-image mb-4" />
+          <h3 class="text-xl font-bold text-cyan-300 mb-2">Aaditya Agrawal</h3>
+          <div class="role-tag">Director</div>
+          <p class="text-sm text-gray-300 mt-4 flex-1 leading-relaxed">
+            Mechanical Engineer from IIT Dharwad contributing to space-tech mechanical systems development.
+          </p>
+        </div>
+
+        <!-- CIO Card -->
+        <div class="team-card p-6 flex flex-col items-center text-center" onclick="openPopup('popup-prayesi')">
+          <img src="p.jpg" alt="Prayesi Agarwal" class="team-image mb-4" />
+          <h3 class="text-xl font-bold text-cyan-300 mb-2">Prayesi Agarwal</h3>
+          <div class="role-tag">Chief Innovation Officer</div>
+          <p class="text-sm text-gray-300 mt-4 flex-1 leading-relaxed">
+            Leading breakthroughs in AI, robotics, VR, and space exploration technologies.
+          </p>
+        </div>
+      </div>
+    </div>
   </div>
-</div>
 
-<div class="glass p-6 rounded-lg">
-  <img src="aadi.webp" alt="Team Member" width="170" class="mx-auto mb-4 rounded-full border border-cyan-400" />
-  <h2 class="text-xl text-cyan-300 font-bold">Aaditya Agrawal</h2>
-  <p class="text-sm text-gray-300">Director Xploreon</p>
+  <!-- Technology Department -->
+  <div class="department-section">
+    <h2 class="department-title">⚙️ TECHNOLOGY</h2>
+    <div class="relative">
+      <div class="flex items-center justify-between mb-4">
+        <button class="nav-button" onclick="scrollSection('technology', -1)">‹</button>
+        <button class="nav-button" onclick="scrollSection('technology', 1)">›</button>
+      </div>
+      <div id="technology" class="scroll-container">
+        <!-- Head of Technology -->
+        <div class="team-card p-6 flex flex-col items-center text-center" onclick="openPopup('popup-om')">
+          <img src="om.jpg" alt="Omprakash Kumar" class="team-image mb-4" />
+          <h3 class="text-xl font-bold text-cyan-300 mb-2">Omprakash Kumar</h3>
+          <div class="role-tag">Head of Technology</div>
+          <p class="text-sm text-gray-300 mt-4 flex-1 leading-relaxed">
+            Spearheading engineering initiatives from propulsion systems to AI-powered mission control.
+          </p>
+        </div>
 
-  <button onclick="openPopup('popup-Aadi')" class="mt-4 text-sm text-cyan-400 underline hover:text-cyan-200">
-    Read More
-  </button>
-</div>
+        <!-- CAD Designer -->
+        <div class="team-card p-6 flex flex-col items-center text-center" onclick="openPopup('popup-narayan')">
+          <img src="n.jpg" alt="Narayan Kataruka" class="team-image mb-4" />
+          <h3 class="text-xl font-bold text-cyan-300 mb-2">Narayan Kataruka</h3>
+          <div class="role-tag">Mission Systems CAD Designer</div>
+          <p class="text-sm text-gray-300 mt-4 flex-1 leading-relaxed">
+            Developing precision CAD/CAM models and prototypes for next-generation aerospace systems.
+          </p>
+        </div>
 
-<!-- Popup for 	Aadi -->
-<div id="popup-Aadi" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 hidden">
-  <div class="bg-gray-900 text-white p-6 rounded-lg max-w-sm w-full relative border border-cyan-400">
-    <button onclick="closePopup('popup-Aadi')" class="absolute top-2 right-3 text-cyan-300 text-xl">×</button>
-    <h3 class="text-xl font-bold mb-2 text-cyan-300"></h3>
-    <p class="text-sm text-gray-300">
-      As a Mechanical Engineer at Xploreon, he contributes to the development and refinement of mechanical systems for space-tech applications. Currently pursuing Mechanical Engineering at IIT Dharwad, he brings a strong academic foundation and a methodical approach to solving real-world engineering problems. His focus lies in applying core mechanical principles to support Xploreon’s mission, making him a valuable part of the technical team working toward next-generation aerospace innovation.
-    </p>
+        <!-- Software Engineer -->
+        <div class="team-card p-6 flex flex-col items-center text-center" onclick="openPopup('popup-rishita')">
+          <img src="rishita.jpg" alt="Rishita Mishra" class="team-image mb-4" />
+          <h3 class="text-xl font-bold text-cyan-300 mb-2">Rishita Mishra</h3>
+          <div class="role-tag">Software Engineer</div>
+          <p class="text-sm text-gray-300 mt-4 flex-1 leading-relaxed">
+            Managing Xploreon website, WhatsApp community, and educational content creation.
+          </p>
+        </div>
+      </div>
+    </div>
   </div>
-</div>
 
-    <div class="glass p-6 rounded-lg">
-  <img src="p.jpg" alt="Team Member" width="200" class="mx-auto mb-4 rounded-full border border-cyan-400" />
-  <h2 class="text-xl text-cyan-300 font-bold">Prayesi Agarwal</h2>
-  <p class="text-sm text-gray-300">Chief Innovation Officer(CIO)</p>
-
-  <button onclick="openPopup('popup-prayesi')" class="mt-4 text-sm text-cyan-400 underline hover:text-cyan-200">
-    Read More
-  </button>
-</div>
-<!-- Popup for prayesi -->
-<div id="popup-prayesi" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 hidden">
-  <div class="bg-gray-900 text-white p-6 rounded-lg max-w-sm w-full relative border border-cyan-400">
-    <button onclick="closePopup('popup-prayesi')" class="absolute top-2 right-3 text-cyan-300 text-xl">×</button>
-    <h3 class="text-xl font-bold mb-2 text-cyan-300">Prayesi Agarwal</h3>
-    <p class="text-sm text-gray-300">
-      Leading the future of human-centric innovation, [Prayesi Agarwal], our Chief Innovation Officer, drives breakthroughs at the intersection of AI, robotics, VR, and space exploration to make intelligent systems more adaptive, immersive, and mission-ready.
-    </p>
+  <!-- Aerospace Engineers Department -->
+  <div class="department-section">
+    <h2 class="department-title">🚀 AEROSPACE ENGINEERS</h2>
+    <div class="relative">
+      <div class="flex items-center justify-between mb-4">
+        <button class="nav-button" onclick="scrollSection('aerospace', -1)">‹</button>
+        <button class="nav-button" onclick="scrollSection('aerospace', 1)">›</button>
+      </div>
+      <div id="aerospace" class="scroll-container">
+        <!-- Placeholder for future aerospace engineers -->
+        <div class="team-card p-6 flex flex-col items-center text-center justify-center border-dashed border-2 border-cyan-500 bg-transparent">
+          <div class="text-6xl mb-4">➕</div>
+          <h3 class="text-xl font-bold text-cyan-300 mb-2">Coming Soon</h3>
+          <div class="role-tag">Aerospace Engineers</div>
+          <p class="text-sm text-gray-300 mt-4 text-center">
+            This section will feature our talented aerospace engineers working on cutting-edge propulsion, spacecraft design, and mission planning.
+          </p>
+        </div>
+      </div>
+    </div>
   </div>
-</div>
 
+  <!-- AI & Research Department -->
+  <div class="department-section">
+    <h2 class="department-title">🧠 AI & RESEARCH</h2>
+    <div class="relative">
+      <div class="flex items-center justify-between mb-4">
+        <button class="nav-button" onclick="scrollSection('ai-research', -1)">‹</button>
+        <button class="nav-button" onclick="scrollSection('ai-research', 1)">›</button>
+      </div>
+      <div id="ai-research" class="scroll-container">
+        <!-- Head of AI & Research -->
+        <div class="team-card p-6 flex flex-col items-center text-center" onclick="openPopup('popup-hemant')">
+          <img src="hemant.webp" alt="Hemant Sharma" class="team-image mb-4" />
+          <h3 class="text-xl font-bold text-cyan-300 mb-2">Hemant Sharma</h3>
+          <div class="role-tag">Head of AI & Research</div>
+          <p class="text-sm text-gray-300 mt-4 flex-1 leading-relaxed">
+            Leading AI research and data-driven innovations for space exploration projects.
+          </p>
+        </div>
 
-<div class="glass p-6 rounded-lg">
-  <img src="chaitanya.png" alt="Team Member" width="200" class="mx-auto mb-4 rounded-full border border-cyan-400" />
-  <h2 class="text-xl text-cyan-300 font-bold">Chaitanya Srivastava</h2>
-  <p class="text-sm text-gray-300">AI Research & Software Engineer</p>
+        <!-- AI Research Engineer -->
+        <div class="team-card p-6 flex flex-col items-center text-center" onclick="openPopup('popup-chaitanya')">
+          <img src="chaitanya.png" alt="Chaitanya Srivastava" class="team-image mb-4" />
+          <h3 class="text-xl font-bold text-cyan-300 mb-2">Chaitanya Srivastava</h3>
+          <div class="role-tag">AI Research & Software Engineer</div>
+          <p class="text-sm text-gray-300 mt-4 flex-1 leading-relaxed">
+            AI Researcher with expertise in machine learning, web development, and cybersecurity.
+          </p>
+        </div>
 
-  <button onclick="openPopup('popup-chaitanya')" class="mt-4 text-sm text-cyan-400 underline hover:text-cyan-200">
-    Read More
-  </button>
-</div>
-
-<div id="popup-chaitanya" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 hidden">
-  <div class="bg-gray-900 text-white p-6 rounded-lg max-w-sm w-full relative border border-cyan-400">
-    <button onclick="closePopup('popup-chaitanya')" class="absolute top-2 right-3 text-cyan-300 text-xl">×</button>
-    <h3 class="text-xl font-bold mb-2 text-cyan-300">Chaitanya Srivastava</h3>
-    <p class="text-sm text-gray-300">
-      Chaitanya is an AI Researcher and Software Engineer at Xploreon, with expertise in machine learning, web development, and cybersecurity. A Computer Science undergrad from Chandigarh University, she has worked on AI virtual assistants, sentiment analysis tools, and malware detection systems. Her interdisciplinary skills across Python, cloud systems, and AI models allow her to bridge cutting-edge research with impactful software development. She's passionate about tech for good, community service, and multilingual communication.
-    </p>
+        <!-- Mathematics Department -->
+        <div class="team-card p-6 flex flex-col items-center text-center" onclick="openPopup('popup-utkarsh')">
+          <img src="u.jpg" alt="Utkarsh Tripathi" class="team-image mb-4" />
+          <h3 class="text-xl font-bold text-cyan-300 mb-2">Utkarsh Tripathi</h3>
+          <div class="role-tag">Mathematics Specialist</div>
+          <p class="text-sm text-gray-300 mt-4 flex-1 leading-relaxed">
+            Leveraging mathematical modeling and data science to optimize aerospace systems.
+          </p>
+        </div>
+      </div>
+    </div>
   </div>
-</div>
+</main>
 
-
-<div class="glass p-6 rounded-lg">
-  <img src="om.jpg" alt="Team Member" width="170" class="mx-auto mb-4 rounded-full border border-cyan-400" />
-  <h2 class="text-xl text-cyan-300 font-bold">Omprakash Kumar</h2>
-  <p class="text-sm text-gray-300">Head Of Technology Department</p>
-
-  <button onclick="openPopup('popup-om')" class="mt-4 text-sm text-cyan-400 underline hover:text-cyan-200">
-    Read More
-  </button>
-</div>
-
-<!-- Popup for 	om -->
-<div id="popup-om" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 hidden">
-  <div class="bg-gray-900 text-white p-6 rounded-lg max-w-sm w-full relative border border-cyan-400">
-    <button onclick="closePopup('popup-om')" class="absolute top-2 right-3 text-cyan-300 text-xl">×</button>
-    <h3 class="text-xl font-bold mb-2 text-cyan-300"></h3>
-    <p class="text-sm text-gray-300">
-      As the Head of Technology at Xploreon, Omprakash kumar spearheads our most ambitious engineering initiatives—from advanced propulsion systems to AI-powered mission control—bridging cutting-edge innovation with real-world execution. With a rare combination of deep technical acumen and strategic foresight, he is shaping the future of space-tech infrastructure and laying the technological foundation for humanity’s next great leap.
-    </p>
-  </div>
-</div>
-
+<!-- Popups (existing popup HTML remains the same) -->
+<div id="popup-avikam" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 hidden backdrop-blur-sm">
+  <div class="bg-gradient-to-br from-gray-800 via-gray-900 to-black text-white p-8 rounded-3xl max-w-lg w-full mx-4 relative border-2 border-cyan-300 shadow-2xl shadow-cyan-500/20 backdrop-filter backdrop-blur-xl">
+    <div class="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-transparent to-blue-500/10 rounded-3xl"></div>
+    <button onclick="closePopup('popup-avikam')" class="absolute top-4 right-4 text-cyan-300 text-3xl hover:text-white transition-all duration-300 hover:rotate-90 z-10">×</button>
+    
+    <div class="relative z-10">
+      <div class="flex items-center mb-6">
+        <img src="avikam.webp" alt="Avikam Deol" class="w-20 h-20 rounded-full border-3 border-cyan-400 mr-4 shadow-lg" />
+        <div>
+          <h3 class="text-2xl font-bold mb-1 bg-gradient-to-r from-yellow-400 to-yellow-300 bg-clip-text text-transparent">Avikam Deol</h3>
+          <p class="text-yellow-300 font-semibold">Founder & CEO</p>
+        </div>
+      </div>
       
-<div class="glass p-6 rounded-lg">
-  <img src="hemant.webp" alt="Team Member" width="180" class="mx-auto mb-4 rounded-full border border-cyan-400" />
-  <h2 class="text-xl text-cyan-300 font-bold">Hemant Sharma</h2>
-  <p class="text-sm text-gray-300">Head of AI & Research Department</p>
-
-  <button onclick="openPopup('popup-hemant')" class="mt-4 text-sm text-cyan-400 underline hover:text-cyan-200">
-    Read More
-  </button>
-</div>
-
-<!-- Popup for Hemant -->
-<div id="popup-hemant" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 hidden">
-  <div class="bg-gray-900 text-white p-6 rounded-lg max-w-sm w-full relative border border-cyan-400">
-    <button onclick="closePopup('popup-hemant')" class="absolute top-2 right-3 text-cyan-300 text-xl">×</button>
-    <h3 class="text-xl font-bold mb-2 text-cyan-300">Hemant Sharma</h3>
-    <p class="text-sm text-gray-300">
-      I'm Hemant Sharma, Head of AI & Research at Xploreon. With a background in AI and Data Science, I bring analytical precision to our mission of building for the stars. I’m leading data-driven innovations and will be collaborating on key space exploration projects. Together, we’re not just aiming to reach space — we’re working to make it a future home for humanity.
-    </p>
+      <div class="bg-gradient-to-r from-cyan-500/20 to-blue-500/20 p-4 rounded-2xl border border-cyan-400/30">
+        <p class="text-sm text-gray-200 leading-relaxed">
+          As the Founder and CEO of Xploreon, he leads the company's vision to push the boundaries of space exploration and deep-tech innovation. With a passion for astrophysics, engineering, and AI, he began building Xploreon to make advanced science more accessible and impactful. Despite being a young founder, he has already led the development of simulations, educational tools, and early-stage R&D projects under the brand. His hands-on approach, from designing technology to building community, reflects a bold and future-forward mindset. Under his leadership, Xploreon is emerging as a platform where big ideas meet real execution—shaping the next generation of space-tech from the ground up.
+        </p>
+      </div>
+    </div>
   </div>
 </div>
 
-
-<div class="glass p-6 rounded-lg">
-  <img src="n.jpg" alt="Team Member" width="200" class="mx-auto mb-4 rounded-full border border-cyan-400" />
-  <h2 class="text-xl text-cyan-300 font-bold">Narayan Kataruka</h2>
-  <p class="text-sm text-gray-300">Mission Systems CAD Designer</p>
-
-  <button onclick="openPopup('popup-narayan')" class="mt-4 text-sm text-cyan-400 underline hover:text-cyan-200">
-    Read More
-  </button>
-</div>
-
-<!-- Popup for Narayan -->
-<div id="popup-narayan" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 hidden">
-  <div class="bg-gray-900 text-white p-6 rounded-lg max-w-sm w-full relative border border-cyan-400">
-    <button onclick="closePopup('popup-narayan')" class="absolute top-2 right-3 text-cyan-300 text-xl">×</button>
-    <h3 class="text-xl font-bold mb-2 text-cyan-300">Narayan Kataruka</h3>
-    <p class="text-sm text-gray-300">
-      Leading the development of precision CAD/CAM models and mechanical prototypes that power Xploreon’s next-generation aerospace systems, with a focus on innovative structural design, real-world manufacturability, and integration with advanced propulsion and launch technologies.
-    </p>
+<div id="popup-Aadi" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 hidden backdrop-blur-sm">
+  <div class="bg-gradient-to-br from-gray-800 via-gray-900 to-black text-white p-8 rounded-3xl max-w-lg w-full mx-4 relative border-2 border-cyan-300 shadow-2xl shadow-cyan-500/20 backdrop-filter backdrop-blur-xl">
+    <div class="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-transparent to-blue-500/10 rounded-3xl"></div>
+    <button onclick="closePopup('popup-Aadi')" class="absolute top-4 right-4 text-cyan-300 text-3xl hover:text-white transition-all duration-300 hover:rotate-90 z-10">×</button>
+    
+    <div class="relative z-10">
+      <div class="flex items-center mb-6">
+        <img src="aadi.webp" alt="Aaditya Agrawal" class="w-20 h-20 rounded-full border-3 border-cyan-400 mr-4 shadow-lg" />
+        <div>
+          <h3 class="text-2xl font-bold mb-1 bg-gradient-to-r from-cyan-400 to-cyan-300 bg-clip-text text-transparent">Aaditya Agrawal</h3>
+          <p class="text-cyan-300 font-semibold">Director</p>
+        </div>
+      </div>
+      
+      <div class="bg-gradient-to-r from-cyan-500/20 to-blue-500/20 p-4 rounded-2xl border border-cyan-400/30">
+        <p class="text-sm text-gray-200 leading-relaxed">
+          As a Mechanical Engineer at Xploreon, he contributes to the development and refinement of mechanical systems for space-tech applications. Currently pursuing Mechanical Engineering at IIT Dharwad, he brings a strong academic foundation and a methodical approach to solving real-world engineering problems. His focus lies in applying core mechanical principles to support Xploreon's mission, making him a valuable part of the technical team working toward next-generation aerospace innovation.
+        </p>
+      </div>
+    </div>
   </div>
 </div>
 
-
-<div class="glass p-6 rounded-lg">
-  <img src="u.jpg" alt="Team Member" width="180" class="mx-auto mb-4 rounded-full border border-cyan-400" />
-  <h2 class="text-xl text-cyan-300 font-bold">Utkarsh Tripathi</h2>
-  <p class="text-sm text-gray-300">Mathematics Department</p>
-
-  <button onclick="openPopup('popup-utkarsh')" class="mt-4 text-sm text-cyan-400 underline hover:text-cyan-200">
-    Read More
-  </button>
-</div>
-
-<!-- Popup for utkarsh -->
-<div id="popup-utkarsh" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 hidden">
-  <div class="bg-gray-900 text-white p-6 rounded-lg max-w-sm w-full relative border border-cyan-400">
-    <button onclick="closePopup('popup-utkarsh')" class="absolute top-2 right-3 text-cyan-300 text-xl">×</button>
-    <h3 class="text-xl font-bold mb-2 text-cyan-300">Utkarsh Tripathi</h3>
-    <p class="text-sm text-gray-300">
-      Driving data-driven innovation at Xploreon by leveraging mathematical modeling, AI, and data science to optimize aerospace systems, enhance predictive analytics, and accelerate mission intelligence.
-    </p>
+<div id="popup-prayesi" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 hidden backdrop-blur-sm">
+  <div class="bg-gradient-to-br from-gray-800 via-gray-900 to-black text-white p-8 rounded-3xl max-w-lg w-full mx-4 relative border-2 border-cyan-300 shadow-2xl shadow-cyan-500/20 backdrop-filter backdrop-blur-xl">
+    <div class="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-transparent to-blue-500/10 rounded-3xl"></div>
+    <button onclick="closePopup('popup-prayesi')" class="absolute top-4 right-4 text-cyan-300 text-3xl hover:text-white transition-all duration-300 hover:rotate-90 z-10">×</button>
+    
+    <div class="relative z-10">
+      <div class="flex items-center mb-6">
+        <img src="p.jpg" alt="Prayesi Agarwal" class="w-20 h-20 rounded-full border-3 border-cyan-400 mr-4 shadow-lg" />
+        <div>
+          <h3 class="text-2xl font-bold mb-1 bg-gradient-to-r from-cyan-400 to-cyan-300 bg-clip-text text-transparent">Prayesi Agarwal</h3>
+          <p class="text-cyan-300 font-semibold">Chief Innovation Officer</p>
+        </div>
+      </div>
+      
+      <div class="bg-gradient-to-r from-cyan-500/20 to-blue-500/20 p-4 rounded-2xl border border-cyan-400/30">
+        <p class="text-sm text-gray-200 leading-relaxed">
+          Leading the future of human-centric innovation, Prayesi Agarwal, our Chief Innovation Officer, drives breakthroughs at the intersection of AI, robotics, VR, and space exploration to make intelligent systems more adaptive, immersive, and mission-ready.
+        </p>
+      </div>
+    </div>
   </div>
 </div>
 
-     
-
-      <div class="glass p-6 rounded-lg">
-  <img src="rishita.jpg" alt="Team Member" width="200" class="mx-auto mb-4 rounded-full border border-cyan-400" />
-  <h2 class="text-xl text-cyan-300 font-bold">Rishita Mishra</h2>
-  <p class="text-sm text-gray-300">Software Engineer</p>
-
-  <button onclick="openPopup('popup-rishita')" class="mt-4 text-sm text-cyan-400 underline hover:text-cyan-200">
-    Read More
-  </button>
-</div>
-<!-- Popup for Rishita -->
-<div id="popup-rishita" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 hidden">
-  <div class="bg-gray-900 text-white p-6 rounded-lg max-w-sm w-full relative border border-cyan-400">
-    <button onclick="closePopup('popup-rishita')" class="absolute top-2 right-3 text-cyan-300 text-xl">×</button>
-    <h3 class="text-xl font-bold mb-2 text-cyan-300">Rishita Mishra</h3>
-    <p class="text-sm text-gray-300">
-      Hello, I'm Rishita Mishra, Software Engineer at Xploreon.
-      I oversee the Xploreon website, WhatsApp community (<b>Xploreon: Space & Tech</b>),
-      and engaging quizzes featured on the website.
-      Join us to learn, participate, and earn certificates!
-    </p>
+<div id="popup-chaitanya" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 hidden backdrop-blur-sm">
+  <div class="bg-gradient-to-br from-gray-800 via-gray-900 to-black text-white p-8 rounded-3xl max-w-lg w-full mx-4 relative border-2 border-cyan-300 shadow-2xl shadow-cyan-500/20 backdrop-filter backdrop-blur-xl">
+    <div class="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-transparent to-blue-500/10 rounded-3xl"></div>
+    <button onclick="closePopup('popup-chaitanya')" class="absolute top-4 right-4 text-cyan-300 text-3xl hover:text-white transition-all duration-300 hover:rotate-90 z-10">×</button>
+    
+    <div class="relative z-10">
+      <div class="flex items-center mb-6">
+        <img src="chaitanya.png" alt="Chaitanya Srivastava" class="w-20 h-20 rounded-full border-3 border-cyan-400 mr-4 shadow-lg" />
+        <div>
+          <h3 class="text-2xl font-bold mb-1 bg-gradient-to-r from-cyan-400 to-cyan-300 bg-clip-text text-transparent">Chaitanya Srivastava</h3>
+          <p class="text-cyan-300 font-semibold">AI Research & Software Engineer</p>
+        </div>
+      </div>
+      
+      <div class="bg-gradient-to-r from-cyan-500/20 to-blue-500/20 p-4 rounded-2xl border border-cyan-400/30">
+        <p class="text-sm text-gray-200 leading-relaxed">
+          Chaitanya is an AI Researcher and Software Engineer at Xploreon, with expertise in machine learning, web development, and cybersecurity. A Computer Science undergrad from Chandigarh University, she has worked on AI virtual assistants, sentiment analysis tools, and malware detection systems. Her interdisciplinary skills across Python, cloud systems, and AI models allow her to bridge cutting-edge research with impactful software development. She's passionate about tech for good, community service, and multilingual communication.
+        </p>
+      </div>
+    </div>
   </div>
 </div>
 
+<div id="popup-om" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 hidden backdrop-blur-sm">
+  <div class="bg-gradient-to-br from-gray-800 via-gray-900 to-black text-white p-8 rounded-3xl max-w-lg w-full mx-4 relative border-2 border-cyan-300 shadow-2xl shadow-cyan-500/20 backdrop-filter backdrop-blur-xl">
+    <div class="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-transparent to-blue-500/10 rounded-3xl"></div>
+    <button onclick="closePopup('popup-om')" class="absolute top-4 right-4 text-cyan-300 text-3xl hover:text-white transition-all duration-300 hover:rotate-90 z-10">×</button>
+    
+    <div class="relative z-10">
+      <div class="flex items-center mb-6">
+        <img src="om.jpg" alt="Omprakash Kumar" class="w-20 h-20 rounded-full border-3 border-cyan-400 mr-4 shadow-lg" />
+        <div>
+          <h3 class="text-2xl font-bold mb-1 bg-gradient-to-r from-cyan-400 to-cyan-300 bg-clip-text text-transparent">Omprakash Kumar</h3>
+          <p class="text-cyan-300 font-semibold">Head of Technology</p>
+        </div>
+      </div>
+      
+      <div class="bg-gradient-to-r from-cyan-500/20 to-blue-500/20 p-4 rounded-2xl border border-cyan-400/30">
+        <p class="text-sm text-gray-200 leading-relaxed">
+          As the Head of Technology at Xploreon, Omprakash kumar spearheads our most ambitious engineering initiatives—from advanced propulsion systems to AI-powered mission control—bridging cutting-edge innovation with real-world execution. With a rare combination of deep technical acumen and strategic foresight, he is shaping the future of space-tech infrastructure and laying the technological foundation for humanity's next great leap.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
 
+<div id="popup-hemant" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 hidden backdrop-blur-sm">
+  <div class="bg-gradient-to-br from-gray-800 via-gray-900 to-black text-white p-8 rounded-3xl max-w-lg w-full mx-4 relative border-2 border-cyan-300 shadow-2xl shadow-cyan-500/20 backdrop-filter backdrop-blur-xl">
+    <div class="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-transparent to-blue-500/10 rounded-3xl"></div>
+    <button onclick="closePopup('popup-hemant')" class="absolute top-4 right-4 text-cyan-300 text-3xl hover:text-white transition-all duration-300 hover:rotate-90 z-10">×</button>
+    
+    <div class="relative z-10">
+      <div class="flex items-center mb-6">
+        <img src="hemant.webp" alt="Hemant Sharma" class="w-20 h-20 rounded-full border-3 border-cyan-400 mr-4 shadow-lg" />
+        <div>
+          <h3 class="text-2xl font-bold mb-1 bg-gradient-to-r from-cyan-400 to-cyan-300 bg-clip-text text-transparent">Hemant Sharma</h3>
+          <p class="text-cyan-300 font-semibold">Head of AI & Research</p>
+        </div>
+      </div>
+      
+      <div class="bg-gradient-to-r from-cyan-500/20 to-blue-500/20 p-4 rounded-2xl border border-cyan-400/30">
+        <p class="text-sm text-gray-200 leading-relaxed">
+          I'm Hemant Sharma, Head of AI & Research at Xploreon. With a background in AI and Data Science, I bring analytical precision to our mission of building for the stars. I'm leading data-driven innovations and will be collaborating on key space exploration projects. Together, we're not just aiming to reach space — we're working to make it a future home for humanity.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
 
-  
+<div id="popup-narayan" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 hidden backdrop-blur-sm">
+  <div class="bg-gradient-to-br from-gray-800 via-gray-900 to-black text-white p-8 rounded-3xl max-w-lg w-full mx-4 relative border-2 border-cyan-300 shadow-2xl shadow-cyan-500/20 backdrop-filter backdrop-blur-xl">
+    <div class="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-transparent to-blue-500/10 rounded-3xl"></div>
+    <button onclick="closePopup('popup-narayan')" class="absolute top-4 right-4 text-cyan-300 text-3xl hover:text-white transition-all duration-300 hover:rotate-90 z-10">×</button>
+    
+    <div class="relative z-10">
+      <div class="flex items-center mb-6">
+        <img src="n.jpg" alt="Narayan Kataruka" class="w-20 h-20 rounded-full border-3 border-cyan-400 mr-4 shadow-lg" />
+        <div>
+          <h3 class="text-2xl font-bold mb-1 bg-gradient-to-r from-cyan-400 to-cyan-300 bg-clip-text text-transparent">Narayan Kataruka</h3>
+          <p class="text-cyan-300 font-semibold">Mission Systems CAD Designer</p>
+        </div>
+      </div>
+      
+      <div class="bg-gradient-to-r from-cyan-500/20 to-blue-500/20 p-4 rounded-2xl border border-cyan-400/30">
+        <p class="text-sm text-gray-200 leading-relaxed">
+          Leading the development of precision CAD/CAM models and mechanical prototypes that power Xploreon's next-generation aerospace systems, with a focus on innovative structural design, real-world manufacturability, and integration with advanced propulsion and launch technologies.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
 
-  </main>
+<div id="popup-utkarsh" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 hidden backdrop-blur-sm">
+  <div class="bg-gradient-to-br from-gray-800 via-gray-900 to-black text-white p-8 rounded-3xl max-w-lg w-full mx-4 relative border-2 border-cyan-300 shadow-2xl shadow-cyan-500/20 backdrop-filter backdrop-blur-xl">
+    <div class="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-transparent to-blue-500/10 rounded-3xl"></div>
+    <button onclick="closePopup('popup-utkarsh')" class="absolute top-4 right-4 text-cyan-300 text-3xl hover:text-white transition-all duration-300 hover:rotate-90 z-10">×</button>
+    
+    <div class="relative z-10">
+      <div class="flex items-center mb-6">
+        <img src="u.jpg" alt="Utkarsh Tripathi" class="w-20 h-20 rounded-full border-3 border-cyan-400 mr-4 shadow-lg" />
+        <div>
+          <h3 class="text-2xl font-bold mb-1 bg-gradient-to-r from-cyan-400 to-cyan-300 bg-clip-text text-transparent">Utkarsh Tripathi</h3>
+          <p class="text-cyan-300 font-semibold">Mathematics Specialist</p>
+        </div>
+      </div>
+      
+      <div class="bg-gradient-to-r from-cyan-500/20 to-blue-500/20 p-4 rounded-2xl border border-cyan-400/30">
+        <p class="text-sm text-gray-200 leading-relaxed">
+          Driving data-driven innovation at Xploreon by leveraging mathematical modeling, AI, and data science to optimize aerospace systems, enhance predictive analytics, and accelerate mission intelligence.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
 
- <!--Start of Tawk.to Script-->
+<div id="popup-rishita" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 hidden backdrop-blur-sm">
+  <div class="bg-gradient-to-br from-gray-800 via-gray-900 to-black text-white p-8 rounded-3xl max-w-lg w-full mx-4 relative border-2 border-cyan-300 shadow-2xl shadow-cyan-500/20 backdrop-filter backdrop-blur-xl">
+    <div class="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-transparent to-blue-500/10 rounded-3xl"></div>
+    <button onclick="closePopup('popup-rishita')" class="absolute top-4 right-4 text-cyan-300 text-3xl hover:text-white transition-all duration-300 hover:rotate-90 z-10">×</button>
+    
+    <div class="relative z-10">
+      <div class="flex items-center mb-6">
+        <img src="rishita.jpg" alt="Rishita Mishra" class="w-20 h-20 rounded-full border-3 border-cyan-400 mr-4 shadow-lg" />
+        <div>
+          <h3 class="text-2xl font-bold mb-1 bg-gradient-to-r from-cyan-400 to-cyan-300 bg-clip-text text-transparent">Rishita Mishra</h3>
+          <p class="text-cyan-300 font-semibold">Software Engineer</p>
+        </div>
+      </div>
+      
+      <div class="bg-gradient-to-r from-cyan-500/20 to-blue-500/20 p-4 rounded-2xl border border-cyan-400/30">
+        <p class="text-sm text-gray-200 leading-relaxed">
+          Hello, I'm Rishita Mishra, Software Engineer at Xploreon.
+          I oversee the Xploreon website, WhatsApp community (<b>Xploreon: Space & Tech</b>),
+          and engaging quizzes featured on the website.
+          Join us to learn, participate, and earn certificates!
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Start of Tawk.to Script-->
 <script type="text/javascript">
 var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
 (function(){
@@ -303,21 +748,143 @@ s0.parentNode.insertBefore(s1,s0);
 </script>
 <!--End of Tawk.to Script-->
 
-  <script>
-    const toggle = document.getElementById('menuToggle');
-    const mobileMenu = document.getElementById('mobileMenu');
-    toggle.addEventListener('click', () => {
-      mobileMenu.classList.toggle('hidden');
-    });
-</script>
 <script>
-  function openPopup(id) {
-    document.getElementById(id).classList.remove('hidden');
-  }
+// Popup functions
+function openPopup(popupId) {
+  document.getElementById(popupId).classList.remove('hidden');
+  document.body.style.overflow = 'hidden'; // Prevent background scrolling
+}
 
-  function closePopup(id) {
-    document.getElementById(id).classList.add('hidden');
+function closePopup(popupId) {
+  document.getElementById(popupId).classList.add('hidden');
+  document.body.style.overflow = ''; // Restore scrolling
+}
+
+// Close popup when clicking outside of it
+document.addEventListener('click', function(event) {
+  const popups = document.querySelectorAll('[id^="popup-"]');
+  popups.forEach(popup => {
+    if (event.target === popup) {
+      closePopup(popup.id);
+    }
+  });
+});
+
+// Close popup with Escape key
+document.addEventListener('keydown', function(event) {
+  if (event.key === 'Escape') {
+    const openPopups = document.querySelectorAll('[id^="popup-"]:not(.hidden)');
+    openPopups.forEach(popup => {
+      closePopup(popup.id);
+    });
   }
+});
+
+// Horizontal scrolling function with mobile optimization
+function scrollSection(sectionId, direction) {
+  const section = document.getElementById(sectionId);
+  let scrollAmount;
+  
+  // Responsive scroll amounts
+  if (window.innerWidth <= 360) {
+    scrollAmount = 250; // Extra small screens
+  } else if (window.innerWidth <= 480) {
+    scrollAmount = 270; // Small mobile
+  } else if (window.innerWidth <= 768) {
+    scrollAmount = 295; // Mobile
+  } else {
+    scrollAmount = 340; // Desktop
+  }
+  
+  if (direction === 1) {
+    section.scrollLeft += scrollAmount;
+  } else {
+    section.scrollLeft -= scrollAmount;
+  }
+  
+  // Smooth scroll behavior
+  section.style.scrollBehavior = 'smooth';
+}
+
+// Touch scrolling optimization for mobile
+document.querySelectorAll('.scroll-container').forEach(container => {
+  let isDown = false;
+  let startX;
+  let scrollStart;
+
+  container.addEventListener('mousedown', (e) => {
+    isDown = true;
+    startX = e.pageX - container.offsetLeft;
+    scrollStart = container.scrollLeft;
+  });
+
+  container.addEventListener('mouseleave', () => {
+    isDown = false;
+  });
+
+  container.addEventListener('mouseup', () => {
+    isDown = false;
+  });
+
+  container.addEventListener('mousemove', (e) => {
+    if (!isDown) return;
+    e.preventDefault();
+    const x = e.pageX - container.offsetLeft;
+    const walk = (x - startX) * 2;
+    container.scrollLeft = scrollStart - walk;
+  });
+
+  // Enhanced mobile touch support
+  let touchStartX = 0;
+  let touchStartScrollLeft = 0;
+
+  container.addEventListener('touchstart', (e) => {
+    touchStartX = e.touches[0].clientX;
+    touchStartScrollLeft = container.scrollLeft;
+  }, { passive: true });
+
+  container.addEventListener('touchmove', (e) => {
+    if (!touchStartX) return;
+    const touchX = e.touches[0].clientX;
+    const diff = touchStartX - touchX;
+    container.scrollLeft = touchStartScrollLeft + diff;
+  }, { passive: true });
+
+  container.addEventListener('touchend', () => {
+    touchStartX = 0;
+  });
+
+  // Auto-hide scroll buttons based on scroll position (desktop only)
+  container.addEventListener('scroll', () => {
+    const buttons = container.parentElement.querySelectorAll('.nav-button');
+    const isAtStart = container.scrollLeft === 0;
+    const isAtEnd = container.scrollLeft >= container.scrollWidth - container.clientWidth;
+    
+    // Only hide buttons on desktop
+    if (window.innerWidth >= 1024) {
+      buttons[0].style.opacity = isAtStart ? '0.5' : '1';
+      buttons[1].style.opacity = isAtEnd ? '0.5' : '1';
+    } else {
+      // Always show on mobile
+      buttons[0].style.opacity = '1';
+      buttons[1].style.opacity = '1';
+    }
+  });
+});
+
+// Mobile menu toggle with improved animation
+const toggle = document.getElementById('menuToggle');
+const mobileMenu = document.getElementById('mobileMenu');
+toggle.addEventListener('click', () => {
+  mobileMenu.classList.toggle('hidden');
+});
+
+// Close mobile menu when clicking on a link
+document.querySelectorAll('#mobileMenu a').forEach(link => {
+  link.addEventListener('click', () => {
+    mobileMenu.classList.add('hidden');
+  });
+});
 </script>
 
 </body>
