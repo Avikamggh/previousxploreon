@@ -73,6 +73,33 @@
       box-shadow: 0 0 30px rgba(0, 255, 224, 0.3);
       max-height: 90vh;
       overflow-y: auto;
+      transition: all 0.3s ease;
+    }
+
+    .panel-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+      background: rgba(10, 10, 10, 0.9);
+      color: #00ffe0;
+      border: 2px solid #00ffe0;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 20px;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    .panel-toggle:hover {
+      background: #00ffe0;
+      color: black;
+      transform: scale(1.1);
     }
 
     .panel-title {
@@ -284,19 +311,34 @@
     /* Mobile Responsive Styles */
     @media (max-width: 768px) {
       .control-panel {
-        top: 10px;
+        top: 70px;
         right: 10px;
         left: 10px;
         min-width: auto;
         max-width: none;
         padding: 15px;
-        max-height: 80vh;
+        max-height: 60vh;
+        transform: translateY(-100%);
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .control-panel.mobile-open {
+        transform: translateY(0);
+        opacity: 1;
+        pointer-events: all;
+      }
+
+      .panel-toggle {
+        display: flex !important;
+        top: 15px;
+        right: 15px;
       }
       
       .map-toggle {
-        top: 10px;
-        left: 10px;
-        flex-direction: column;
+        top: 15px;
+        left: 15px;
+        flex-direction: row;
         gap: 5px;
       }
       
@@ -310,7 +352,7 @@
       }
 
       .control-btn {
-        min-width: 80px;
+        min-width: 70px;
         padding: 6px 8px;
         font-size: 9px;
       }
@@ -323,10 +365,35 @@
 
       .panel-title {
         font-size: 14px;
+        margin-bottom: 10px;
       }
 
       .satellite-info {
         font-size: 10px;
+        padding: 10px;
+      }
+
+      .cors-info {
+        padding: 8px;
+        font-size: 8px;
+        margin-bottom: 10px;
+      }
+
+      .tle-status {
+        padding: 8px;
+        font-size: 10px;
+        margin-bottom: 10px;
+      }
+
+      .status-indicator {
+        padding: 6px;
+        font-size: 9px;
+        margin: 8px 0;
+      }
+
+      .info-row {
+        margin-bottom: 6px;
+        padding: 2px 0;
       }
     }
 
@@ -334,26 +401,41 @@
       .control-panel {
         padding: 12px;
         border-radius: 10px;
+        max-height: 50vh;
       }
 
       .control-btn {
-        min-width: 70px;
+        min-width: 60px;
         font-size: 8px;
-        padding: 5px 6px;
+        padding: 4px 6px;
       }
 
       .map-btn {
-        padding: 6px 10px;
+        padding: 6px 8px;
         font-size: 10px;
       }
 
       .back-xploreon-btn {
-        padding: 8px 14px;
+        padding: 8px 12px;
         font-size: 11px;
       }
 
       .satellite-label {
-        font-size: 16px;
+        font-size: 14px;
+      }
+
+      .panel-toggle {
+        width: 45px;
+        height: 45px;
+        font-size: 18px;
+      }
+
+      .satellite-info {
+        font-size: 9px;
+      }
+
+      .panel-title {
+        font-size: 13px;
       }
     }
 
@@ -388,7 +470,11 @@
 
 <div id="map"></div>
 
-<div class="control-panel">
+<div class="panel-toggle" id="panelToggle" onclick="toggleMobilePanel()">
+  📡
+</div>
+
+<div class="control-panel" id="controlPanel">
   <div class="panel-title">🛰️ LIVE SATELLITE TRACKER</div>
   
   <div class="cors-info">
@@ -494,6 +580,44 @@
   let updateInterval, tleUpdateInterval;
   let lastTLEUpdate = null;
   let workingProxy = null;
+  let isMobile = window.innerWidth <= 768;
+  let mobileMenuOpen = false;
+
+  // Mobile panel toggle function
+  function toggleMobilePanel() {
+    const panel = document.getElementById('controlPanel');
+    const toggle = document.getElementById('panelToggle');
+    
+    mobileMenuOpen = !mobileMenuOpen;
+    
+    if (mobileMenuOpen) {
+      panel.classList.add('mobile-open');
+      toggle.textContent = '✕';
+      toggle.style.background = '#ff4444';
+      toggle.style.borderColor = '#ff4444';
+    } else {
+      panel.classList.remove('mobile-open');
+      toggle.textContent = '📡';
+      toggle.style.background = 'rgba(10, 10, 10, 0.9)';
+      toggle.style.borderColor = '#00ffe0';
+    }
+  }
+
+  // Handle window resize
+  function handleResize() {
+    const waseMobile = isMobile;
+    isMobile = window.innerWidth <= 768;
+    
+    // If switching from mobile to desktop, ensure panel is visible
+    if (waseMobile && !isMobile) {
+      document.getElementById('controlPanel').classList.remove('mobile-open');
+      mobileMenuOpen = false;
+      const toggle = document.getElementById('panelToggle');
+      toggle.textContent = '📡';
+      toggle.style.background = 'rgba(10, 10, 10, 0.9)';
+      toggle.style.borderColor = '#00ffe0';
+    }
+  }
 
   // Initialize map
   function initializeMap() {
@@ -972,6 +1096,11 @@
     map.setView([0, 0], 2);
     document.getElementById('satelliteInfo').innerHTML = 
       `<div style="text-align: center; color: #00ffe0; margin: 20px 0;">Showing ${tleData.length} satellites</div>`;
+    
+    // Auto-close mobile menu
+    if (isMobile && mobileMenuOpen) {
+      toggleMobilePanel();
+    }
   }
 
   function clearAllSatellites() {
@@ -986,6 +1115,11 @@
     });
     document.getElementById('satelliteInfo').innerHTML = 
       '<div style="text-align: center; color: #00ffe0; margin: 20px 0;">Select a satellite to view details</div>';
+    
+    // Auto-close mobile menu
+    if (isMobile && mobileMenuOpen) {
+      toggleMobilePanel();
+    }
   }
 
   function toggleOrbits() {
@@ -1056,6 +1190,11 @@
       const selectedIndex = parseInt(e.target.value);
       selectedSatellite = isNaN(selectedIndex) ? null : selectedIndex;
       
+      // Auto-close mobile menu when satellite is selected
+      if (isMobile && mobileMenuOpen) {
+        toggleMobilePanel();
+      }
+      
       markers.forEach((marker, i) => {
         if (isNaN(selectedIndex)) {
           map.removeLayer(marker.icon);
@@ -1079,6 +1218,9 @@
           '<div style="text-align: center; color: #00ffe0; margin: 20px 0;">Select a satellite to view details</div>';
       }
     });
+    
+    // Add window resize listener
+    window.addEventListener('resize', handleResize);
     
     // Start automatic updates
     setupAutoUpdates();
