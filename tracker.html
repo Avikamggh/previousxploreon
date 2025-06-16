@@ -3,379 +3,1104 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Xploreon | Satellite Tracker</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+  <title>Xploreon | Enhanced Satellite Tracker with Live TLE</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://unpkg.com/satellite.js/dist/satellite.min.js"></script>
   <style>
+    * {
+      box-sizing: border-box;
+    }
+    
     body {
       margin: 0;
       font-family: 'Orbitron', sans-serif;
-      background: black;
+      background: #0a0a0a;
+      color: #ffffff;
+      overflow-x: hidden;
     }
+    
     #map {
       height: 100vh;
       width: 100%;
     }
+    
     .leaflet-control-attribution {
       display: none;
     }
-    .back-btn {
+    
+    .back-xploreon-btn {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(45deg, #00ffe0, #00d4aa);
+      color: #000;
+      padding: 12px 20px;
+      font-weight: 700;
+      border-radius: 25px;
+      font-family: 'Orbitron', sans-serif;
+      box-shadow: 0 0 20px rgba(0, 255, 224, 0.5);
+      text-decoration: none;
+      z-index: 1000;
+      white-space: nowrap;
+      transition: all 0.3s ease;
+      border: 2px solid #00ffe0;
+      font-size: 14px;
+    }
+
+    .back-xploreon-btn:hover {
+      transform: translateX(-50%) scale(1.05);
+      box-shadow: 0 0 30px rgba(0, 255, 224, 0.8);
+      background: linear-gradient(45deg, #00d4aa, #00ffe0);
+    }
+
+    .control-panel {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 999;
+      background: rgba(10, 10, 10, 0.95);
+      padding: 20px;
+      border-radius: 15px;
+      border: 2px solid #00ffe0;
+      color: white;
+      font-family: 'Orbitron', sans-serif;
+      min-width: 320px;
+      max-width: 350px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 0 30px rgba(0, 255, 224, 0.3);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .panel-title {
+      color: #00ffe0;
+      font-weight: 700;
+      font-size: 16px;
+      margin-bottom: 15px;
+      text-align: center;
+      text-shadow: 0 0 10px #00ffe0;
+    }
+
+    .satellite-selector {
+      margin-bottom: 15px;
+    }
+
+    .satellite-selector select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.8);
+      color: #00ffe0;
+      border: 1px solid #00ffe0;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 12px;
+    }
+
+    .control-buttons {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+    }
+
+    .control-btn {
+      flex: 1;
+      min-width: 90px;
+      background: linear-gradient(45deg, #00ffe0, #00d4aa);
+      color: black;
+      border: none;
+      padding: 8px 10px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .control-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 15px rgba(0, 255, 224, 0.6);
+    }
+
+    .control-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .satellite-info {
+      background: rgba(0, 0, 0, 0.8);
+      padding: 15px;
+      border-radius: 10px;
+      border: 1px solid #00ffe0;
+      font-size: 11px;
+      line-height: 1.4;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      padding: 4px 0;
+      border-bottom: 1px solid rgba(0, 255, 224, 0.2);
+    }
+
+    .info-label {
+      color: #00ffe0;
+      font-weight: 600;
+    }
+
+    .info-value {
+      color: #ffffff;
+      font-weight: 400;
+    }
+
+    .satellite-icon {
+      font-size: 28px;
+      text-align: center;
+      line-height: 32px;
+      filter: drop-shadow(0 0 8px #00ffe0);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    .satellite-label {
+      color: #ffffff;
+      font-size: 18px;
+      font-weight: 600;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8), 0 0 10px #00ffe0;
+      text-align: center;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 4px 8px;
+      border-radius: 50%;
+      border: 1px solid rgba(0, 255, 224, 0.5);
+      backdrop-filter: blur(5px);
+      white-space: nowrap;
+    }
+
+    .orbit-path {
+      stroke: #00ffe0;
+      stroke-width: 2;
+      fill: none;
+      opacity: 0.6;
+      stroke-dasharray: 5,5;
+      animation: dash 20s linear infinite;
+    }
+
+    @keyframes dash {
+      to { stroke-dashoffset: -200; }
+    }
+
+    .map-toggle {
       position: fixed;
       top: 20px;
       left: 20px;
+      z-index: 999;
+      display: flex;
+      gap: 10px;
+    }
+
+    .map-btn {
+      background: rgba(10, 10, 10, 0.9);
+      color: #00ffe0;
+      border: 2px solid #00ffe0;
+      padding: 10px 15px;
+      border-radius: 8px;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 12px;
+    }
+
+    .map-btn:hover, .map-btn.active {
       background: #00ffe0;
       color: black;
-      font-weight: bold;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      z-index: 999;
-      text-decoration: none;
-      box-shadow: 0 0 10px #00ffe0;
+      box-shadow: 0 0 15px rgba(0, 255, 224, 0.6);
     }
-   .label-icon {
-  color: #ffffff;
-  font-size: 12px;
-  font-weight: bold;
-  text-shadow: 0 0 4px #00ffe0, 0 0 10px #000;
-  text-align: center;
-}
 
-.back-xploreon-btn {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #00ffe0;
-  color: #000;
-  padding: 12px 16px;
-  font-weight: bold;
-  border-radius: 12px;
-  font-family: 'Orbitron', sans-serif;
-  box-shadow: 0 0 12px #00ffe0, 0 0 24px #00ffe0;
-  text-decoration: none;
-  z-index: 999;
-  white-space: nowrap; /* 💥 prevents breaking */
-  max-width: 90vw;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+    .status-indicator {
+      text-align: center;
+      color: #00ffe0;
+      font-size: 10px;
+      margin: 10px 0;
+      opacity: 0.8;
+      padding: 8px;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 8px;
+      border: 1px solid rgba(0, 255, 224, 0.3);
+    }
 
+    .tle-status {
+      background: rgba(0, 0, 0, 0.7);
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #00ffe0;
+      margin-bottom: 15px;
+      font-size: 11px;
+      text-align: center;
+    }
 
-.back-xploreon-btn:hover {
-  transform: translateX(-50%) scale(1.05);
-  box-shadow: 0 0 18px #00ffe0, 0 0 30px #00ffe0;
-}
-.emoji-icon {
-  font-size: 24px;
-  text-align: center;
-  line-height: 30px;
-}
+    .tle-status.loading {
+      border-color: #ffaa00;
+      color: #ffaa00;
+      animation: loading-pulse 1.5s infinite;
+    }
 
-.label-icon {
-  color: #ffffff;
-  font-size: 12px;
-  font-weight: bold;
-  text-shadow: 0 0 4px #00ffe0, 0 0 10px #000;
-  text-align: center;
-}
+    .tle-status.success {
+      border-color: #00ff00;
+      color: #00ff00;
+    }
 
+    .tle-status.error {
+      border-color: #ff0000;
+      color: #ff0000;
+    }
 
+    @keyframes loading-pulse {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; }
+    }
+
+    .cors-info {
+      background: rgba(0, 100, 200, 0.1);
+      border: 1px solid #0080ff;
+      color: #80c0ff;
+      padding: 10px;
+      border-radius: 6px;
+      font-size: 9px;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    /* Mobile Responsive Styles */
+    @media (max-width: 768px) {
+      .control-panel {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+        min-width: auto;
+        max-width: none;
+        padding: 15px;
+        max-height: 80vh;
+      }
+      
+      .map-toggle {
+        top: 10px;
+        left: 10px;
+        flex-direction: column;
+        gap: 5px;
+      }
+      
+      .map-btn {
+        padding: 8px 12px;
+        font-size: 11px;
+      }
+
+      .control-buttons {
+        gap: 5px;
+      }
+
+      .control-btn {
+        min-width: 80px;
+        padding: 6px 8px;
+        font-size: 9px;
+      }
+
+      .back-xploreon-btn {
+        bottom: 15px;
+        padding: 10px 16px;
+        font-size: 12px;
+      }
+
+      .panel-title {
+        font-size: 14px;
+      }
+
+      .satellite-info {
+        font-size: 10px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .control-panel {
+        padding: 12px;
+        border-radius: 10px;
+      }
+
+      .control-btn {
+        min-width: 70px;
+        font-size: 8px;
+        padding: 5px 6px;
+      }
+
+      .map-btn {
+        padding: 6px 10px;
+        font-size: 10px;
+      }
+
+      .back-xploreon-btn {
+        padding: 8px 14px;
+        font-size: 11px;
+      }
+
+      .satellite-label {
+        font-size: 16px;
+      }
+    }
+
+    /* Custom scrollbar */
+    .control-panel::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .control-panel::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 3px;
+    }
+
+    .control-panel::-webkit-scrollbar-thumb {
+      background: rgba(0, 255, 224, 0.5);
+      border-radius: 3px;
+    }
+
+    .control-panel::-webkit-scrollbar-thumb:hover {
+      background: rgba(0, 255, 224, 0.8);
+    }
   </style>
 </head>
 <body>
 
-<a href="index.html" class="back-xploreon-btn">← Back to Xploreon</a>
+<a href="index.html" class="back-xploreon-btn">🚀 Back to Xploreon</a>
+
+<div class="map-toggle">
+  <button class="map-btn active" onclick="switchMapType('satellite')">🛰️ Satellite</button>
+  <button class="map-btn" onclick="switchMapType('street')">🗺️ Street</button>
+</div>
 
 <div id="map"></div>
 
-<div id="satSelector" style="
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 999;
-  background: rgba(0, 0, 0, 0.8);
-  padding: 12px;
-  border-radius: 10px;
-  border: 1px solid #00ffe0;
-  color: white;
-  font-family: Orbitron, sans-serif;
-  max-height: 200px;
-  overflow-y: auto;
-">
-  <strong style="color:#00ffe0">🛰 Select Satellite</strong><br/>
-  <select id="satDropdown" style="margin-top: 6px; width: 100%; padding: 4px; border-radius: 5px;">
-    <option value="">-- Choose --</option>
-  </select>
+<div class="control-panel">
+  <div class="panel-title">🛰️ LIVE SATELLITE TRACKER</div>
+  
+  <div class="cors-info">
+    🌐 CORS-Enabled | Live TLE Data from Celestrak
+  </div>
+  
+  <div class="tle-status" id="tleStatus">
+    🔄 Initializing satellite data...
+  </div>
+  
+  <div class="satellite-selector">
+    <select id="satDropdown">
+      <option value="">-- Loading Satellites --</option>
+    </select>
+  </div>
 
-<button onclick="showAllSatellites()" style="
-  margin-top: 8px;
-  background: #00ffe0;
-  color: black;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 6px;
-  font-weight: bold;
-  width: 100%;
-">Show All</button>
+  <div class="control-buttons">
+    <button class="control-btn" onclick="showAllSatellites()">Show All</button>
+    <button class="control-btn" onclick="clearAllSatellites()">Clear All</button>
+    <button class="control-btn" onclick="toggleOrbits()">Orbits</button>
+    <button class="control-btn" onclick="updateTLEData()" id="updateBtn">Refresh TLE</button>
+  </div>
 
+  <div class="status-indicator">
+    🔄 Position Updates: <span id="updateStatus">Active</span>
+    <br>
+    📡 TLE Age: <span id="tleAge">--</span>
+    <br>
+    🛰️ Satellites: <span id="satCount">0</span>
+  </div>
+
+  <div class="satellite-info" id="satelliteInfo">
+    <div style="text-align: center; color: #00ffe0; margin: 20px 0;">
+      🚀 Loading satellite constellation...
+    </div>
+  </div>
 </div>
 
-
-
 <script>
-  const tleData = [
-    { name: "ISS", tle1: "1 25544U 98067A   24132.62097222  .00001590  00000+0  36033-4 0  9993", tle2: "2 25544  51.6407  61.6826 0003520 291.4022 173.8315 15.50444796432523" },
-    { name: "NOAA 19", tle1: "1 33591U 09005A   24132.48398255  .00000086  00000+0  71639-4 0  9994", tle2: "2 33591  99.1934 178.2788 0014181 110.1394 250.1659 14.12328065903130" },
+  // Configuration
+  const CONFIG = {
+    TLE_UPDATE_INTERVAL: 6 * 60 * 60 * 1000, // 6 hours
+    POSITION_UPDATE_INTERVAL: 1000, // 1 second
+    AUTO_UPDATE_ENABLED: true,
+    MAX_SATELLITES: 50, // Limit for performance
+    ORBIT_POINTS: 90 // Number of points for orbit visualization
+  };
+
+  // CORS Proxy Services (Multiple fallbacks)
+  const CORS_PROXIES = [
     {
-        name: "STARLINK-30001",
-        tle1: "1 54089U 23024L   24132.40474537  .00001663  00000+0  11883-3 0  9991",
-        tle2: "2 54089  53.0545  65.9482 0001162  69.9815 290.1510 15.05363961 59848"
-      },
-      {
-        name: "STARLINK-30002",
-        tle1: "1 54090U 23024M   24132.38400232  .00001761  00000+0  12525-3 0  9994",
-        tle2: "2 54090  53.0538  65.8503 0001173  71.2967 288.8342 15.05356446 59844"
-      },
-      {
-        name: "GPS BIIR-2  (PRN 13)",
-        tle1: "1 24876U 97035A   24132.44920139 -.00000075  00000+0  00000+0 0  9998",
-        tle2: "2 24876  53.3847  94.4146 0169703 151.2716 210.0070  2.00563765197645"
-      },
-   
-      {
-        name: "FENGYUN 1C DEB",
-        tle1: "1 30000U 99025E   24132.46727331  .00000541  00000+0  19858-3 0  9996",
-        tle2: "2 30000  98.7764  58.8035 0026377  94.9093 265.6086 14.33970551578720"
-      },
-      {
-        name: "TERRA",
-        tle1: "1 25994U 99068A   24132.46420884  .00000124  00000+0  75900-4 0  9997",
-        tle2: "2 25994  98.2117 164.2071 0001389 102.1842 257.9515 14.57138647140653"
-      },
-      {
-        name: "SUOMI NPP",
-        tle1: "1 37849U 11061A   24132.37838059  .00000048  00000+0  48152-4 0  9996",
-        tle2: "2 37849  98.6931 170.7749 0001105  87.8043 272.3247 14.19592627588057"
-      },
-      {
-        name: "HST",
-        tle1: "1 20580U 90037B   24132.34719649  .00000502  00000+0  16244-3 0  9992",
-        tle2: "2 20580  28.4707 104.8942 0002872 343.3722  16.7208 15.09109345236089"
-      },
-      {
-        name: "TIANGONG",
-        tle1: "1 48274U 21035A   24132.42262466  .00000629  00000+0  79310-4 0  9999",
-        tle2: "2 48274  41.4754 181.7232 0007942  83.5357 276.6712 15.61799195174073"
-      },
-
- {
-    name: "Hubble Space Telescope",
-    tle1: "1 20580U 90037B   24132.34719649  .00000502  00000+0  16244-3 0  9992",
-    tle2: "2 20580  28.4707 104.8942 0002872 343.3722  16.7208 15.09109345236089"
-  },
-  {
-    name: "TIANGONG",
-    tle1: "1 48274U 21035A   24132.42262466  .00000629  00000+0  79310-4 0  9999",
-    tle2: "2 48274  41.4754 181.7232 0007942  83.5357 276.6712 15.61799195174073"
-  },
-  {
-    name: "AQUA",
-    tle1: "1 27424U 02022A   24132.45678901  .00000123  00000+0  78901-4 0  9991",
-    tle2: "2 27424  98.2090 164.2071 0001389 102.1842 257.9515 14.57138647140653"
-  },
-  {
-    name: "LANDSAT 8",
-    tle1: "1 39084U 13008A   24132.37838059  .00000048  00000+0  48152-4 0  9996",
-    tle2: "2 39084  98.2090 170.7749 0001105  87.8043 272.3247 14.19592627588057"
-  },
-  {
-    name: "TERRA",
-    tle1: "1 25994U 99068A   24132.46420884  .00000124  00000+0  75900-4 0  9997",
-    tle2: "2 25994  98.2117 164.2071 0001389 102.1842 257.9515 14.57138647140653"
-  },
-  {
-    name: "SUOMI NPP",
-    tle1: "1 37849U 11061A   24132.37838059  .00000048  00000+0  48152-4 0  9996",
-    tle2: "2 37849  98.6931 170.7749 0001105  87.8043 272.3247 14.19592627588057"
-  },
-  {
-    name: "NOAA 20",
-    tle1: "1 43013U 17073A   24132.45678901  .00000123  00000+0  78901-4 0  9991",
-    tle2: "2 43013  98.2090 164.2071 0001389 102.1842 257.9515 14.57138647140653"
-  },
-  {
-    name: "NOAA 21",
-    tle1: "1 54089U 23024L   24132.40474537  .00001663  00000+0  11883-3 0  9991",
-    tle2: "2 54089  53.0545  65.9482 0001162  69.9815 290.1510 15.05363961 59848"
-  },
-  {
-    name: "METOP-B",
-    tle1: "1 38771U 12049A   24132.45678901  .00000123  00000+0  78901-4 0  9991",
-    tle2: "2 38771  98.2090 164.2071 0001389 102.1842 257.9515 14.57138647140653"
-  },
-  {
-    name: "METOP-C",
-    tle1: "1 43689U 18084A   24132.45678901  .00000123  00000+0  78901-4 0  9991",
-    tle2: "2 43689  98.2090 164.2071 0001389 102.1842 257.9515 14.57138647140653"
-  },
-  {
-    name: "Sentinel-3A",
-    tle1: "1 41335U 16011A   24132.45678901  .00000123  00000+0  78901-4 0  9991",
-    tle2: "2 41335  98.2090 164.2071 0001389 102.1842 257.9515 14.57138647140653"
-  },
-  {
-    name: "Sentinel-3B",
-    tle1: "1 43437U 18039A   24132.45678901  .00000123  00000+0  78901-4 0  9991",
-    tle2: "2 43437  98.2090 164.2071 0001389 102.1842 257.9515 14.57138647140653"
-  },
-  {
-    name: "Sentinel-6 MF",
-    tle1: "1 46839U 20088A   24132.45678901  .00000123  00000+0  78901-4 0  9991",
-    tle2: "2 46839  98.2090 164.2071 0001389 102.1842 257.9515 14.57138647140653"
-  },
-  {
-    name: "COSMOS 2551",
-    tle1: "1 54090U 23024M   24132.38400232  .00001761  00000+0  12525-3 0  9994",
-    tle2: "2 54090  53.0538  65.8503 0001173  71.2967 288.8342 15.05356446 59844"
-  },
-  {
-    name: "FENGYUN 1C DEB",
-    tle1: "1 30000U 99025E   24132.46727331  .00000541  00000+0  19858-3 0  9996",
-    tle2: "2 30000  98.7764  58.8035 0026377  94.9093 265.6086 14.33970551578720"
-  },
-  {
-    name: "GPS BIIR-2  (PRN 13)",
-    tle1: "1 24876U 97035A   24132.44920139 -.00000075  00000+0  00000+0 0  9998",
-    tle2: "2 24876  53.3847  94.4146 0169703 151.2716 210.0070  2.00563765197645"
-  },
-  {
-    name: "STARLINK-30003",
-    tle1: "1 54091U 23024N   24132.40474537  .00001663  00000+0  11883-3 0  9991",
-    tle2: "2 54091  53.0545  65.9482 0001162  69.9815 290.1510 15.05363961 59848"
-  },
-  {
-    name: "STARLINK-30004",
-    tle1: "1 54092U 23024P   24132.38400232  .00001761  00000+0  12525-3 0  9994",
-    tle2: "2 54092  53.0538  65.8503 0001173  71.2967 288.8342 15.05356446 59844"
-  },
-  {
-    name: "STARLINK-30005",
-    tle1: "1 54093U 23024Q   24132.40474537  .00001663  00000+0  11883-3 0  9991",
-    tle2: "2 54093  53.0545  65.9482 0001162  69.9815 290.1510 15.05363961 59848"
-  },
-  {
-    name: "STARLINK-30006",
-    tle1: "1 54094U 23024R   24132.38400232  .00001761  00000+0  12525-3 0  9994",
-    tle2: "2 54094  53.0538  65.8503 0001173  71.2967 288.8342 15.05356446 59844"
-  },
-
+      name: "AllOrigins",
+      url: (targetUrl) => `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`,
+      active: true
+    },
+    {
+      name: "CORS Proxy",
+      url: (targetUrl) => `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`,
+      active: true
+    },
+    {
+      name: "ThingProxy",
+      url: (targetUrl) => `https://thingproxy.freeboard.io/fetch/${targetUrl}`,
+      active: true
+    }
   ];
 
+  // Celestrak TLE Sources
+  const TLE_SOURCES = {
+    stations: 'https://celestrak.org/NORAD/elements/gp.php?GROUP=stations&FORMAT=tle',
+    weather: 'https://celestrak.org/NORAD/elements/gp.php?GROUP=weather&FORMAT=tle',
+    noaa: 'https://celestrak.org/NORAD/elements/gp.php?GROUP=noaa&FORMAT=tle',
+    visual: 'https://celestrak.org/NORAD/elements/gp.php?GROUP=visual&FORMAT=tle',
+    active: 'https://celestrak.org/NORAD/elements/gp.php?GROUP=active&FORMAT=tle'
+  };
 
-  const map = L.map('map').setView([0, 0], 2);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+  // Featured satellites with custom icons
+  const FEATURED_SATELLITES = {
+    25544: { name: "ISS (International Space Station)", icon: "🏠" },
+    48274: { name: "TIANGONG (Chinese Space Station)", icon: "🏛️" },
+    20580: { name: "Hubble Space Telescope", icon: "🔭" },
+    33591: { name: "NOAA 19 (Weather)", icon: "🌦️" },
+    43013: { name: "NOAA 20 (JPSS-1)", icon: "⛈️" },
+    41866: { name: "GOES-16 (Weather)", icon: "🌪️" },
+    25994: { name: "TERRA (Earth Observation)", icon: "🌍" },
+    27424: { name: "AQUA (Earth Observation)", icon: "🌊" },
+    39084: { name: "LANDSAT 8", icon: "📸" },
+    49260: { name: "LANDSAT 9", icon: "📷" },
+    43692: { name: "SENTINEL-3B", icon: "🛰️" },
+    40069: { name: "GOES-15 (Weather)", icon: "⛅" },
+    29155: { name: "METOP-A (Weather)", icon: "🌡️" },
+    38771: { name: "METOP-B (Weather)", icon: "🌨️" },
+    43689: { name: "METOP-C (Weather)", icon: "❄️" }
+  };
 
+  // Global variables
+  let map, satelliteLayer, streetLayer;
+  let tleData = [];
+  let markers = [];
+  let orbitPaths = [];
+  let selectedSatellite = null;
+  let showOrbits = false;
+  let updateInterval, tleUpdateInterval;
+  let lastTLEUpdate = null;
+  let workingProxy = null;
 
-  const markers = [];
-  
+  // Initialize map
+  function initializeMap() {
+    map = L.map('map').setView([0, 0], 2);
+    
+    // Map layers
+    satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+      attribution: '© Esri'
+    });
+    
+    streetLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap'
+    });
+    
+    // Start with satellite view
+    satelliteLayer.addTo(map);
+  }
 
-  function getOrbitPoints(satrec) {
-    const gmst = satellite.gstime(new Date());
-    const points = [];
-    const now = new Date();
-    for (let i = 0; i < 90; i++) {
-      const time = new Date(now.getTime() + i * 60 * 1000); // next 90 mins
-      const position = satellite.propagate(satrec, time);
-      if (position.position) {
-        const geo = satellite.eciToGeodetic(position.position, satellite.gstime(time));
-        const lat = satellite.degreesLat(geo.latitude);
-        const lon = satellite.degreesLong(geo.longitude);
-        points.push([lat, lon]);
+  // Update TLE status display
+  function updateTLEStatus(type, message) {
+    const statusElement = document.getElementById('tleStatus');
+    statusElement.className = `tle-status ${type}`;
+    statusElement.textContent = message;
+  }
+
+  // Update status indicators
+  function updateStatusIndicators() {
+    document.getElementById('satCount').textContent = tleData.length;
+    
+    if (lastTLEUpdate) {
+      const ageHours = Math.floor((Date.now() - lastTLEUpdate.getTime()) / (1000 * 60 * 60));
+      document.getElementById('tleAge').textContent = `${ageHours}h`;
+    }
+  }
+
+  // Fetch TLE data with CORS proxy fallback
+  async function fetchWithCORSProxy(url) {
+    const activeProxies = CORS_PROXIES.filter(proxy => proxy.active);
+    
+    for (const proxy of activeProxies) {
+      try {
+        updateTLEStatus('loading', `📡 Trying ${proxy.name}...`);
+        console.log(`Attempting fetch with ${proxy.name}`);
+        
+        const proxyUrl = proxy.url(url);
+        const response = await fetch(proxyUrl, {
+          method: 'GET',
+          headers: {
+            'Accept': 'text/plain',
+          },
+          signal: AbortSignal.timeout(15000) // 15 second timeout
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        const data = await response.text();
+        
+        // Validate TLE data
+        if (data && data.includes('1 ') && data.includes('2 ') && data.length > 100) {
+          console.log(`✅ Success with ${proxy.name}`);
+          workingProxy = proxy;
+          return data;
+        } else {
+          throw new Error('Invalid TLE format received');
+        }
+      } catch (error) {
+        console.warn(`${proxy.name} failed:`, error.message);
+        continue;
       }
     }
+    
+    throw new Error('All CORS proxies failed');
+  }
+
+  // Parse TLE data from text
+  function parseTLEData(tleText) {
+    const lines = tleText.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+    const satellites = [];
+    
+    for (let i = 0; i < lines.length && satellites.length < CONFIG.MAX_SATELLITES; i += 3) {
+      if (i + 2 < lines.length) {
+        const name = lines[i];
+        const tle1 = lines[i + 1];
+        const tle2 = lines[i + 2];
+        
+        // Extract NORAD ID
+        const noradMatch = tle1.match(/^1 (\d+)/);
+        if (!noradMatch) continue;
+        
+        const noradId = parseInt(noradMatch[1]);
+        
+        // Check if this is a featured satellite or important one
+        const featured = FEATURED_SATELLITES[noradId];
+        
+        if (featured || name.includes('ISS') || name.includes('NOAA') || 
+            name.includes('GOES') || name.includes('TERRA') || name.includes('AQUA') ||
+            name.includes('LANDSAT') || name.includes('METOP') || name.includes('SENTINEL') ||
+            name.includes('TIANGONG') || name.includes('HUBBLE')) {
+          
+          satellites.push({
+            name: featured ? featured.name : name.replace(/\s+/g, ' ').trim(),
+            icon: featured ? featured.icon : '🛰️',
+            noradId: noradId,
+            tle1: tle1,
+            tle2: tle2
+          });
+        }
+      }
+    }
+    
+    return satellites;
+  }
+
+  // Fetch TLE data from multiple sources
+  async function updateTLEData() {
+    updateTLEStatus('loading', '🔄 Fetching fresh TLE data...');
+    document.getElementById('updateBtn').disabled = true;
+    
+    try {
+      const allSatellites = [];
+      
+      // Fetch from primary sources
+      const primarySources = ['stations', 'weather', 'noaa', 'visual'];
+      
+      for (const source of primarySources) {
+        try {
+          const tleText = await fetchWithCORSProxy(TLE_SOURCES[source]);
+          const satellites = parseTLEData(tleText);
+          allSatellites.push(...satellites);
+          console.log(`Loaded ${satellites.length} satellites from ${source}`);
+        } catch (error) {
+          console.warn(`Failed to load ${source}:`, error.message);
+        }
+      }
+      
+      if (allSatellites.length > 0) {
+        // Remove duplicates by NORAD ID
+        const uniqueSatellites = allSatellites.filter((sat, index, arr) => 
+          arr.findIndex(s => s.noradId === sat.noradId) === index
+        );
+        
+        // Sort by importance (featured satellites first)
+        uniqueSatellites.sort((a, b) => {
+          const aFeatured = FEATURED_SATELLITES[a.noradId] ? 1 : 0;
+          const bFeatured = FEATURED_SATELLITES[b.noradId] ? 1 : 0;
+          return bFeatured - aFeatured || a.name.localeCompare(b.name);
+        });
+        
+        tleData = uniqueSatellites.slice(0, CONFIG.MAX_SATELLITES);
+        lastTLEUpdate = new Date();
+        
+        updateTLEStatus('success', `✅ Loaded ${tleData.length} satellites (${workingProxy?.name})`);
+        populateDropdown();
+        clearAllMarkers();
+        updateStatusIndicators();
+        
+        // Store in localStorage
+        localStorage.setItem('satelliteTLEData', JSON.stringify({
+          data: tleData,
+          timestamp: lastTLEUpdate.getTime(),
+          proxy: workingProxy?.name
+        }));
+        
+        console.log(`✅ TLE data updated: ${tleData.length} satellites loaded`);
+      } else {
+        throw new Error('No valid satellites found in TLE data');
+      }
+    } catch (error) {
+      console.error('TLE update failed:', error);
+      updateTLEStatus('error', `❌ Update failed: ${error.message}`);
+      
+      // Try to load from localStorage as fallback
+      loadStoredTLEData();
+    } finally {
+      document.getElementById('updateBtn').disabled = false;
+    }
+  }
+
+  // Load stored TLE data from localStorage
+  function loadStoredTLEData() {
+    try {
+      const stored = localStorage.getItem('satelliteTLEData');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        tleData = parsed.data || [];
+        lastTLEUpdate = new Date(parsed.timestamp || Date.now());
+        
+        if (tleData.length > 0) {
+          updateTLEStatus('success', `📱 Loaded ${tleData.length} satellites from cache (${parsed.proxy || 'Unknown'})`);
+          populateDropdown();
+          updateStatusIndicators();
+          console.log('Loaded TLE data from localStorage');
+          return true;
+        }
+      }
+    } catch (error) {
+      console.error('Error loading stored TLE data:', error);
+    }
+    return false;
+  }
+
+  // Populate satellite dropdown
+  function populateDropdown() {
+    const dropdown = document.getElementById('satDropdown');
+    dropdown.innerHTML = '<option value="">-- Select Satellite --</option>';
+    
+    tleData.forEach((sat, index) => {
+      const option = document.createElement('option');
+      option.value = index;
+      option.textContent = `${sat.icon} ${sat.name}`;
+      dropdown.appendChild(option);
+    });
+  }
+
+  // Clear all markers from map
+  function clearAllMarkers() {
+    markers.forEach((marker) => {
+      if (marker && marker.icon) {
+        map.removeLayer(marker.icon);
+        map.removeLayer(marker.label);
+      }
+    });
+    orbitPaths.forEach(path => map.removeLayer(path));
+    markers = [];
+    orbitPaths = [];
+  }
+
+  // Coordinate validation
+  function isValidCoordinate(lat, lng) {
+    return !isNaN(lat) && !isNaN(lng) && 
+           isFinite(lat) && isFinite(lng) &&
+           lat >= -90 && lat <= 90 && 
+           lng >= -180 && lng <= 180;
+  }
+
+  // Calculate satellite speed
+  function calculateSpeed(satrec, time) {
+    try {
+      const position1 = satellite.propagate(satrec, time);
+      const position2 = satellite.propagate(satrec, new Date(time.getTime() + 1000));
+      
+      if (position1.position && position2.position && 
+          position1.position.x && position2.position.x) {
+        const dx = position2.position.x - position1.position.x;
+        const dy = position2.position.y - position1.position.y;
+        const dz = position2.position.z - position1.position.z;
+        
+        const distance = Math.sqrt(dx*dx + dy*dy + dz*dz);
+        return (distance * 3600).toFixed(2); // km/h
+      }
+    } catch (error) {
+      console.error('Speed calculation error:', error);
+    }
+    return '0';
+  }
+
+  // Get orbit points for visualization
+  function getOrbitPoints(satrec) {
+    const points = [];
+    const now = new Date();
+    
+    try {
+      for (let i = 0; i < CONFIG.ORBIT_POINTS; i++) {
+        const time = new Date(now.getTime() + i * 60 * 1000);
+        const position = satellite.propagate(satrec, time);
+        
+        if (position.position && !position.error) {
+          const geo = satellite.eciToGeodetic(position.position, satellite.gstime(time));
+          const lat = satellite.degreesLat(geo.latitude);
+          const lon = satellite.degreesLong(geo.longitude);
+          
+          if (isValidCoordinate(lat, lon)) {
+            points.push([lat, lon]);
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Orbit calculation error:', error);
+    }
+    
     return points;
   }
 
-function updateSatellites() {
-  const now = new Date();
-  tleData.forEach((sat, i) => {
-    const satrec = satellite.twoline2satrec(sat.tle1, sat.tle2);
-    const position = satellite.propagate(satrec, now);
-    const geo = satellite.eciToGeodetic(position.position, satellite.gstime(now));
-    const lat = satellite.degreesLat(geo.latitude);
-    const lon = satellite.degreesLong(geo.longitude);
+  // Update satellite positions
+  function updateSatellites() {
+    if (tleData.length === 0) return;
+    
+    const now = new Date();
+    let activeCount = 0;
+    
+    tleData.forEach((sat, i) => {
+      try {
+        const satrec = satellite.twoline2satrec(sat.tle1, sat.tle2);
+        if (!satrec) return;
 
-    if (markers[i]) {
-      markers[i].icon.setLatLng([lat, lon]);
-      markers[i].label.setLatLng([lat - 2, lon]);
+        const position = satellite.propagate(satrec, now);
+        if (!position.position || position.error) return;
+
+        const geo = satellite.eciToGeodetic(position.position, satellite.gstime(now));
+        const lat = satellite.degreesLat(geo.latitude);
+        const lon = satellite.degreesLong(geo.longitude);
+
+        if (!isValidCoordinate(lat, lon)) return;
+
+        activeCount++;
+
+        // Update existing marker
+        if (markers[i]) {
+          markers[i].icon.setLatLng([lat, lon]);
+          markers[i].label.setLatLng([lat - 1.5, lon]);
+          
+          // Update orbit path if showing orbits
+          if (showOrbits && orbitPaths[i]) {
+            const orbitPoints = getOrbitPoints(satrec);
+            if (orbitPoints.length > 0) {
+              orbitPaths[i].setLatLngs(orbitPoints);
+            }
+          }
+        } else {
+          // Create new marker
+          const iconMarker = L.marker([lat, lon], {
+            icon: L.divIcon({
+              className: 'satellite-icon',
+              html: '🛰️',
+              iconSize: [32, 32],
+              iconAnchor: [16, 16]
+            })
+          });
+
+          const label = L.marker([lat - 1.5, lon], {
+            icon: L.divIcon({
+              className: 'satellite-label',
+              html: sat.icon,
+              iconSize: [30, 30],
+              iconAnchor: [15, 15]
+            }),
+            interactive: false
+          });
+
+          // Create orbit path
+          const orbitPoints = getOrbitPoints(satrec);
+          const orbitPath = L.polyline(orbitPoints, {
+            color: '#00ffe0',
+            weight: 2,
+            opacity: 0.6,
+            dashArray: '5, 5'
+          });
+
+          markers.push({ icon: iconMarker, label: label });
+          orbitPaths.push(orbitPath);
+        }
+        
+        // Update info if this satellite is selected
+        if (selectedSatellite === i) {
+          updateSatelliteInfo(sat, i);
+        }
+
+      } catch (error) {
+        console.error(`Update failed for ${sat.name}: ${error.message}`);
+      }
+    });
+    
+    // Update active satellite count
+    document.getElementById('updateStatus').textContent = `Active (${activeCount})`;
+  }
+
+  // Update satellite info panel
+  function updateSatelliteInfo(sat, index) {
+    try {
+      const now = new Date();
+      const satrec = satellite.twoline2satrec(sat.tle1, sat.tle2);
+      
+      if (!satrec) {
+        document.getElementById('satelliteInfo').innerHTML = 
+          '<div style="text-align: center; color: #ff0000;">Error parsing satellite data</div>';
+        return;
+      }
+      
+      const position = satellite.propagate(satrec, now);
+      if (!position.position || position.error) {
+        document.getElementById('satelliteInfo').innerHTML = 
+          '<div style="text-align: center; color: #ff0000;">Error calculating position</div>';
+        return;
+      }
+      
+      const geo = satellite.eciToGeodetic(position.position, satellite.gstime(now));
+      const lat = satellite.degreesLat(geo.latitude);
+      const lon = satellite.degreesLong(geo.longitude);
+      const alt = geo.height;
+      
+      if (!isValidCoordinate(lat, lon)) {
+        document.getElementById('satelliteInfo').innerHTML = 
+          '<div style="text-align: center; color: #ff0000;">Invalid coordinates</div>';
+        return;
+      }
+      
+      const speed = calculateSpeed(satrec, now);
+      
+      // Calculate pass information
+      const isVisible = alt > 200 && alt < 2000; // Rough visibility check
+      const passType = alt > 35000 ? 'Geostationary' : 'Low Earth Orbit';
+      
+      const infoPanel = document.getElementById('satelliteInfo');
+      infoPanel.innerHTML = `
+        <div style="text-align: center; color: #00ffe0; margin-bottom: 15px; font-weight: 700; font-size: 13px;">
+          ${sat.icon} ${sat.name}
+        </div>
+        <div class="info-row">
+          <span class="info-label">NORAD ID:</span>
+          <span class="info-value">${sat.noradId}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Latitude:</span>
+          <span class="info-value">${lat.toFixed(4)}°</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Longitude:</span>
+          <span class="info-value">${lon.toFixed(4)}°</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Altitude:</span>
+          <span class="info-value">${alt.toFixed(2)} km</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Speed:</span>
+          <span class="info-value">${speed} km/h</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Orbit Type:</span>
+          <span class="info-value">${passType}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Visibility:</span>
+          <span class="info-value" style="color: ${isVisible ? '#00ff00' : '#ffaa00'}">${isVisible ? 'Potentially Visible' : 'Not Visible'}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Last Update:</span>
+          <span class="info-value">${now.toLocaleTimeString()}</span>
+        </div>
+      `;
+    } catch (error) {
+      console.error(`Info update failed for ${sat.name}: ${error.message}`);
+      document.getElementById('satelliteInfo').innerHTML = 
+        '<div style="text-align: center; color: #ff0000;">Update failed</div>';
+    }
+  }
+
+  // Control functions
+  function switchMapType(type) {
+    const buttons = document.querySelectorAll('.map-btn');
+    buttons.forEach(btn => btn.classList.remove('active'));
+    
+    if (type === 'satellite') {
+      map.removeLayer(streetLayer);
+      satelliteLayer.addTo(map);
+      buttons[0].classList.add('active');
     } else {
-     const iconMarker = L.marker([lat, lon], {
-  icon: L.divIcon({
-    className: 'emoji-icon',
-    html: '🛰',
-    iconSize: [100, 100]
-  })
-});
+      map.removeLayer(satelliteLayer);
+      streetLayer.addTo(map);
+      buttons[1].classList.add('active');
+    }
+  }
 
-      const label = L.marker([lat - 0.3, lon], {
-        icon: L.divIcon({
-          className: 'label-icon',
-          html: sat.name
-        }),
-        interactive: false
+  function showAllSatellites() {
+    selectedSatellite = null;
+    document.getElementById('satDropdown').value = '';
+    markers.forEach((marker, i) => {
+      if (marker && marker.icon) {
+        marker.icon.addTo(map);
+        marker.label.addTo(map);
+        if (showOrbits && orbitPaths[i]) orbitPaths[i].addTo(map);
+      }
+    });
+    map.setView([0, 0], 2);
+    document.getElementById('satelliteInfo').innerHTML = 
+      `<div style="text-align: center; color: #00ffe0; margin: 20px 0;">Showing ${tleData.length} satellites</div>`;
+  }
+
+  function clearAllSatellites() {
+    selectedSatellite = null;
+    document.getElementById('satDropdown').value = '';
+    markers.forEach((marker, i) => {
+      if (marker && marker.icon) {
+        map.removeLayer(marker.icon);
+        map.removeLayer(marker.label);
+        if (orbitPaths[i]) map.removeLayer(orbitPaths[i]);
+      }
+    });
+    document.getElementById('satelliteInfo').innerHTML = 
+      '<div style="text-align: center; color: #00ffe0; margin: 20px 0;">Select a satellite to view details</div>';
+  }
+
+  function toggleOrbits() {
+    showOrbits = !showOrbits;
+    const button = event.target;
+    button.textContent = showOrbits ? 'Hide Orbits' : 'Orbits';
+    
+    if (selectedSatellite !== null) {
+      if (showOrbits && orbitPaths[selectedSatellite]) {
+        orbitPaths[selectedSatellite].addTo(map);
+      } else if (orbitPaths[selectedSatellite]) {
+        map.removeLayer(orbitPaths[selectedSatellite]);
+      }
+    } else {
+      markers.forEach((marker, i) => {
+        if (marker && map.hasLayer(marker.icon) && orbitPaths[i]) {
+          if (showOrbits) {
+            orbitPaths[i].addTo(map);
+          } else {
+            map.removeLayer(orbitPaths[i]);
+          }
+        }
       });
-      // Do NOT add to map on load
-      markers.push({ icon: iconMarker, label: label });
     }
-  });
-}
+  }
 
+  // Setup automatic updates
+  function setupAutoUpdates() {
+    // Position updates every second
+    updateInterval = setInterval(updateSatellites, CONFIG.POSITION_UPDATE_INTERVAL);
+    
+    // TLE updates every 6 hours
+    if (CONFIG.AUTO_UPDATE_ENABLED) {
+      tleUpdateInterval = setInterval(() => {
+        console.log('🔄 Auto-updating TLE data...');
+        updateTLEData();
+      }, CONFIG.TLE_UPDATE_INTERVAL);
+    }
+    
+    // Status updates every minute
+    setInterval(updateStatusIndicators, 60000);
+  }
 
-  updateSatellites();
-  setInterval(updateSatellites, 700);
-
-const satDropdown = document.getElementById('satDropdown');
-
-// Populate dropdown with satellite names
-tleData.forEach((sat, index) => {
-  const option = document.createElement('option');
-  option.value = index;
-  option.textContent = sat.name;
-  satDropdown.appendChild(option);
-});
-
-// Zoom to satellite when selected
-satDropdown.addEventListener('change', () => {
-  const selectedIndex = parseInt(satDropdown.value);
-  markers.forEach((marker, i) => {
-    if (isNaN(selectedIndex)) {
-      // Don't show anything if no satellite is selected
-      map.removeLayer(marker.icon);
-      map.removeLayer(marker.label);
-    } else if (i === selectedIndex) {
-      marker.icon.addTo(map);
-      marker.label.addTo(map);
-      map.setView(marker.icon.getLatLng(), 4);
+  // Initialize application
+  async function initialize() {
+    console.log('🛰️ Initializing CORS-Enabled Satellite Tracker...');
+    
+    // Initialize map
+    initializeMap();
+    
+    // Try to load cached data first for faster startup
+    const hasStoredData = loadStoredTLEData();
+    
+    // Always fetch fresh data in background
+    if (hasStoredData) {
+      // Check if cached data is old (more than 12 hours)
+      const dataAge = Date.now() - lastTLEUpdate.getTime();
+      if (dataAge > 12 * 60 * 60 * 1000) {
+        setTimeout(() => updateTLEData(), 2000); // Fetch fresh data after 2 seconds
+      }
     } else {
-      map.removeLayer(marker.icon);
-      map.removeLayer(marker.label);
+      // No cached data, fetch immediately
+      await updateTLEData();
+    }
+    
+    // Setup dropdown event listener
+    document.getElementById('satDropdown').addEventListener('change', (e) => {
+      const selectedIndex = parseInt(e.target.value);
+      selectedSatellite = isNaN(selectedIndex) ? null : selectedIndex;
+      
+      markers.forEach((marker, i) => {
+        if (isNaN(selectedIndex)) {
+          map.removeLayer(marker.icon);
+          map.removeLayer(marker.label);
+          if (orbitPaths[i]) map.removeLayer(orbitPaths[i]);
+        } else if (i === selectedIndex) {
+          marker.icon.addTo(map);
+          marker.label.addTo(map);
+          if (showOrbits && orbitPaths[i]) orbitPaths[i].addTo(map);
+          map.setView(marker.icon.getLatLng(), 4);
+          updateSatelliteInfo(tleData[i], i);
+        } else {
+          map.removeLayer(marker.icon);
+          map.removeLayer(marker.label);
+          if (orbitPaths[i]) map.removeLayer(orbitPaths[i]);
+        }
+      });
+      
+      if (isNaN(selectedIndex)) {
+        document.getElementById('satelliteInfo').innerHTML = 
+          '<div style="text-align: center; color: #00ffe0; margin: 20px 0;">Select a satellite to view details</div>';
+      }
+    });
+    
+    // Start automatic updates
+    setupAutoUpdates();
+    
+    console.log('✅ CORS-Enabled Satellite Tracker Initialized Successfully');
+    console.log(`📡 Working Proxy: ${workingProxy?.name || 'None'}`);
+    console.log(`🛰️ Satellites Loaded: ${tleData.length}`);
+  }
+
+  // Start the application
+  window.addEventListener('DOMContentLoaded', initialize);
+
+  // Handle page visibility changes (pause updates when tab is hidden)
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      document.getElementById('updateStatus').textContent = 'Paused';
+    } else {
+      document.getElementById('updateStatus').textContent = 'Active';
     }
   });
-});
 
-function showAllSatellites() {
-  markers.forEach(marker => {
-    marker.icon.addTo(map);
-    marker.label.addTo(map);
-  });
-  satDropdown.value = '500';
-}
-
-
+  console.log('🚀 Satellite Tracker Script Loaded - Ready for CORS-free TLE fetching!');
 </script>
 
 </body>
