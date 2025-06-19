@@ -649,6 +649,29 @@
             from { height: 10px; }
             to { height: 20px; }
         }
+.typing-indicator {
+    display: none;
+    padding: 12px 14px;
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 600;
+    max-width: 75%;
+    text-align: left;
+    padding-left: 20px;
+}
+.typing-indicator.active {
+    display: block;
+    animation: slideInUp 0.2s ease-out;
+}
+
+.typing-dot {
+    background: #ffffff; /* Make the dots white */
+}
+
+
+
     </style>
 </head>
 <body>
@@ -11540,52 +11563,57 @@ this.allKnowledge = {
         }
 
         function showTypingIndicator() {
+            
             document.getElementById('typingIndicator').classList.add('active');
             document.getElementById('chatbotMessages').scrollTop = 999999;
         }
 
         function hideTypingIndicator() {
+       
             document.getElementById('typingIndicator').classList.remove('active');
         }
-
-        async function sendMessage() {
-            const input = document.getElementById('chatbotInput');
-            const button = document.getElementById('sendButton');
-            const message = input.value.trim();
-            
-            if (!message || button.disabled) return;
-            
-            // If sending via text (not voice), reset voice mode
-            if (!voiceManager.voiceMode) {
-                voiceManager.voiceMode = false;
-            }
-            
-            button.disabled = true;
-            input.disabled = true;
-            
-            addMessage(message, true);
-            input.value = '';
-            
-            showTypingIndicator();
-            
-            try {
-                const response = await Promise.race([
-                    xploreonAI.generateResponseAsync(message),
-                    new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 5000))
-                ]);
-                
-                hideTypingIndicator();
-                addMessage(response.text, false, response.category);
-                
-            } catch (error) {
-                hideTypingIndicator();
-                addMessage("I'm having a quick technical moment. Please try again! 🛠️", false, "System");
-            } finally {
-                button.disabled = false;
-                input.disabled = false;
-                input.focus();
-            }
-        }
+     async function sendMessage() {
+    const input = document.getElementById('chatbotInput');
+    const button = document.getElementById('sendButton');
+    const message = input.value.trim();
+    
+    if (!message || button.disabled) return;
+    
+    // If sending via text (not voice), reset voice mode
+    if (!voiceManager.voiceMode) {
+        voiceManager.voiceMode = false;
+    }
+    
+    button.disabled = true;
+    input.disabled = true;
+    
+    addMessage(message, true);
+    input.value = '';
+    
+    showTypingIndicator();
+    
+    try {
+        // Add a random delay between 1 and 3 seconds
+        const delay = 1000 + Math.random() * 2000;
+        await new Promise(resolve => setTimeout(resolve, delay));
+        
+        const response = await Promise.race([
+            xploreonAI.generateResponseAsync(message),
+            new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 5000))
+        ]);
+        
+        hideTypingIndicator();
+        addMessage(response.text, false, response.category);
+        
+    } catch (error) {
+        hideTypingIndicator();
+        addMessage("I'm having a quick technical moment. Please try again! 🛠️", false, "System");
+    } finally {
+        button.disabled = false;
+        input.disabled = false;
+        input.focus();
+    }
+}
 
         function sendQuickMessage(message) {
             document.getElementById('chatbotInput').value = message;
