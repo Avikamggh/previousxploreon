@@ -795,114 +795,21 @@
             initializeSpeechSynthesis() {
                 const setVoice = () => {
                     const voices = this.synthesis.getVoices();
-                    console.log('Available voices:', voices.map(v => ({name: v.name, lang: v.lang, gender: v.voiceURI})));
-                    
-                    // Priority order for male voices (mobile and desktop)
-                    const maleVoicePatterns = [
-                        // Mobile-specific male voices
-                        'male',
-                        'man',
-                        'masculine',
-                        // Common male voice names
-                        'alex',
-                        'david',
-                        'daniel',
-                        'mark',
-                        'tom',
-                        'mike',
-                        'john',
-                        'james',
-                        'robert',
-                        'william',
-                        'richard',
-                        'charles',
-                        'thomas',
-                        // Platform specific
-                        'google male',
-                        'enhanced male',
-                        'premium male',
-                        // Language specific male indicators
-                        'en-us male',
-                        'en-gb male',
-                        'english male'
-                    ];
-                    
-                    // Try to find the best male voice
-                    let selectedVoice = null;
-                    
-                    // First pass: Look for explicit male indicators
-                    for (const pattern of maleVoicePatterns) {
-                        selectedVoice = voices.find(voice => 
-                            voice.name.toLowerCase().includes(pattern.toLowerCase()) ||
-                            voice.voiceURI.toLowerCase().includes(pattern.toLowerCase())
-                        );
-                        if (selectedVoice) break;
-                    }
-                    
-                    // Second pass: Look for voices that are likely male (lower index, specific names)
-                    if (!selectedVoice) {
-                        const likelyMaleVoices = voices.filter(voice => {
-                            const name = voice.name.toLowerCase();
-                            const uri = voice.voiceURI.toLowerCase();
-                            return (
-                                // Common patterns that indicate male voices
-                                name.includes('alex') ||
-                                name.includes('daniel') ||
-                                name.includes('david') ||
-                                name.includes('tom') ||
-                                name.includes('mike') ||
-                                name.includes('john') ||
-                                name.includes('james') ||
-                                name.includes('arthur') ||
-                                name.includes('fred') ||
-                                name.includes('gordon') ||
-                                name.includes('jorge') ||
-                                name.includes('masculine') ||
-                                // Avoid obviously female names
-                                (!name.includes('female') &&
-                                 !name.includes('woman') &&
-                                 !name.includes('girl') &&
-                                 !name.includes('samantha') &&
-                                 !name.includes('victoria') &&
-                                 !name.includes('karen') &&
-                                 !name.includes('susan') &&
-                                 !name.includes('allison') &&
-                                 !name.includes('ava') &&
-                                 !name.includes('zira') &&
-                                 voice.lang.startsWith('en'))
-                            );
-                        });
-                        
-                        if (likelyMaleVoices.length > 0) {
-                            selectedVoice = likelyMaleVoices[0];
-                        }
-                    }
-                    
-                    // Third pass: Default to first English voice if no male voice found
-                    if (!selectedVoice) {
-                        selectedVoice = voices.find(voice => voice.lang.startsWith('en')) || voices[0];
-                    }
-                    
-                    this.maleVoice = selectedVoice;
-                    console.log('Selected voice:', this.maleVoice ? this.maleVoice.name : 'None');
+                    // Try to find a male voice
+                    this.maleVoice = voices.find(voice => 
+                        voice.name.toLowerCase().includes('male') ||
+                        voice.name.toLowerCase().includes('david') ||
+                        voice.name.toLowerCase().includes('alex') ||
+                        voice.name.toLowerCase().includes('daniel') ||
+                        voice.name.toLowerCase().includes('mark')
+                    ) || voices.find(voice => voice.lang.startsWith('en')) || voices[0];
                 };
 
-                // Multiple attempts to load voices (mobile browsers need this)
                 if (this.synthesis.getVoices().length === 0) {
                     this.synthesis.addEventListener('voiceschanged', setVoice);
-                    // Force trigger after a delay for mobile
-                    setTimeout(setVoice, 1000);
-                    setTimeout(setVoice, 2000);
                 } else {
                     setVoice();
                 }
-                
-                // Additional check when speech synthesis is first used
-                setTimeout(() => {
-                    if (!this.maleVoice || !this.maleVoice.name) {
-                        setVoice();
-                    }
-                }, 3000);
             }
 
             startListening() {
