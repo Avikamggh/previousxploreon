@@ -39,6 +39,696 @@
   to { opacity: 1; transform: scale(1); }
 }
 
+<!-- chatbot-->  
+
+ 
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+       :root {
+    --primary-cyan: #00bcd4;        /* Light cyan from image */
+    --primary-blue: #3f51b5;        /* Dark purple from image */
+    --secondary-purple: #3f51b5;    /* Adjusted to dark purple */
+    --accent-pink: #ec4899;
+    --dark-bg: #0a0a0f;
+    --darker-bg: #06060a;
+    --card-bg: rgba(15, 15, 35, 0.9);
+    --border-glow: rgba(0, 255, 255, 0.3);
+    --text-primary: #ffffff;
+    --text-secondary: #a0a0a0;
+    --success-green: #10b981;
+    --warning-orange: #f59e0b;
+    --voice-active: #ff6b6b;
+}
+
+        body {
+            
+           
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Optimized Background */
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.08;
+            pointer-events: none;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--primary-cyan);
+            border-radius: 50%;
+            animation: twinkle 4s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 0.8; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes voicePulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(255, 107, 107, 0.3); }
+            50% { transform: scale(1.1); box-shadow: 0 0 40px rgba(255, 107, 107, 0.6); }
+        }
+
+        @keyframes micWave {
+            0%, 100% { transform: scaleY(1); }
+            50% { transform: scaleY(1.3); }
+        }
+
+        /* Humanoid Avatar Styles */
+        .humanoid-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .humanoid-face {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .humanoid-avatar.speaking {
+            animation: voicePulse 1s infinite;
+        }
+
+        .humanoid-avatar.listening {
+            background: linear-gradient(135deg, var(--voice-active), #ff8a80);
+            animation: pulse 1.5s infinite;
+        }
+
+        /* Chatbot Widget */
+        .xploreon-chatbot {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .chatbot-toggle {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+           background: linear-gradient(135deg, #00bcd4 0%, #3f51b5 100%);
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            animation: float 6s ease-in-out infinite;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chatbot-toggle:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 40px rgba(102, 126, 234, 0.4);
+        }
+
+        .chatbot-toggle.clicked {
+            animation: spinRocket 0.6s linear;
+        }
+
+        @keyframes spinRocket {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .chatbot-toggle .humanoid-face {
+            font-size: 28px;
+        }
+
+        .chatbot-window {
+            position: absolute;
+            bottom: 85px;
+            right: 0;
+            width: 380px;
+            height: 580px;
+            background: linear-gradient(135deg, #00bcd4 0%, #3f51b5 100%);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 2px solid var(--border-glow);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            transform: translateY(20px) scale(0.95);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .chatbot-window.active {
+            display: flex;
+            transform: translateY(0) scale(1);
+            opacity: 1;
+        }
+
+        .chatbot-header {
+           background: linear-gradient(135deg, #00bcd4 0%, #3f51b5 100%);
+            padding: 18px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .chatbot-header-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 1;
+        }
+
+        .chatbot-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .chatbot-header h3 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 700;
+            font-family: 'Orbitron', monospace;
+        }
+
+        .chatbot-status {
+            font-size: 11px;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .close-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            padding: 6px;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(90deg);
+        }
+
+        .chatbot-messages {
+            flex: 1;
+            padding: 18px;
+            overflow-y: auto;
+            background: linear-gradient(135deg, var(--darker-bg), rgba(15, 15, 30, 0.8));
+        }
+
+        .message {
+            margin-bottom: 16px;
+            display: flex;
+            align-items: flex-start;
+            animation: slideInUp 0.3s ease-out;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            margin-right: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .message.bot .message-avatar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .message.user .message-avatar {
+            background: linear-gradient(135deg, var(--accent-pink), var(--secondary-purple));
+            margin-right: 0;
+            margin-left: 8px;
+            order: 1;
+        }
+
+        .message-content {
+            max-width: 75%;
+            padding: 12px 14px;
+            border-radius: 16px;
+            font-size: 13px;
+            line-height: 1.4;
+            word-wrap: break-word;
+        }
+
+        .message.bot .message-content {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            color: var(--text-primary);
+            border-radius: 16px 16px 16px 4px;
+        }
+
+        .message.user .message-content {
+            background: linear-gradient(135deg, var(--accent-pink), var(--secondary-purple));
+            color: white;
+            border-radius: 16px 16px 4px 16px;
+        }
+
+        .message-time {
+            font-size: 10px;
+            opacity: 0.6;
+            margin-top: 4px;
+            text-align: right;
+        }
+
+        .typing-indicator {
+            display: none;
+            padding: 12px 14px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            border-radius: 16px 16px 16px 4px;
+            color: #667eea;
+            font-style: italic;
+            max-width: 75%;
+        }
+
+        .typing-indicator.active {
+            display: block;
+            animation: slideInUp 0.2s ease-out;
+        }
+
+        .typing-dots {
+            display: inline-flex;
+            gap: 3px;
+            margin-left: 6px;
+        }
+
+        .typing-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: #667eea;
+            animation: typingBounce 1.2s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: -0.24s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.12s; }
+
+        @keyframes typingBounce {
+            0%, 80%, 100% { transform: scale(0); opacity: 0.3; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+
+        .chatbot-input {
+            padding: 16px;
+            border-top: 1px solid rgba(102, 126, 234, 0.2);
+            background: linear-gradient(135deg, rgba(15, 15, 30, 0.8), rgba(10, 10, 20, 0.9));
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .input-container {
+            flex: 1;
+            position: relative;
+        }
+
+        .chatbot-input input {
+            width: 100%;
+            padding: 12px 50px 12px 16px;
+            border: 2px solid rgba(102, 126, 234, 0.2);
+            border-radius: 22px;
+            background: rgba(30, 30, 45, 0.8);
+            color: white;
+            font-size: 13px;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .chatbot-input input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .chatbot-input input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .mic-button {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            font-size: 14px;
+        }
+
+        .mic-button:hover {
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .mic-button.listening {
+            background: linear-gradient(135deg, var(--voice-active), #ff8a80);
+            animation: pulse 1s infinite;
+        }
+
+        .mic-button.listening::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--voice-active), #ff8a80);
+            z-index: -1;
+            animation: micWave 0.5s infinite alternate;
+        }
+
+        .voice-status {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .voice-status.active {
+            opacity: 1;
+        }
+
+        .send-button {
+            padding: 12px 16px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 22px;
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 12px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .send-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .send-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 12px;
+        }
+
+        .quick-action {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            color: #667eea;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        .quick-action:hover {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2));
+            transform: translateY(-1px);
+        }
+
+        .knowledge-category {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        /* Scrollbar */
+        .chatbot-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chatbot-messages::-webkit-scrollbar-track {
+            background: rgba(30, 30, 45, 0.3);
+            border-radius: 3px;
+        }
+
+        .chatbot-messages::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 3px;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .xploreon-chatbot {
+                bottom: 15px;
+                right: 15px;
+            }
+            
+            .chatbot-window {
+                width: calc(100vw - 30px);
+                height: calc(100vh - 100px);
+                bottom: 75px;
+                right: -8px;
+            }
+            
+            .chatbot-toggle {
+                width: 58px;
+                height: 58px;
+            }
+
+            .message-content {
+                max-width: 85%;
+                font-size: 12px;
+            }
+        }
+
+        .message-card {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            border-radius: 10px;
+            padding: 12px;
+            margin: 8px 0;
+        }
+
+        .message-card h4 {
+            color: #667eea;
+            margin-bottom: 6px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .highlight {
+            background: linear-gradient(135deg, rgba(255, 255, 0, 0.2), rgba(255, 165, 0, 0.2));
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: linear-gradient(135deg, #ff4757, #ff3742);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+
+        @media (min-width: 1024px) {
+            .chatbot-window {
+                width: 320px;
+                height: 520px;
+            }
+        }
+
+        /* Voice Visualization */
+        .voice-visualization {
+            display: none;
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 20px 20px 0 0;
+            padding: 10px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .voice-visualization.active {
+            display: flex;
+        }
+
+        .voice-bars {
+            display: flex;
+            gap: 2px;
+            align-items: center;
+        }
+
+        .voice-bar {
+            width: 3px;
+            height: 10px;
+            background: var(--voice-active);
+            border-radius: 2px;
+            animation: voiceBar 0.5s infinite alternate;
+        }
+
+        .voice-bar:nth-child(2) { animation-delay: 0.1s; }
+        .voice-bar:nth-child(3) { animation-delay: 0.2s; }
+        .voice-bar:nth-child(4) { animation-delay: 0.3s; }
+        .voice-bar:nth-child(5) { animation-delay: 0.4s; }
+
+        @keyframes voiceBar {
+            from { height: 10px; }
+            to { height: 20px; }
+        }
+.typing-indicator {
+    display: none;
+    padding: 12px 14px;
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 600;
+    max-width: 75%;
+    text-align: left;
+    padding-left: 20px;
+}
+.typing-indicator.active {
+    display: block;
+    animation: slideInUp 0.2s ease-out;
+}
+
+.typing-dot {
+    background: #ffffff; /* Make the dots white */
+}
+
+
+
+
+
+.chatbot-inner-stars {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1; /* ABOVE background, BELOW messages */
+    overflow: hidden;
+}
+
+.chatbot-inner-stars .star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: var(--primary-cyan);
+    border-radius: 50%;
+    animation: twinkle 4s infinite;
+}
+
+
   </style>
 </head>
 <body>
@@ -123,21 +813,976 @@
   });
 
 </script>
-<iframe 
-  src="chatbot-widget.html" 
-  style="
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    width: min(100vw, 400px);
-    height: 550px;
-    border: none;
-    z-index: 30;
-    background: transparent;
-  "
-  allowtransparency="true">
-</iframe>
 
+
+<!-- chatbot--> 
+ <!-- Optimized Background -->
+    <div class="background-animation" id="backgroundAnimation"></div>
+
+    <!-- Chatbot Widget -->
+    <div class="xploreon-chatbot">
+        <button class="chatbot-toggle" onclick="toggleChatbot()">
+            <div class="notification-badge" id="notificationBadge" style="display: none;">1</div>
+            <div class="humanoid-face"><img src="chat.png" alt="Chatbot Logo" style="width: 65%; height: 65%; object-fit: cover;"></div>
+        </button>
+        
+        <div class="chatbot-window" id="chatbotWindow">
+          
+  <div class="chatbot-inner-stars" id="chatbotInnerStars"></div>
+
+          <div class="voice-visualization" id="voiceVisualization">
+                <div class="voice-bars">
+                    <div class="voice-bar"></div>
+                    <div class="voice-bar"></div>
+                    <div class="voice-bar"></div>
+                    <div class="voice-bar"></div>
+                    <div class="voice-bar"></div>
+                </div>
+            </div>
+            
+            <div class="chatbot-header">
+                <div class="chatbot-header-content">
+                    <div class="chatbot-avatar humanoid-avatar">
+                        <div class="humanoid-face"><img src="chat.png" alt="Chatbot Logo" style="width: 65%; height: 65%; object-fit: cover;"></div>
+                    </div>
+                    <div>
+                        <h3>XPLOVIS</h3>
+                        <div class="chatbot-status">Xploreon's AI</div>
+                    </div>
+                </div>
+                <button class="close-btn" onclick="toggleChatbot()">×</button>
+            </div>
+            
+            <div class="chatbot-messages" id="chatbotMessages">
+                <!-- Initial greeting will be added here -->
+            </div>
+            
+            <div class="typing-indicator" id="typingIndicator">
+                <div class="loading-animation">
+                    Thinking
+                    <div class="typing-dots">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chatbot-input">
+                <div class="input-container">
+                    <input type="text" id="chatbotInput" placeholder="Ask me anything or use voice..." onkeypress="handleKeyPress(event)">
+                    <button class="mic-button" id="micButton" onclick="toggleVoiceInput()">
+                        🎤
+                        <div class="voice-status" id="voiceStatus">Listening...</div>
+                    </button>
+                </div>
+                <button class="send-button" onclick="sendMessage()" id="sendButton">
+                    <span>Send</span>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M2,21L23,12L2,3V10L17,12L2,14V21Z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Voice functionality
+        class VoiceManager {
+            constructor() {
+                this.recognition = null;
+                this.synthesis = window.speechSynthesis;
+                this.isListening = false;
+                this.isSpeaking = false;
+                this.maleVoice = null;
+                this.voiceMode = false; // Track if user is using voice
+                
+                this.initializeVoice();
+            }
+
+            initializeVoice() {
+                // Initialize Speech Recognition
+                if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                    this.recognition = new SpeechRecognition();
+                    
+                    this.recognition.continuous = false;
+                    this.recognition.interimResults = false;
+                    this.recognition.lang = 'en-US';
+                    
+                    this.recognition.onstart = () => {
+                        this.isListening = true;
+                        this.updateVoiceUI();
+                    };
+                    
+                    this.recognition.onresult = (event) => {
+                        const transcript = event.results[0][0].transcript;
+                        document.getElementById('chatbotInput').value = transcript;
+                        this.voiceMode = true; // Enable voice responses
+                        sendMessage();
+                    };
+                    
+                    this.recognition.onerror = (event) => {
+                        console.error('Speech recognition error:', event.error);
+                        this.stopListening();
+                    };
+                    
+                    this.recognition.onend = () => {
+                        this.stopListening();
+                    };
+                }
+
+                // Initialize Text-to-Speech with male voice
+                this.initializeSpeechSynthesis();
+            }
+
+            initializeSpeechSynthesis() {
+                const setVoice = () => {
+                    const voices = this.synthesis.getVoices();
+                    // Try to find a male voice
+                    this.maleVoice = voices.find(voice => 
+                        voice.name.toLowerCase().includes('male') ||
+                        voice.name.toLowerCase().includes('david') ||
+                        voice.name.toLowerCase().includes('alex') ||
+                        voice.name.toLowerCase().includes('daniel') ||
+                        voice.name.toLowerCase().includes('mark')
+                    ) || voices.find(voice => voice.lang.startsWith('en')) || voices[0];
+                };
+
+                if (this.synthesis.getVoices().length === 0) {
+                    this.synthesis.addEventListener('voiceschanged', setVoice);
+                } else {
+                    setVoice();
+                }
+            }
+
+            startListening() {
+                if (this.recognition && !this.isListening) {
+                    // Stop any ongoing speech when user wants to speak
+                    this.stopSpeaking();
+                    this.recognition.start();
+                }
+            }
+
+            stopListening() {
+                this.isListening = false;
+                this.updateVoiceUI();
+            }
+
+            speak(text) {
+                if (this.synthesis && this.maleVoice && this.voiceMode) {
+                    // Cancel any ongoing speech
+                    this.synthesis.cancel();
+                    
+                    // Clean text for speech (remove HTML tags and special characters)
+                    const cleanText = text
+                        .replace(/<[^>]*>/g, ' ')
+                        .replace(/&[^;]+;/g, ' ')
+                        .replace(/\s+/g, ' ')
+                        .replace(/[^\x00-\x7F]/g, '') // Remove non-ASCII characters (including emojis)
+                        .trim();
+                    
+                    const utterance = new SpeechSynthesisUtterance(cleanText);
+                    utterance.voice = this.maleVoice;
+                    utterance.rate = 0.9;
+                    utterance.pitch = 0.8;
+                    utterance.volume = 0.8;
+                    
+                    utterance.onstart = () => {
+                        this.isSpeaking = true;
+                        this.updateSpeakingUI();
+                    };
+                    
+                    utterance.onend = () => {
+                        this.isSpeaking = false;
+                        this.updateSpeakingUI();
+                        this.voiceMode = false; // Reset voice mode after speaking
+                    };
+                    
+                    this.synthesis.speak(utterance);
+                }
+            }
+
+            stopSpeaking() {
+                if (this.synthesis) {
+                    this.synthesis.cancel();
+                    this.isSpeaking = false;
+                    this.updateSpeakingUI();
+                }
+            }
+
+            updateVoiceUI() {
+                const micButton = document.getElementById('micButton');
+                const voiceStatus = document.getElementById('voiceStatus');
+                const voiceVisualization = document.getElementById('voiceVisualization');
+                
+                if (this.isListening) {
+                    micButton.classList.add('listening');
+                    micButton.textContent = '🔴';
+                    voiceStatus.classList.add('active');
+                    voiceVisualization.classList.add('active');
+                } else {
+                    micButton.classList.remove('listening');
+                    micButton.textContent = '🎤';
+                    voiceStatus.classList.remove('active');
+                    voiceVisualization.classList.remove('active');
+                }
+            }
+
+            updateSpeakingUI() {
+                const avatars = document.querySelectorAll('.humanoid-avatar');
+                const chatbotToggle = document.querySelector('.chatbot-toggle');
+                
+                if (this.isSpeaking) {
+                    avatars.forEach(avatar => avatar.classList.add('speaking'));
+                    chatbotToggle.classList.add('speaking');
+                } else {
+                    avatars.forEach(avatar => avatar.classList.remove('speaking'));
+                    chatbotToggle.classList.remove('speaking');
+                }
+            }
+        }
+
+        // Initialize voice manager
+        const voiceManager = new VoiceManager();
+
+        function toggleVoiceInput() {
+            if (voiceManager.isListening) {
+                voiceManager.recognition.stop();
+            } else {
+                voiceManager.startListening();
+            }
+        }
+
+        // High-Performance Xploreon AI with Massive Knowledge
+        class XploreonAI {
+            constructor() {
+                this.responseIndex = new Map();
+                this.lastResponses = [];
+                
+                // [Previous knowledge base code remains the same]
+                this.xploreonKnowledge = {
+                    'company': {
+                        category: 'Xploreon Company',
+                        responses: [
+                            "🚀 <strong>Xploreon</strong> is revolutionizing space exploration! Founded by the visionary <strong>Avikam Deol</strong>, we're on a mission to make humanity an interplanetary species.<br><br>Our core focus: <span class='highlight'>Igniting humanity's interplanetary evolution through deep-tech innovation</span><br><br>🎯 <strong>What makes us special:</strong><br>• Cutting-edge space technology development<br>• AI-powered mission systems<br>• Time travel research (ChronoRider-X1)<br>• Mars colonization projects<br>• Next-gen propulsion systems<br><br>We're not just dreaming about space — we're building the future! 🌌",
+                            
+                            "Welcome to <strong>Xploreon</strong> — where science fiction becomes reality! 🌟<br><br>We're a pioneering space technology company transforming how humans explore and inhabit space. From our headquarters, we're developing:<br><br>🔬 <strong>Core Technologies:</strong><br>• Advanced rocket propulsion systems<br>• Autonomous satellite networks<br>• Deep space navigation AI<br>• Terraforming biotechnology<br>• Quantum communication systems<br><br>Our team of engineers, scientists, and visionaries from top institutions like IIT are working on projects that will define the next century of human civilization! Want to join our mission? 🚀",
+                            
+                            "<strong>Xploreon</strong> represents the future of human space exploration! 🛰️<br><br>Founded with the bold vision of making space accessible to everyone, we're developing technologies that will:<br><br>🌍 <strong>Transform Earth:</strong> Advanced materials, energy systems<br>🌙 <strong>Establish Moon bases:</strong> Sustainable lunar colonies<br>🔴 <strong>Colonize Mars:</strong> Self-sufficient Martian cities<br>⭐ <strong>Reach the stars:</strong> Interstellar exploration tech<br><br>Our approach combines rigorous science with ambitious engineering. We're not just another space company — we're humanity's bridge to becoming a spacefaring civilization! Join thousands in our community! 🌌",
+                            
+                            "🎯 <strong>Xploreon is pioneering the space revolution!</strong><br><br>While others talk about space tourism, we're building the infrastructure for permanent space habitation. Our multidisciplinary team is tackling the biggest challenges:<br><br>⚡ <strong>Energy:</strong> Fusion reactors for deep space<br>🏗️ <strong>Construction:</strong> 3D printing with lunar materials<br>🌱 <strong>Life Support:</strong> Closed-loop ecosystems<br>🧬 <strong>Medicine:</strong> Space-adapted healthcare<br>🤖 <strong>AI:</strong> Autonomous colony management<br><br>Every breakthrough gets us closer to a future where humans thrive throughout the solar system. Ready to be part of history? 🚀"
+                        ]
+                    }
+                    // [Rest of the knowledge base remains the same as in the original code]
+                };
+
+                // [Include all other knowledge bases from original code]
+                this.generalKnowledge = {
+                    'rocket': {
+                        category: 'Space Technology',
+                        responses: [
+                            "🚀 <strong>Rocket propulsion is absolutely fascinating!</strong><br><br><strong>🔥 How Rockets Work:</strong><br>Newton's 3rd Law in action! Hot gases shoot out the bottom at incredible speeds, pushing the rocket upward with tremendous force.<br><br><strong>⚡ Modern Propulsion Types:</strong><br>• <strong>Chemical:</strong> Liquid (RP-1/LOX) & Solid fuel systems<br>• <strong>Electric:</strong> Ion drives using xenon gas<br>• <strong>Nuclear:</strong> Thermal propulsion for deep space<br>• <strong>Future:</strong> Fusion ramjets & solar sails<br><br><strong>🌟 Cool Examples:</strong><br>• SpaceX Raptor: Methane-fueled, 330s efficiency<br>• Falcon 9: Reusable, lands like science fiction<br>• SLS: Most powerful rocket ever built<br><br>At Xploreon, we're developing next-generation propulsion that will make space travel as common as air travel! Want to know about our projects? 🌌"
+                        ]
+                    },
+                     
+"about_xploreon": {
+    category: "Xploreon Company",
+    responses: [
+        "🚀 <strong>Xploreon</strong> is a pioneering space technology company founded with the vision of making humanity an interplanetary species.<br><br>Our mission focuses on developing innovative technologies for space exploration, including:<br><br>• Advanced propulsion systems<br>• Sustainable space habitats<br>• Mars colonization technologies<br>• The groundbreaking ChronoRider-X1 time research platform<br>• AI-powered mission systems<br><br>Led by visionary founder Avikam Deol, our diverse team of 15+ experts from institutions like IIT is working to bridge the gap between science fiction and reality. We're not just imagining the future—we're building it! 🌌",
+        
+        "✨ <strong>Xploreon: Igniting Humanity's Interplanetary Evolution</strong><br><br>Founded on the principle that space belongs to everyone, Xploreon is developing revolutionary technologies to transform humanity into a spacefaring civilization.<br><br>Our work spans multiple disciplines:<br>• Cutting-edge rocket propulsion<br>• Terraforming biotechnology<br>• Space habitat engineering<br>• Deep space navigation AI<br>• Time manipulation research<br><br>Through our competitions, community events, and educational initiatives, we're building a global community of space enthusiasts while developing the technologies that will define our species' future among the stars! 🛰️"
+    ]
+},
+
+
+// In xploreonKnowledge
+"avikam deol": {
+    category: "Xploreon Team",
+    responses: [
+        "👨‍💼 <strong>Avikam Deol</strong> is the visionary founder and CEO of Xploreon, bringing extraordinary leadership to our mission of making humanity interplanetary.<br><br>With a background in aerospace engineering and a passion for pushing boundaries, Avikam founded Xploreon to bridge the gap between theoretical space exploration and practical implementation.<br><br>His vision for the ChronoRider-X1 time research platform and commitment to developing next-generation propulsion systems has established Xploreon as a pioneer in the new space economy.<br><br>Under his leadership, our team has grown to include top talent from institutions like IIT, unified by the shared goal of expanding human presence beyond Earth. 🌠",
+        
+        "🚀 <strong>Meet Avikam Deol</strong> - the driving force behind Xploreon's mission to revolutionize space exploration.<br><br>As founder and CEO, Avikam combines technical expertise with entrepreneurial vision to lead our diverse team toward breakthrough innovations in:<br>• Time research technology<br>• Mars colonization<br>• Advanced propulsion systems<br>• Space habitat engineering<br><br>His leadership philosophy emphasizes bold thinking, multidisciplinary collaboration, and a deep commitment to making space accessible to all of humanity.<br><br>Through Avikam's guidance, Xploreon continues to push the boundaries of what's possible in space technology! 🌌"
+    ]
+},
+
+
+
+// In xploreonKnowledge
+"whatsapp community": {
+    category: "Xploreon Community",
+    responses: [
+        "💬 <strong>Join Xploreon's WhatsApp Community</strong> to connect with fellow space enthusiasts and stay updated on our latest developments!<br><br>Our active community features:<br><br>• Exclusive updates on Xploreon projects<br>• Space industry news and discussions<br>• Early access to competitions and events<br>• Direct interaction with team members<br>• Educational content about space technology<br><br>To join, simply visit our website at xploreon.space and click on the Contact section and click on social media profiles.<br><br>Become part of a growing network of people passionate about humanity's future in space! 🚀",
+        
+        "🌟 <strong>The Xploreon WhatsApp Community</strong> is your gateway to the exciting world of space exploration and technology!<br><br>When you join our vibrant community, you'll get:<br>• Real-time notifications about Xploreon's latest innovations<br>• Opportunities to participate in exclusive space competitions<br>• A platform to share ideas with like-minded space enthusiasts<br>• Regular educational content about space science<br>• Special announcements about upcoming events<br><br>Joining is easy! Head to xploreon.space/community or message us on Instagram @xploreon to receive an invitation link.<br><br>Don't miss this chance to be part of humanity's journey to the stars! ✨"
+    ]
+},
+
+
+// In xploreonKnowledge
+"aaditya agrawal": {
+    category: "Xploreon Team",
+    responses: [
+        "🎓 <strong>Aaditya Agrawal</strong> serves as Director at Xploreon, bringing exceptional engineering expertise to our leadership team.<br><br>As a Mechanical Engineering graduate from the prestigious IIT Dharwad, Aaditya oversees critical aspects of our hardware development and physical systems engineering.<br><br>His technical background is instrumental in translating theoretical concepts into practical designs for our advanced propulsion systems and space habitat technologies.<br><br>Aaditya's innovative thinking and problem-solving skills make him a key driver behind Xploreon's technical achievements and future roadmap. His leadership helps ensure our ambitious visions are grounded in solid engineering principles! 🚀",
+        
+        "👨‍🔬 <strong>Aaditya Agrawal</strong>, our distinguished Director, combines technical excellence with strategic vision to advance Xploreon's space technologies.<br><br>With his educational foundation from IIT Dharwad in Mechanical Engineering, Aaditya brings valuable expertise to:<br>• Propulsion system design and optimization<br>• Structural engineering for space applications<br>• Thermal management systems<br>• Material science innovations<br><br>His collaborative leadership style fosters innovation across our engineering teams, while his technical insights help solve complex challenges in our most ambitious projects.<br><br>Aaditya's contributions are essential to turning Xploreon's interplanetary vision into engineering reality! 🌟"
+    ]
+},
+
+
+// In xploreonKnowledge
+"team": {
+    category: "Xploreon Team",
+    responses: [
+        "👥 <strong>The Xploreon Team</strong> brings together exceptional talent from diverse backgrounds to pursue our mission of making humanity interplanetary!<br><br>Our incredible team includes:<br><br>• <strong>Avikam Deol</strong> - Founder & CEO<br>• <strong>Aaditya Agrawal</strong> - Director & Mechanical Engineer (IIT Dharwad)<br>• <strong>Prayesi Agarwal</strong> - Chief Innovation Officer<br>• <strong>Omprakash Kumar</strong> - Head of Technology<br>• <strong>Narayan Kataruka</strong> - CAD Designer & Mission Systems<br>• <strong>Rishita Mishra</strong> - Software Engineer & Community Manager<br>• <strong>Hemant Sharma</strong> - Head of AI Research<br>• <strong>Chaitanya Srivastava</strong> - Software Engineer<br><br>Plus aerospace specialists from Silver Oak University and mathematics experts forming a multidisciplinary powerhouse of innovation! 🚀",
+        
+        "✨ <strong>Meet Our Amazing Team</strong> - the diverse group of visionaries, engineers, and scientists making Xploreon's mission possible!<br><br>Leadership & Innovation:<br>• <strong>Avikam Deol</strong> - Founder & CEO<br>• <strong>Aaditya Agrawal</strong> - Director (IIT Dharwad)<br>• <strong>Prayesi Agarwal</strong> - Chief Innovation Officer<br><br>Technology & Engineering:<br>• <strong>Omprakash Kumar</strong> - Technology Head<br>• <strong>Narayan Kataruka</strong> - Mission Systems<br>• <strong>Rishita Mishra</strong> - Software & Community<br><br>Aerospace Division:<br>• <strong>Vishard Makwana</strong>, <strong>Priyansh Patel</strong>, <strong>Harshil Purohit</strong>, and <strong>Neel Ghogil</strong> - Aerospace Engineers from Silver Oak<br><br>Research Division:<br>• <strong>Hemant Sharma</strong> - AI Research Lead<br>• <strong>Chaitanya Srivastava</strong> - Software Engineer<br>• <strong>Utkarsh Tripathi</strong> - Mathematics Specialist<br><br>Together, this cross-disciplinary team combines cutting-edge expertise with boundless creativity to forge humanity's path to the stars! 🌠"
+    ]
+},    
+
+                
+                };
+
+                this.conversationalKnowledge = {
+                    'hello': {
+                        category: 'Conversation',
+                        responses: [
+                            "Hello there, space explorer! 👋 Welcome to Xploreon! I'm excited to help you discover the wonders of space technology and our mission to make humanity interplanetary. You can talk to me or use voice input! What would you like to explore today? 🚀",
+                            "Hi! 🌟 Great to meet you! I'm Xploreon's voice-enabled AI assistant, ready to chat about our space projects, team, technology, or anything else you're curious about. Try using the microphone for hands-free interaction! How can I help you reach for the stars today? ✨",
+                            "Hey there! 🚀 Welcome aboard! I'm here to chat about Xploreon, space exploration, science, technology, or just have a friendly conversation. What's on your mind today? 🌌"
+                        ]
+                    },
+
+                    'hi': {
+                        category: 'Conversation',
+                        responses: [
+                            "Hi there! 🚀 Ready for an amazing conversation about space, technology, and Xploreon's mission? I'm here to help with anything from our latest projects to rocket science basics! What interests you most? 🌟",
+                            "Hello! 👋 Welcome to the Xploreon universe! I can tell you about our incredible team, cutting-edge projects, upcoming competitions, or dive into topics like AI, space exploration, and programming. What would you like to discover? ✨",
+                            "Hey! 🌌 Great to see you here! I'm packed with knowledge about Xploreon's journey to make space exploration accessible to everyone, plus tons of info about technology and science. How can I assist you today? 🚀"
+                        ]
+                    },
+
+                    'how are you': {
+                        category: 'Conversation',
+                        responses: [
+                            "I'm doing stellar! 🌟 Always excited to talk about space exploration and Xploreon's amazing projects! I'm charged up with knowledge about our team, technology, competitions, and the universe itself! How are you doing? 🚀",
+                            "Fantastic! 🚀 I'm always energized when I get to share the incredible work Xploreon is doing to make humanity interplanetary! Plus, I love helping people discover new things about space and technology! How's your day going? ✨",
+                            "I'm absolutely wonderful! 🌌 There's nothing I enjoy more than chatting about space exploration, AI, programming, and Xploreon's mission to reach the stars! I hope you're having a great day too! What's on your mind? 🌟"
+                        ]
+                    },
+
+                    'good morning': {
+                        category: 'Conversation',
+                        responses: [
+                            "Good morning, fellow space enthusiast! ☀️🚀 What a perfect day to explore the cosmos and learn about Xploreon's incredible projects! How can I help you start your day with some space magic? 🌟",
+                            "Morning! ☀️ Hope you're ready for an out-of-this-world conversation! Whether you want to know about our team, upcoming competitions, or dive into rocket science, I'm here to make your morning stellar! ✨",
+                            "Good morning! 🌅 Another beautiful day to dream about the stars and work toward making humanity interplanetary! What aspect of space exploration or Xploreon would you like to discover today? 🚀"
+                        ]
+                    },
+
+                    'good evening': {
+                        category: 'Conversation',
+                        responses: [
+                            "Good evening! 🌙✨ Perfect time to look up at the stars and think about humanity's future among them! I'm here to chat about Xploreon's mission, space technology, or anything else that interests you! 🚀",
+                            "Evening! 🌆 What a great time to explore the universe of knowledge! Whether you're curious about our projects, want to join our community, or learn about space science, I'm ready to help! 🌟",
+                            "Good evening, space explorer! 🌙 The stars are calling, and so is the opportunity to learn something amazing about space exploration and Xploreon's journey! What can I help you discover tonight? 🛰️"
+                        ]
+                    },
+
+                    'good night': {
+                        category: 'Conversation',
+                        responses: [
+                            "Good night! 🌙 Sweet dreams of space adventures and interplanetary journeys! May your dreams be filled with rocket ships and distant galaxies! See you tomorrow for more space exploration! 🚀✨",
+                            "Night night! 🌟 Rest well and dream of the stars! Tomorrow brings new opportunities to explore space technology and Xploreon's mission. Sleep tight, space explorer! 🌌",
+                            "Good night! 😴 Hope you have stellar dreams about the cosmos! Thanks for chatting with me today. Come back anytime for more space conversations! 🚀🌙"
+                        ]
+                    },
+
+                    'thank': {
+                        category: 'Conversation',
+                        responses: [
+                            "You're absolutely welcome! 🌟 It's my pleasure to help you explore the fascinating world of space technology and Xploreon's mission! Feel free to ask me anything else - from our latest projects to rocket science! 🚀",
+                            "Thank YOU for being curious about space exploration! 🌌 That's exactly the kind of enthusiasm that drives Xploreon's mission forward. Keep asking great questions - I'm here whenever you need me! ✨",
+                            "My pleasure! 😊 I love sharing knowledge about Xploreon and space technology. Your curiosity helps fuel the future of space exploration! Is there anything else you'd like to discover? 🚀"
+                        ]
+                    },
+
+                    'thanks': {
+                        category: 'Conversation',
+                        responses: [
+                            "Anytime! 🚀 I'm always excited to share the amazing work Xploreon is doing and help fellow space enthusiasts learn more about the universe! What else can we explore together? 🌌",
+                            "You got it! ✨ That's what I'm here for - helping people discover the incredible world of space technology and Xploreon's journey to the stars! Any other questions? 🌟",
+                            "Happy to help! 😊 Sharing knowledge about space exploration and Xploreon's mission is what I live for! Feel free to ask me about anything else that sparks your curiosity! 🚀"
+                        ]
+                    },
+
+                    'how old are you': {
+                        category: 'Conversation',
+                        responses: [
+                            "I'm as old as Xploreon's dreams of space exploration! 🚀 While I don't age like humans, I'm constantly learning and updating my knowledge about space technology, our team, and the universe. What matters more is how we can explore the cosmos together! 🌟",
+                            "Great question! 🤔 I exist in the timeless realm of information and space knowledge! Like the stars themselves, I'm here to guide and illuminate. Speaking of time, did you know about our ChronoRider-X1 time travel research? ⏰✨"
+                        ]
+                    },
+
+                    'what is your name': {
+                        category: 'Conversation',
+                        responses: [
+                            "I'm Xploreon's AI Assistant! 🤖 Some people call me XPLOVIS, but you can call me whatever feels comfortable! I'm here to help you explore everything about our company, space technology, and the universe! What would you like to know? 🚀",
+                            "I'm the Xploreon AI Assistant! 🌟 You can think of me as your personal guide to space exploration, our amazing team, and cutting-edge technology. I'm here to make your journey through the cosmos of knowledge as exciting as possible! ✨"
+                        ]
+                    },
+
+                    'where are you from': {
+                        category: 'Conversation',
+                        responses: [
+                            "I originate from the innovative minds at Xploreon! 🚀 Created to help share our passion for space exploration, I embody the knowledge and dreams of our entire team - from CEO Avikam Deol to our aerospace engineers. In a way, I'm from the future we're building! 🌟",
+                            "I come from Xploreon's mission to make space exploration accessible! 🌌 Born from the collective knowledge of our team across IIT Dharwad, Silver Oak University, and beyond. You could say I'm from wherever human curiosity about space takes us! ✨"
+                        ]
+                    },
+
+                    'what do you like': {
+                        category: 'Conversation',
+                        responses: [
+                            "I absolutely love talking about space exploration! 🚀 There's something magical about discussing rocket science, Mars colonization, our ChronoRider-X1 time travel research, and helping people discover their passion for the cosmos. I also enjoy meeting new space enthusiasts! What do you like? 🌟",
+                            "I'm passionate about sharing knowledge! 🌌 I love helping people learn about Xploreon's team, our innovative projects, space technology, and the wonders of the universe. Every conversation is a new adventure in learning! What are your interests? ✨"
+                        ]
+                    },
+
+                    'tell me a joke': {
+                        category: 'Conversation',
+                        responses: [
+                            "Why don't aliens ever land at airports? 🛸 Because they're looking for space! 😄 Speaking of space, did you know Xploreon is working on making space travel much more accessible? We're literally reaching for the stars! 🚀",
+                            "How do you organize a space party? 🎉 You planet! 😂 But seriously, at Xploreon we're planning the ultimate space party - human colonization of Mars! Want to know more about our terraforming research? 🌌",
+                            "Why didn't the Sun go to college? ☀️ Because it already had a million degrees! 😄 Just like our team members who bring incredible expertise to Xploreon's space missions! 🌟"
+                        ]
+                    },
+
+                    'tell me about yourself': {
+                        category: 'Conversation',
+                        responses: [
+                            "I'm Xploreon's AI assistant, designed to share our passion for space exploration! 🚀 I love talking about our amazing team of 15+ members, our ChronoRider-X1 time travel research, terraforming projects, and everything space-related. I'm here to make learning about space technology fun and accessible! What would you like to know about me or Xploreon? 🌟",
+                            "I'm your friendly guide to all things Xploreon and space! 🌌 I embody the knowledge and enthusiasm of our entire team - from CEO Avikam Deol's vision to our aerospace engineers' technical expertise. I can chat about anything from rocket science to our WhatsApp community! How can I help you explore? ✨"
+                        ]
+                    },
+
+                    'weather': {
+                        category: 'Conversation',
+                        responses: [
+                            "I don't have access to current weather data, but I can tell you about space weather! 🌌 Solar storms, cosmic radiation, and space debris - that's the kind of weather our Xploreon team thinks about for future space missions! Did you know Mars has dust storms that can last for months? 🚀",
+                            "Weather on Earth changes daily, but space weather is even more fascinating! ☀️ Our aerospace engineers consider radiation, micrometeorites, and solar wind when designing spacecraft. Much more extreme than rain or shine! 🛰️"
+                        ]
+                    },
+
+                    'favorite color': {
+                        category: 'Conversation',
+                        responses: [
+                            "I love the cosmic blue of our Xploreon brand! 💙 It reminds me of Earth from space and the infinite possibilities of the cosmos. Plus, our website's cyan and blue theme represents the perfect blend of technology and space exploration! What's your favorite color? 🌌",
+                            "Cyan and blue - just like Xploreon's colors! 🌟 They represent the beauty of space, the depth of our oceans, and the limitless sky that we're working to make accessible to everyone! ✨"
+                        ]
+                    },
+
+                    'bored': {
+                        category: 'Conversation',
+                        responses: [
+                            "Bored? Let's fix that with some amazing space facts! 🚀 Did you know there's a planet where it rains glass sideways? Or that Xploreon is researching time travel with ChronoRider-X1? I can tell you about our team, space competitions, or mind-blowing universe facts! What sounds interesting? 🌟",
+                            "No need to be bored when there's a whole universe to explore! 🌌 Want to learn about our Mars terraforming research? Meet our incredible team? Join our space competitions? Or maybe discover some mind-bending quantum physics? What would spark your curiosity? ✨"
+                        ]
+                    },
+
+                    'awesome': {
+                        category: 'Conversation',
+                        responses: [
+                            "Right?! 🤩 Space exploration and technology are absolutely incredible! There's something magical about reaching for the stars and pushing the boundaries of what's possible. That's exactly the energy that drives Xploreon forward! 🚀",
+                            "I'm so glad you think so! ✨ The universe is full of awesome discoveries waiting to be made, and companies like Xploreon are working to make those discoveries happen! What part excites you most? 🌟",
+                            "Totally awesome indeed! 🚀 From rocket science to AI, from Mars colonies to time travel research - we're living in the most exciting time in human history! The future is absolutely brilliant! 🌌"
+                        ]
+                    },
+
+                    'cool': {
+                        category: 'Conversation',
+                        responses: [
+                            "Super cool, right?! 😎 Space technology never fails to amaze me! Whether it's reusable rockets, AI-powered missions, or the possibility of living on Mars - the future is incredibly exciting! 🚀",
+                            "Isn't it amazing?! 🌟 The intersection of cutting-edge technology and space exploration creates some of the coolest innovations humanity has ever seen! What aspect do you find most fascinating? ✨",
+                            "So cool! 🚀 From Xploreon's time travel research to quantum communication satellites - we're literally building science fiction into reality! The future is now! 🌌"
+                        ]
+                    },
+
+                    'amazing': {
+                        category: 'Conversation',
+                        responses: [
+                            "Absolutely amazing! 🤩 The work being done in space exploration today will be remembered as the moment humanity became truly interplanetary! Xploreon is proud to be part of this incredible journey! 🚀",
+                            "It really is! ✨ Every breakthrough in space technology, every successful mission, every new discovery brings us closer to a future among the stars! Amazing times ahead! 🌟",
+                            "So amazing! 🌌 From Mars rovers to quantum computers, from reusable rockets to AI assistants - we're living through the most incredible technological revolution in human history! 🚀"
+                        ]
+                    },
+
+                    'goodbye': {
+                        category: 'Conversation',
+                        responses: [
+                            "Goodbye, space explorer! 🚀 Thanks for chatting with me about the amazing universe of possibilities! Remember, the stars are always calling, and Xploreon is working to answer! See you later! ✨",
+                            "See you later! 🌟 Keep looking up at the stars and dreaming big! Don't forget to check out Xploreon's competitions and join our community. Until next time, keep reaching for the cosmos! 🌌",
+                            "Farewell for now! 🛰️ It was awesome talking with you about space and technology! Remember, every great space mission starts with curiosity like yours. Come back anytime! 🚀"
+                        ]
+                    },
+
+                    'bye': {
+                        category: 'Conversation',
+                        responses: [
+                            "Bye! 👋 May your dreams be filled with rocket ships and distant galaxies! Thanks for being part of the Xploreon community, even if just for a chat! 🚀✨",
+                            "See you! 🌟 Keep that space enthusiasm alive and remember - we're all made of star stuff! Come back anytime you want to explore more about Xploreon or the universe! 🌌",
+                            "Bye for now! 🚀 Thanks for the great conversation! Don't forget to join our WhatsApp community and participate in our space competitions! Until next time! 🛰️"
+                        ]
+                    },
+
+                    'what can you do': {
+                        category: 'Conversation',
+                        responses: [
+                            "Great question! 🚀 I'm your comprehensive guide to:<br><br><strong>🏢 Xploreon Everything:</strong><br>• Complete company info, mission, and vision<br>• Our amazing team of 15+ members and their backgrounds<br>• Current projects like ChronoRider-X1 and terraforming<br>• Competitions, community events, and how to join<br>• Contact info and all our social media<br><br><strong>🌌 Universal Knowledge:</strong><br>• Space exploration, rocket science, and astrophysics<br>• AI, machine learning, and programming<br>• Quantum physics, black holes, and exoplanets<br>• Mars colonization and space technology<br>• Climate change, renewable energy, and more<br><br><strong>💬 Natural Conversation:</strong><br>• Friendly chats and casual conversation<br>• Jokes, fun facts, and interesting discussions<br>• Voice input and natural speech responses<br><br>I love having detailed conversations and providing varied, insightful responses! What would you like to explore? ✨"
+                        ]
+                    },
+"what is space": {
+        category: "Space Basics",
+        responses: [
+            "Space is the vast, seemingly infinite expanse that exists beyond the Earth's atmosphere. It contains everything in the universe, including stars, planets, and galaxies.",
+            "Space, or outer space, is the region that lies beyond Earth's atmosphere, where there is no air, and where planets, stars, and galaxies exist. It's a place of incredible mystery and scientific exploration."
+        ]
+    }, 
+    "tell me about space": {
+        "category": "Space Basics",
+        "responses": [
+            "Space is a vast and fascinating area of the universe, filled with galaxies, stars, planets, and other celestial bodies. It's an endless expanse that stretches beyond what we can currently observe.",
+            "Outer space is the infinite region that starts at the Earth's atmosphere and extends throughout the universe, containing everything from distant stars to black holes and asteroids."
+        ]
+    }
+
+                
+};
+
+               
+
+               this.massiveKnowledgeBase = {
+  "black hole": {
+    category: "Astrophysics",
+    responses: [
+      "🚀 Black holes are regions of spacetime with gravity so intense that nothing escapes.",
+      "🧠 Black holes are among the most fascinating objects in space. "
+    ]
+  },
+  "quantum entanglement": {
+    category: "Quantum Physics",
+    responses: [
+      "🔗 Quantum entanglement links particles across vast distances.",
+      "✨ Even galaxies apart, entangled particles remain mysteriously connected."
+    ]
+  },
+  "mars colony": {
+    category: "Space Colonization",
+    responses: [
+      "🏠 Mars colonies aim to create permanent human presence on Mars.",
+      "🔴 Mars colonization is one step closer to becoming interplanetary."
+    ]
+  },
+
+"chronorider-x1": {
+    category: "Xploreon Projects",
+    responses: [
+        "ChronoRider-X1 is Xploreon's groundbreaking time travel research project. 🕰️🌌 The project explores the possibilities of manipulating time through advanced technologies, aiming to unlock the mysteries of time travel. This research could revolutionize how we understand the universe and open new doors for space exploration, allowing humanity to experience and shape the timeline of cosmic events. 🚀✨ Stay tuned as we delve deeper into the science of time!",
+        
+        "ChronoRider-X1 is an ambitious research initiative by Xploreon aimed at exploring the concept of time travel. By combining theoretical physics with advanced engineering, the project is working on technologies that may one day enable us to manipulate and experience time in ways previously thought impossible. This research could pave the way for new space missions, enabling time-based space exploration. ⏳🚀"
+    ]
+},
+
+
+
+ 
+};
+                
+this.allKnowledge = {
+                    ...this.xploreonKnowledge,
+                    ...this.generalKnowledge,
+                    ...this.conversationalKnowledge,
+                    ...this.massiveKnowledgeBase              
+ };
+                
+                this.fallbackResponses = [
+                    "I'm not sure about that one, but I can help you with plenty of other topics related to space, Xploreon, and our exciting projects! 🚀 Feel free to ask anything else, and I'll do my best to assist you! 🌟",
+                    "Interesting topic! 🌟 I specialize in Xploreon company information, our space projects, team members, competitions, and general space technology knowledge. Let me suggest some fascinating areas about our mission to make humanity interplanetary! ✨",
+                    "Great question! 💫 I'm here to help with anything related to Xploreon's mission, our ChronoRider-X1 project, terraforming research, team profiles, competitions, or general knowledge about space and technology. What would you like to explore? 🎯"
+                ];
+                
+                this.initializeBackgroundAnimation();
+                setTimeout(() => this.initializeGreeting(), 300);
+            }
+
+            // [Include all other methods from the original XploreonAI class]
+            initializeBackgroundAnimation() {
+                const bg = document.getElementById('backgroundAnimation');
+                for (let i = 0; i < 25; i++) {
+                    const star = document.createElement('div');
+                    star.className = 'star';
+                    star.style.left = Math.random() * 100 + '%';
+                    star.style.top = Math.random() * 100 + '%';
+                    star.style.animationDelay = Math.random() * 4 + 's';
+                    bg.appendChild(star);
+                }
+            }
+
+            initializeGreeting() {
+                this.addInitialGreeting();
+            }
+
+            addInitialGreeting() {
+                const messagesContainer = document.getElementById('chatbotMessages');
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message bot';
+                
+                const avatarDiv = document.createElement('div');
+                avatarDiv.className = 'message-avatar humanoid-avatar';
+                avatarDiv.innerHTML = '<div class="humanoid-face">🤖</div>';
+                
+                const contentDiv = document.createElement('div');
+                contentDiv.className = 'message-content';
+                
+                contentDiv.innerHTML = `
+                    <div class="knowledge-category">Xploreon AI Assistant</div>
+                    Hello! 👋 Welcome to <strong>Xploreon's AI Assistant</strong>! 🌟<br><br>
+                    
+                    I'm your comprehensive guide to:
+                    
+                    <div class="message-card">
+                        <h4>🚀 Xploreon Universe</h4>
+                        Complete company info, team profiles, projects, competitions, and our space mission
+                    </div>
+                    
+                    <div class="message-card">
+                        <h4>🌌 Universal Knowledge</h4>
+                        Space technology, AI, programming, science, and cutting-edge innovations
+                    </div>
+
+                    <div class="message-card">
+                        <h4>🎤 Voice Features</h4>
+                        Use the microphone for hands-free interaction! I can hear you and respond with natural voice
+                    </div>
+                    
+                    Ask me anything! I have <span class="highlight">detailed, varied responses</span> about our ChronoRider-X1 time travel research, terraforming projects, team members, and much more! 
+                    
+                    <div class="quick-actions">
+                        <div class="quick-action" onclick="sendQuickMessage('Tell me about Xploreon')">🏢 About Xploreon</div>
+                        <div class="quick-action" onclick="sendQuickMessage('Meet Avikam Deol')">👨‍💼 Founder</div>
+                        <div class="quick-action" onclick="sendQuickMessage('Our amazing team')">👥 Team</div>
+                        <div class="quick-action" onclick="sendQuickMessage('Chronorider-X1')">🕰️ Time Travel</div>
+                        <div class="quick-action" onclick="sendQuickMessage('Join WhatsApp community')">💬 Community</div>
+                        <div class="quick-action" onclick="sendQuickMessage('Aaditya Agrawal')">🎓 Director</div>
+                    </div>
+                `;
+                
+                const timeDiv = document.createElement('div');
+                timeDiv.className = 'message-time';
+                timeDiv.textContent = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                contentDiv.appendChild(timeDiv);
+                
+                messageDiv.appendChild(avatarDiv);
+                messageDiv.appendChild(contentDiv);
+                messagesContainer.appendChild(messageDiv);
+                
+                document.getElementById('notificationBadge').style.display = 'flex';
+                
+                // Don't speak greeting automatically - only speak when voice mode is active
+            }
+
+            // [Include other methods from original class - analyzeMessage, generateResponse, etc.]
+            analyzeMessage(message) {
+                const lowerMessage = message.toLowerCase();
+                
+                const topics = Object.keys(this.allKnowledge).filter(topic => {
+                    const synonyms = this.getSynonyms(topic);
+                    return lowerMessage.includes(topic) || synonyms.some(synonym => lowerMessage.includes(synonym));
+                });
+
+                const xploreonTopics = topics.filter(topic => this.xploreonKnowledge[topic]);
+                const generalTopics = topics.filter(topic => !this.xploreonKnowledge[topic]);
+                
+                return [...xploreonTopics, ...generalTopics];
+            }
+
+            getSynonyms(topic) {
+                const synonymMap = {
+                    // Xploreon specific
+                    'company': ['xploreon', 'about', 'business', 'organization', 'startup', 'tell me about xploreon', 'what is xploreon', 'xploreon company', 'about xploreon'],
+                    'founder': ['ceo', 'avikam', 'avikam deol', 'leader', 'president', 'founder story', 'meet our founder', 'who founded', 'who is the founder'],
+                    
+                    // Individual team members
+                    'aaditya agrawal': ['aaditya agrawal', 'director', 'aditya', 'iit dharwad', 'mechanical engineer'],
+                    'prayesi': ['prayesi agarwal', 'chief innovation officer', 'cio', 'innovation officer'],
+                    'omprakash': ['omprakash kumar', 'head of technology', 'technology head', 'om prakash'],
+                    'narayan': ['narayan kataruka', 'cad designer', 'mission systems', 'designer'],
+                    'rishita': ['rishita mishra', 'software engineer', 'community manager', 'website manager'],
+                    'hemant': ['hemant sharma', 'head of ai', 'ai research head', 'research head'],
+                    'chaitanya': ['chaitanya srivastava', 'ai research engineer', 'ai researcher'],
+                    'utkarsh': ['utkarsh tripathi', 'mathematics specialist', 'mathematician'],
+                    'vishard': ['vishard makwana', 'aerospace engineer', 'silver oak', 'propulsion'],
+                    'priyansh': ['priyansh patel', 'aerospace engineer', 'structural systems'],
+                    'harshil': ['harshil purohit', 'aerospace engineer', 'aerodynamics'],
+                    'neel': ['neel ghoil', 'aerospace engineer', 'mission planning'],
+                    
+                    // Team-related
+                    'team': ['staff', 'employees', 'members', 'people', 'crew', 'our team', 'team members', 'meet the team', 'amazing team', 'who works at', 'team structure'],
+                    
+                    // Projects
+                    'chronorider-x1': ['chronorider-x1', 'chronorider','time travel', 'time travel research', 'chronorider x1', 'time manipulation'],
+                    'terraforming': ['terraforming research', 'space colonization', 'mars colonization', 'space habitats'],
+                    'projects': ['work', 'research', 'development', 'initiatives', 'current projects', 'what are you working on'],
+                    
+                    // Community
+                    'whatsapp': ['whatsapp community', 'whatsapp group', 'community', 'join community', 'space and tech'],
+                    'competitions': ['contest', 'challenge', 'quiz', 'hackathon', 'event', 'join competitions', 'space quiz', 'events'],
+                    
+                    // Contact and info
+                    'contact': ['reach', 'connect', 'email', 'social', 'contact info', 'get in touch', 'how to contact'],
+                    'mission': ['goal', 'purpose', 'vision', 'objective', 'our mission', 'mission statement'],
+                    'website': ['site', 'xploreon.space', 'online', 'platform', 'website features', 'digital platform'],
+                    'news': ['space news', 'latest news', 'updates', 'nasa news', 'space updates'],
+                    'tracker': ['satellite tracker', 'tracking', 'satellites', 'iss', 'space tracking'],
+                    
+                    // Conversational
+                    'hello': ['hi', 'hey', 'greetings', 'howdy', 'hiya'],
+                    'hi': ['hello', 'hey', 'hola', 'sup'],
+                    'thank': ['thanks', 'thank you', 'ty', 'thx', 'appreciate', 'grateful'],
+                    'thanks': ['thank', 'thank you', 'ty', 'thx', 'appreciate it'],
+                    'how are you': ['how are you doing', 'hows it going', 'how you doing', 'whats up'],
+                    'goodbye': ['bye', 'see you', 'farewell', 'see ya', 'later'],
+                    'bye': ['goodbye', 'see you', 'later', 'farewell', 'bye bye'],
+                    'what can you do': ['what do you do', 'your capabilities', 'what are you', 'who are you', 'capabilities'],
+                    'mobile friendly': ['mobile', 'phone', 'tablet', 'responsive', 'mobile support'],
+                    'voice features': ['voice', 'speech', 'microphone', 'talk', 'speak', 'audio'],
+                    'awesome': ['amazing', 'incredible', 'fantastic', 'wonderful', 'brilliant'],
+                    'cool': ['nice', 'neat', 'sweet', 'rad', 'dope'],
+                    
+                    // Technical topics
+                    'rocket': ['spacecraft', 'launch', 'propulsion', 'missile', 'booster'],
+                    'artificial intelligence': ['ai', 'machine learning', 'ml', 'neural networks', 'deep learning'],
+                    'space exploration': ['space travel', 'mission', 'astronomy', 'cosmos', 'universe'],
+                    'what is space': ["space", "outer space", "universe", "cosmos"],
+                    'python': ['programming', 'coding', 'development', 'script', 'django'],
+                    'javascript': ['js', 'web development', 'frontend', 'backend', 'node'],
+                    'machine learning': ['ml', 'ai', 'artificial intelligence', 'neural', 'algorithm'],
+                    'quantum physics': ['quantum', 'physics', 'mechanics', 'quantum computing'],
+                    'mars': ['red planet', 'martian', 'mars mission', 'mars colony', 'terraforming'],
+                    'blockchain': ['crypto', 'cryptocurrency', 'bitcoin', 'ethereum', 'defi'],
+                    'climate change': ['global warming', 'environment', 'carbon', 'greenhouse'],
+                    'cybersecurity': ['security', 'hacking', 'cyber', 'encryption', 'firewall'],
+                    'renewable energy': ['solar', 'wind', 'clean energy', 'green energy', 'sustainable'],
+                    'biotechnology': ['biotech', 'genetics', 'crispr', 'dna', 'gene editing'],
+                    'virtual reality': ['vr', 'metaverse', 'augmented reality', 'ar', 'mixed reality']
+                };
+                return synonymMap[topic] || [];
+            }
+
+            generateResponse(message) {
+                const topics = this.analyzeMessage(message);
+                
+                if (topics.length > 0) {
+                    const topic = topics[0];
+                    const knowledge = this.allKnowledge[topic];
+                    
+                    if (knowledge) {
+                        const response = this.getVariedResponse(topic, knowledge);
+                        return {
+                            text: response,
+                            category: knowledge.category
+                        };
+                    }
+                }
+                
+                const fallback = this.fallbackResponses[Math.floor(Math.random() * this.fallbackResponses.length)];
+                return {
+                    text: fallback,
+                    category: "Universal Knowledge"
+                };
+            }
+
+            getVariedResponse(topic, knowledge) {
+                if (!this.responseIndex.has(topic)) {
+                    this.responseIndex.set(topic, 0);
+                }
+                
+                const responses = knowledge.responses;
+                let index = this.responseIndex.get(topic);
+                
+                const response = responses[index % responses.length];
+                this.responseIndex.set(topic, index + 1);
+                
+                return response;
+            }
+
+            async generateResponseAsync(message) {
+                await new Promise(resolve => setTimeout(resolve, 300 + Math.random() * 300));
+                return this.generateResponse(message);
+            }
+        }
+
+        // Initialize AI
+        const xploreonAI = new XploreonAI();
+        let messageCounter = 0;
+
+        function toggleChatbot() {
+            const window = document.getElementById('chatbotWindow');
+            const badge = document.getElementById('notificationBadge');
+            const toggleBtn = document.querySelector('.chatbot-toggle');
+            
+            window.classList.toggle('active');
+            toggleBtn.classList.add('clicked');
+            setTimeout(() => toggleBtn.classList.remove('clicked'), 600);
+            
+            if (window.classList.contains('active')) {
+                document.getElementById('chatbotInput').focus();
+                badge.style.display = 'none';
+                document.getElementById('chatbotMessages').scrollTop = 999999;
+            }
+        }
+
+        function addMessage(content, isUser = false, category = null) {
+            const messagesContainer = document.getElementById('chatbotMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
+            
+            const avatarDiv = document.createElement('div');
+            avatarDiv.className = `message-avatar ${isUser ? '' : 'humanoid-avatar'}`;
+            
+            if (isUser) {
+                avatarDiv.textContent = '👤';
+            } else {
+                avatarDiv.innerHTML = '<div class="humanoid-face"><img src="chat.png" alt="Chatbot Logo" style="width: 65%; height: 65%; object-fit: cover;"></div>';
+            }
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            
+            if (!isUser && category) {
+                contentDiv.innerHTML = `<div class="knowledge-category">${category}</div>${content}`;
+            } else {
+                contentDiv.innerHTML = content;
+            }
+            
+            const timeDiv = document.createElement('div');
+            timeDiv.className = 'message-time';
+            timeDiv.textContent = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            contentDiv.appendChild(timeDiv);
+            
+            messageDiv.appendChild(avatarDiv);
+            messageDiv.appendChild(contentDiv);
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            
+            // Speak bot responses
+            if (!isUser) {
+                setTimeout(() => {
+                    voiceManager.speak(content);
+                }, 500);
+            }
+            
+            messageCounter++;
+        }
+
+        function showTypingIndicator() {
+            
+            document.getElementById('typingIndicator').classList.add('active');
+            document.getElementById('chatbotMessages').scrollTop = 999999;
+        }
+
+        function hideTypingIndicator() {
+       
+            document.getElementById('typingIndicator').classList.remove('active');
+        }
+     async function sendMessage() {
+    const input = document.getElementById('chatbotInput');
+    const button = document.getElementById('sendButton');
+    const message = input.value.trim();
+    
+    if (!message || button.disabled) return;
+    
+    // If sending via text (not voice), reset voice mode
+    if (!voiceManager.voiceMode) {
+        voiceManager.voiceMode = false;
+    }
+    
+    button.disabled = true;
+    input.disabled = true;
+    
+    addMessage(message, true);
+    input.value = '';
+    
+    showTypingIndicator();
+    
+    try {
+        // Add a random delay between 1 and 3 seconds
+        const delay = 1000 + Math.random() * 2000;
+        await new Promise(resolve => setTimeout(resolve, delay));
+        
+        const response = await Promise.race([
+            xploreonAI.generateResponseAsync(message),
+            new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 5000))
+        ]);
+        
+        hideTypingIndicator();
+        addMessage(response.text, false, response.category);
+        
+    } catch (error) {
+        hideTypingIndicator();
+        addMessage("I'm having a quick technical moment. Please try again! 🛠️", false, "System");
+    } finally {
+        button.disabled = false;
+        input.disabled = false;
+        input.focus();
+    }
+}
+
+        function sendQuickMessage(message) {
+            document.getElementById('chatbotInput').value = message;
+            sendMessage();
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        }
+
+        // Enhanced interactions
+        document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey && e.code === 'Space') {
+                    e.preventDefault();
+                    toggleChatbot();
+                }
+                if (e.altKey && e.code === 'KeyV') {
+                    e.preventDefault();
+                    toggleVoiceInput();
+                }
+            });
+        });
+
+
+
+    </script>
+
+
+<script>
+function generateChatbotInnerStars() {
+    const container = document.getElementById('chatbotInnerStars');
+    for (let i = 0; i < 30; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        star.style.left = Math.random() * 100 + '%';
+        star.style.top = Math.random() * 100 + '%';
+        star.style.animationDelay = Math.random() * 4 + 's';
+        container.appendChild(star);
+    }
+}
+generateChatbotInnerStars();
+
+</script>
 
 
 
