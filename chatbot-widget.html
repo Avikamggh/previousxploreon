@@ -860,6 +860,7 @@
                         .replace(/<[^>]*>/g, ' ')
                         .replace(/&[^;]+;/g, ' ')
                         .replace(/\s+/g, ' ')
+                        .replace(/[^\x00-\x7F]/g, '') // Remove non-ASCII characters (including emojis)
                         .trim();
                     
                     const utterance = new SpeechSynthesisUtterance(cleanText);
