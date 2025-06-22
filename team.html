@@ -1148,6 +1148,35 @@ body {
     </div>
   </div>
 
+
+<!-- Infrastructure & Facilities Department -->
+<div class="department-section">
+  <h2 class="department-title">🏗️ INFRASTRUCTURE & FACILITIES</h2>
+  <div class="relative">
+    <div class="flex items-center justify-between mb-4">
+      <button class="nav-button" onclick="scrollSection('infrastructure', -1)">‹</button>
+      <button class="nav-button" onclick="scrollSection('infrastructure', 1)">›</button>
+    </div>
+    <div id="infrastructure" class="scroll-container">
+      <!-- Mehul Agarwal Card -->
+      <div class="team-card p-6 flex flex-col items-center text-center" onclick="openPopup('popup-launchpad')">
+        <img src="mehul.jpg" alt="Mehul Agarwal" class="team-image mb-4" />
+        <h3 class="text-xl font-bold text-cyan-300 mb-2">Mehul Agarwal</h3>
+        <div class="role-tag">Project Manager – Launchpad & Facilities</div>
+        <p class="text-sm text-gray-300 mt-4 flex-1 leading-relaxed">
+          Civil Engineering student from IIT Roorkee overseeing all infrastructure development, including launchpad construction, structural planning, and on-site execution for orbital missions.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
   <!-- Aerospace Engineers Department -->
   <div class="department-section">
     <h2 class="department-title">🚀 AEROSPACE ENGINEERS</h2>
@@ -1541,6 +1570,28 @@ body {
       <div class="bg-gradient-to-r from-cyan-500/20 to-blue-500/20 p-4 rounded-2xl border border-cyan-400/30">
         <p class="text-sm text-gray-200 leading-relaxed">
           Neil is an Aerospace Engineer at Xploreon from Silver Oak University, Ahmedabad. He focuses on space mission planning and satellite deployment systems for future aerospace projects. His expertise in mission architecture and orbital mechanics contributes to Xploreon's strategic approach to space exploration and satellite technology development.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="popup-launchpad" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 hidden backdrop-blur-sm">
+  <div class="bg-gradient-to-br from-gray-800 via-gray-900 to-black text-white p-8 rounded-3xl max-w-lg w-full mx-4 relative border-2 border-cyan-300 shadow-2xl shadow-cyan-500/20 backdrop-filter backdrop-blur-xl">
+    <div class="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-transparent to-blue-500/10 rounded-3xl"></div>
+    <button onclick="closePopup('popup-launchpad')" class="absolute top-4 right-4 text-cyan-300 text-3xl hover:text-white transition-all duration-300 hover:rotate-90 z-10">×</button>
+    
+    <div class="relative z-10">
+      <div class="flex items-center mb-6">
+        <img src="mehul.jpg" alt="Mehul Agarwal" class="w-20 h-20 rounded-full border-3 border-cyan-400 mr-4 shadow-lg" />
+        <div>
+          <h3 class="text-2xl font-bold mb-1 bg-gradient-to-r from-cyan-400 to-cyan-300 bg-clip-text text-transparent">Mehul Agarwal</h3>
+          <p class="text-cyan-300 font-semibold">Project Manager – Launchpad & Facilities</p>
+        </div>
+      </div>
+      
+      <div class="bg-gradient-to-r from-cyan-500/20 to-blue-500/20 p-4 rounded-2xl border border-cyan-400/30">
+        <p class="text-sm text-gray-200 leading-relaxed">
+          Mehul Agarwal is a Civil Engineering student from IIT Roorkee, leading Xploreon’s infrastructure initiatives. He is responsible for planning, designing, and managing construction of our physical launchpad and related facilities. His expertise ensures that every ground operation — from satellite deployment prep to rocket staging — is supported by robust, scalable, and mission-ready infrastructure.
         </p>
       </div>
     </div>
