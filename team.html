@@ -1026,7 +1026,27 @@ body {
     animation: twinkle 4s infinite;
 }
 
+.director-card {
+  background: linear-gradient(145deg, rgba(192,192,192, 0.1), rgba(0, 255, 255, 0.1));
+  border: 3px solid #c0c0c0;
+  box-shadow: 0 0 30px rgba(192,192,192, 0.3);
+}
 
+.director-card:hover {
+  box-shadow: 0 0 50px rgba(192,192,192, 0.5);
+  border-color: #c0c0c0;
+}
+
+.cio-card {
+  background: linear-gradient(145deg, rgba(0, 128, 255, 0.1), rgba(0, 255, 255, 0.08));
+  border: 3px solid #00bfff;
+  box-shadow: 0 0 30px rgba(0, 191, 255, 0.3);
+}
+
+.cio-card:hover {
+  box-shadow: 0 0 50px rgba(0, 191, 255, 0.5);
+  border-color: #00bfff;
+}
 
 </style>
 </head>
@@ -1083,10 +1103,24 @@ body {
           </p>
         </div>
 
+
+
+        <!-- Director card -->
+        <!-- Director card -->
+<div class="team-card director-card p-6 flex flex-col items-center text-center" onclick="openPopup('popup-chaitanya')">
+
+          <img src="chaitanya.png" alt="Chaitanya Srivastava" class="team-image mb-4" />
+          <h3 class="text-xl font-bold text-cyan-300 mb-2">Chaitanya Srivastava</h3>
+          <div class="role-tag">Director</div>
+          <p class="text-sm text-gray-300 mt-4 flex-1 leading-relaxed">
+            AI Researcher with expertise in machine learning, web development, and cybersecurity.
+          </p>
+        </div>
      
 
-        <!-- CIO Card -->
-        <div class="team-card p-6 flex flex-col items-center text-center" onclick="openPopup('popup-prayesi')">
+      <!-- CIO Card -->
+<div class="team-card cio-card p-6 flex flex-col items-center text-center" onclick="openPopup('popup-prayesi')">
+
           <img src="p.jpg" alt="Prayesi Agarwal" class="team-image mb-4" />
           <h3 class="text-xl font-bold text-cyan-300 mb-2">Prayesi Agarwal</h3>
           <div class="role-tag">Chief Innovation Officer</div>
@@ -1156,7 +1190,7 @@ body {
         <h3 class="text-xl font-bold text-cyan-300 mb-2">Mehul Agarwal</h3>
         <div class="role-tag">Project Manager – Launchpad & Facilities</div>
         <p class="text-sm text-gray-300 mt-4 flex-1 leading-relaxed">
-          Civil Engineering student from IIT Roorkee overseeing all infrastructure development, including launchpad construction, structural planning, and on-site execution for orbital missions.
+          Civil Engineering student from IIT Roorkee overseeing all infrastructure development, including launchpad construction.
         </p>
       </div>
     </div>
@@ -1240,15 +1274,6 @@ body {
           </p>
         </div>
 
-        <!-- AI Research Engineer -->
-        <div class="team-card p-6 flex flex-col items-center text-center" onclick="openPopup('popup-chaitanya')">
-          <img src="chaitanya.png" alt="Chaitanya Srivastava" class="team-image mb-4" />
-          <h3 class="text-xl font-bold text-cyan-300 mb-2">Chaitanya Srivastava</h3>
-          <div class="role-tag">AI Research & Software Engineer</div>
-          <p class="text-sm text-gray-300 mt-4 flex-1 leading-relaxed">
-            AI Researcher with expertise in machine learning, web development, and cybersecurity.
-          </p>
-        </div>
 
         <!-- Mathematics Department -->
         <div class="team-card p-6 flex flex-col items-center text-center" onclick="openPopup('popup-utkarsh')">
@@ -1289,6 +1314,29 @@ body {
 </div>
 
 
+<div id="popup-chaitanya" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 hidden backdrop-blur-sm">
+  <div class="bg-gradient-to-br from-gray-800 via-gray-900 to-black text-white p-8 rounded-3xl max-w-lg w-full mx-4 relative border-2 border-cyan-300 shadow-2xl shadow-cyan-500/20 backdrop-filter backdrop-blur-xl">
+    <div class="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-transparent to-blue-500/10 rounded-3xl"></div>
+    <button onclick="closePopup('popup-chaitanya')" class="absolute top-4 right-4 text-cyan-300 text-3xl hover:text-white transition-all duration-300 hover:rotate-90 z-10">×</button>
+    
+    <div class="relative z-10">
+      <div class="flex items-center mb-6">
+        <img src="chaitanya.png" alt="Chaitanya Srivastava" class="w-20 h-20 rounded-full border-3 border-cyan-400 mr-4 shadow-lg" />
+        <div>
+          <h3 class="text-2xl font-bold mb-1 bg-gradient-to-r from-cyan-400 to-cyan-300 bg-clip-text text-transparent">Chaitanya Srivastava</h3>
+          <p class="text-cyan-300 font-semibold">Director</p>
+        </div>
+      </div>
+      
+      <div class="bg-gradient-to-r from-cyan-500/20 to-blue-500/20 p-4 rounded-2xl border border-cyan-400/30">
+        <p class="text-sm text-gray-200 leading-relaxed">
+          Chaitanya is Director at Xploreon, with expertise in machine learning, web development, and cybersecurity. A Computer Science undergrad from Chandigarh University, she has worked on AI virtual assistants, sentiment analysis tools, and malware detection systems. Her interdisciplinary skills across Python, cloud systems, and AI models allow her to bridge cutting-edge research with impactful software development. She's passionate about tech for good, community service, and multilingual communication.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 <div id="popup-prayesi" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 hidden backdrop-blur-sm">
   <div class="bg-gradient-to-br from-gray-800 via-gray-900 to-black text-white p-8 rounded-3xl max-w-lg w-full mx-4 relative border-2 border-cyan-300 shadow-2xl shadow-cyan-500/20 backdrop-filter backdrop-blur-xl">
@@ -1313,28 +1361,7 @@ body {
   </div>
 </div>
 
-<div id="popup-chaitanya" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 hidden backdrop-blur-sm">
-  <div class="bg-gradient-to-br from-gray-800 via-gray-900 to-black text-white p-8 rounded-3xl max-w-lg w-full mx-4 relative border-2 border-cyan-300 shadow-2xl shadow-cyan-500/20 backdrop-filter backdrop-blur-xl">
-    <div class="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-transparent to-blue-500/10 rounded-3xl"></div>
-    <button onclick="closePopup('popup-chaitanya')" class="absolute top-4 right-4 text-cyan-300 text-3xl hover:text-white transition-all duration-300 hover:rotate-90 z-10">×</button>
-    
-    <div class="relative z-10">
-      <div class="flex items-center mb-6">
-        <img src="chaitanya.png" alt="Chaitanya Srivastava" class="w-20 h-20 rounded-full border-3 border-cyan-400 mr-4 shadow-lg" />
-        <div>
-          <h3 class="text-2xl font-bold mb-1 bg-gradient-to-r from-cyan-400 to-cyan-300 bg-clip-text text-transparent">Chaitanya Srivastava</h3>
-          <p class="text-cyan-300 font-semibold">AI Research & Software Engineer</p>
-        </div>
-      </div>
-      
-      <div class="bg-gradient-to-r from-cyan-500/20 to-blue-500/20 p-4 rounded-2xl border border-cyan-400/30">
-        <p class="text-sm text-gray-200 leading-relaxed">
-          Chaitanya is an AI Researcher and Software Engineer at Xploreon, with expertise in machine learning, web development, and cybersecurity. A Computer Science undergrad from Chandigarh University, she has worked on AI virtual assistants, sentiment analysis tools, and malware detection systems. Her interdisciplinary skills across Python, cloud systems, and AI models allow her to bridge cutting-edge research with impactful software development. She's passionate about tech for good, community service, and multilingual communication.
-        </p>
-      </div>
-    </div>
-  </div>
-</div>
+
 
 <div id="popup-om" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 hidden backdrop-blur-sm">
   <div class="bg-gradient-to-br from-gray-800 via-gray-900 to-black text-white p-8 rounded-3xl max-w-lg w-full mx-4 relative border-2 border-cyan-300 shadow-2xl shadow-cyan-500/20 backdrop-filter backdrop-blur-xl">
