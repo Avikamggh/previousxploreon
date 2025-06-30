@@ -144,16 +144,26 @@ body {
 
 .department-title {
   font-size: 2.5rem;
-  background: linear-gradient(45deg, #00ffe0, #0080ff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #00ffe0;
   text-align: center;
   margin-bottom: 30px;
   font-weight: 700;
   position: relative;
 }
 
+.department-title .emoji {
+  color: initial !important;
+  background: none !important;
+  -webkit-background-clip: initial !important;
+  -webkit-text-fill-color: initial !important;
+  margin-right: 0.5rem;
+}
+.department-title .text-part {
+  background: linear-gradient(45deg, #00ffe0, #0080ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
 .department-title::after {
   content: '';
   position: absolute;
@@ -1048,6 +1058,8 @@ body {
   border-color: #00bfff;
 }
 
+
+
 </style>
 </head>
 <body>
@@ -1198,6 +1210,28 @@ body {
 </div>
 
 
+<!-- Business Development & Research Section -->
+<div class="department-section">
+ <h2 class="department-title">📊 BUSINESS DEVELOPMENT & RESEARCH</h2>
+
+  <div class="relative">
+    <div class="flex items-center justify-between mb-4">
+      <button class="nav-button" onclick="scrollSection('business-research', -1)">‹</button>
+      <button class="nav-button" onclick="scrollSection('business-research', 1)">›</button>
+    </div>
+    <div id="business-research" class="scroll-container">
+      <!-- Mansi's Card -->
+      <div class="team-card p-6 flex flex-col items-center text-center" onclick="openPopup('popup-mansi')">
+        <img src="mansi.png" alt="Mansi Pradyuman Shah" class="team-image mb-4" />
+        <h3 class="text-xl font-bold text-cyan-300 mb-2">Mansi Pradyuman Shah</h3>
+        <div class="role-tag">Market Research Manager</div>
+        <p class="text-sm text-gray-300 mt-4 flex-1 leading-relaxed">
+          Experienced in market research, leading teams, and providing strategic insights for business growth across multiple industries.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 
@@ -1361,6 +1395,29 @@ body {
   </div>
 </div>
 
+<!-- Mansi's Popup -->
+<div id="popup-mansi" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 hidden backdrop-blur-sm">
+  <div class="bg-gradient-to-br from-gray-800 via-gray-900 to-black text-white p-8 rounded-3xl max-w-lg w-full mx-4 relative border-2 border-cyan-300 shadow-2xl shadow-cyan-500/20 backdrop-filter backdrop-blur-xl">
+    <div class="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-transparent to-blue-500/10 rounded-3xl"></div>
+    <button onclick="closePopup('popup-mansi')" class="absolute top-4 right-4 text-cyan-300 text-3xl hover:text-white transition-all duration-300 hover:rotate-90 z-10">×</button>
+    
+    <div class="relative z-10">
+      <div class="flex items-center mb-6">
+        <img src="mansi.png" alt="Mansi Pradyuman Shah" class="w-20 h-20 rounded-full border-3 border-cyan-400 mr-4 shadow-lg" />
+        <div>
+          <h3 class="text-2xl font-bold mb-1 bg-gradient-to-r from-cyan-400 to-cyan-300 bg-clip-text text-transparent">Mansi Pradyuman Shah</h3>
+          <p class="text-cyan-300 font-semibold">Market Research Manager</p>
+        </div>
+      </div>
+      
+      <div class="bg-gradient-to-r from-cyan-500/20 to-blue-500/20 p-4 rounded-2xl border border-cyan-400/30">
+        <p class="text-sm text-gray-200 leading-relaxed">
+          Mansi has over 7 years of experience in market research, managing teams across diverse industries such as Energy, Healthcare, and ICT. Her expertise includes executing syndicated and customized market research reports, leading teams, and providing business solutions to enhance client engagement and conversion rates.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 <div id="popup-om" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 hidden backdrop-blur-sm">
