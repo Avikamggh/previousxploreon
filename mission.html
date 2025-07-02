@@ -735,9 +735,45 @@
 }
 
 
+
+/* Loading Screen Styles */
+.loading-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* Make sure it sits on top of other content */
+}
+
+.spinner {
+  border: 16px solid #f3f3f3;
+  border-top: 16px solid #00ffe0; /* Customize with your brand color */
+  border-radius: 50%;
+  width: 70px;
+  height: 70px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+   
   </style>
 </head>
 <body>
+<!-- Loading Screen (Initially Hidden) -->
+<div id="loading-screen" class="loading-screen hidden">
+  <div class="spinner"></div> <!-- Spinner or custom content -->
+</div>
+
+
+
 
     <!-- Navbar -->
   <nav class="w-full flex justify-between items-center px-4 py-4 glass fixed top-0 z-50">
@@ -1761,6 +1797,27 @@ generateChatbotInnerStars();
 
 </script>
 
+<script>
+// Show loading screen when navigating to a new page
+function showLoading() {
+  document.getElementById('loading-screen').classList.remove('hidden');
+}
+
+// Hide loading screen once the new page is loaded
+function hideLoading() {
+  document.getElementById('loading-screen').classList.add('hidden');
+}
+
+// Trigger loading screen when navigating (or use for AJAX calls)
+window.onload = function() {
+  hideLoading();  // Hide loading screen when page is ready
+};
+
+window.onbeforeunload = function() {
+  showLoading();  // Show loading screen when leaving the page
+};
+
+</script> 
 
 
 </body>
