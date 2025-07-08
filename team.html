@@ -40,6 +40,257 @@ body {
   to { opacity: 1; transform: scale(1); }
 }
 
+/* Enhanced Navigation Styles */
+.nav-enhanced {
+  backdrop-filter: blur(20px);
+  background: rgba(0, 255, 255, 0.07);
+  border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.logo-enhanced {
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.logo-enhanced:hover {
+  transform: scale(1.05);
+  text-shadow: 0 0 20px #00ffe0, 0 0 40px #00ffe0;
+}
+
+/* Desktop Menu Enhancements */
+.desktop-menu .nav-link {
+  position: relative;
+  padding: 3px 6px;
+  border-radius: 25px;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  overflow: hidden;
+  text-decoration: none;
+  display: block;
+}
+
+.desktop-menu .nav-link::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(0, 188, 212, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.desktop-menu .nav-link:hover::before {
+  left: 100%;
+}
+
+.desktop-menu .nav-link:hover {
+  background: rgba(0, 188, 212, 0.1);
+  border: 1px solid rgba(0, 188, 212, 0.3);
+  box-shadow: 0 5px 15px rgba(0, 188, 212, 0.2);
+  color: #00bcd4;
+}
+
+.desktop-menu .nav-link::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(45deg, #00bcd4, #3f51b5);
+  color: black;
+  font-weight: bold;
+  opacity: 0;
+  transform: rotateY(90deg);
+  transition: all 0.3s ease;
+}
+
+.desktop-menu .nav-link:hover::after {
+  opacity: 1;
+  transform: rotateY(0deg);
+}
+
+/* Enhanced Hamburger Menu */
+.menu-toggle-btn {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.hamburger-line {
+  width: 25px;
+  height: 3px;
+  background: linear-gradient(90deg, #00bcd4, #3f51b5);
+  box-shadow: 0 0 10px rgba(0, 188, 212, 0.5);
+  margin: 3px 0;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border-radius: 2px;
+}
+
+.menu-toggle-btn.active .hamburger-line:nth-child(1) {
+  transform: rotate(45deg) translate(6px, 6px);
+  background: linear-gradient(90deg, #ff4757, #ff3742);
+}
+
+.menu-toggle-btn.active .hamburger-line:nth-child(2) {
+  opacity: 0;
+  transform: scale(0);
+}
+
+.menu-toggle-btn.active .hamburger-line:nth-child(3) {
+  transform: rotate(-45deg) translate(6px, -6px);
+  background: linear-gradient(90deg, #ff4757, #ff3742);
+}
+
+/* Enhanced Mobile Menu */
+.mobile-menu-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 40;
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.mobile-menu-container.show {
+  visibility: visible;
+  opacity: 1;
+}
+
+.mobile-menu-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+}
+
+.mobile-menu-content {
+  position: absolute;
+  top: 80px;
+  left: 0;
+  width: 100%;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.95), rgba(0, 20, 40, 0.95));
+  backdrop-filter: blur(20px);
+  border-top: 2px solid rgba(0, 188, 212, 0.3);
+  border-bottom: 2px solid rgba(0, 188, 212, 0.3);
+  padding: 20px 0;
+  transform: translateY(-100%);
+  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.mobile-menu-container.show .mobile-menu-content {
+  transform: translateY(0);
+}
+
+.mobile-menu-item {
+  margin: 0;
+  opacity: 0;
+  transform: translateX(-50px);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.mobile-menu-container.show .mobile-menu-item {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.mobile-menu-container.show .mobile-menu-item:nth-child(1) { transition-delay: 0.1s; }
+.mobile-menu-container.show .mobile-menu-item:nth-child(2) { transition-delay: 0.15s; }
+.mobile-menu-container.show .mobile-menu-item:nth-child(3) { transition-delay: 0.2s; }
+.mobile-menu-container.show .mobile-menu-item:nth-child(4) { transition-delay: 0.25s; }
+.mobile-menu-container.show .mobile-menu-item:nth-child(5) { transition-delay: 0.3s; }
+.mobile-menu-container.show .mobile-menu-item:nth-child(6) { transition-delay: 0.35s; }
+.mobile-menu-container.show .mobile-menu-item:nth-child(7) { transition-delay: 0.4s; }
+
+.mobile-nav-link {
+  display: flex;
+  align-items: center;
+  padding: 15px 25px;
+  color: white;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  border-left: 4px solid transparent;
+}
+
+.mobile-nav-link::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(0, 188, 212, 0.1), transparent);
+  transition: left 0.5s ease;
+}
+
+.mobile-nav-link:hover::before {
+  left: 100%;
+}
+
+.mobile-nav-link:hover {
+  background: rgba(0, 188, 212, 0.1);
+  border-left-color: #00bcd4;
+  color: #00bcd4;
+}
+
+.menu-icon {
+  font-size: 20px;
+  margin-right: 15px;
+  transition: all 0.3s ease;
+}
+
+.menu-text {
+  flex: 1;
+  font-size: 16px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.menu-arrow {
+  font-size: 18px;
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: all 0.3s ease;
+}
+
+.mobile-nav-link:hover .menu-arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.mobile-nav-link:hover .menu-icon {
+  transform: scale(1.2) rotate(10deg);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .nav-enhanced {
+    padding: 12px 16px;
+  }
+  
+  .logo-enhanced {
+    font-size: 20px;
+  }
+}
+
 .team-card {
   background: linear-gradient(145deg, rgba(15, 25, 45, 0.9), rgba(25, 35, 65, 0.9));
   border: 2px solid rgba(0, 255, 255, 0.3);
@@ -670,12 +921,14 @@ body {
         .typing-indicator {
             display: none;
             padding: 12px 14px;
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
-            border: 1px solid rgba(102, 126, 234, 0.2);
-            border-radius: 16px 16px 16px 4px;
-            color: #667eea;
-            font-style: italic;
+            background: transparent;
+            border: none;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 600;
             max-width: 75%;
+            text-align: left;
+            padding-left: 20px;
         }
 
         .typing-indicator.active {
@@ -693,7 +946,7 @@ body {
             width: 5px;
             height: 5px;
             border-radius: 50%;
-            background: #667eea;
+            background: #ffffff;
             animation: typingBounce 1.2s infinite ease-in-out;
         }
 
@@ -993,30 +1246,6 @@ body {
             from { height: 10px; }
             to { height: 20px; }
         }
-.typing-indicator {
-    display: none;
-    padding: 12px 14px;
-    background: transparent;
-    border: none;
-    color: #ffffff;
-    font-size: 16px;
-    font-weight: 600;
-    max-width: 75%;
-    text-align: left;
-    padding-left: 20px;
-}
-.typing-indicator.active {
-    display: block;
-    animation: slideInUp 0.2s ease-out;
-}
-
-.typing-dot {
-    background: #ffffff; /* Make the dots white */
-}
-
-
-
-
 
 .chatbot-inner-stars {
     position: absolute;
@@ -1086,47 +1315,7 @@ body {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
-
-
-
-
-
-
-/* Mobile Menu Transitions */
-#mobileMenu {
-  transform: translateY(-100%);
-  opacity: 0;
-  transition: all 0.4s ease;
-  visibility: hidden;
-  max-height: 0;
-  overflow: hidden;
-}
-
-#mobileMenu.show {
-  transform: translateY(0);
-  opacity: 1;
-  visibility: visible;
-  max-height: 400px;
-}
-
-#mobileMenu li {
-  transform: translateX(-30px);
-  opacity: 0;
-  transition: all 0.3s ease;
-}
-
-#mobileMenu.show li {
-  transform: translateX(0);
-  opacity: 1;
-}
-
-#mobileMenu.show li:nth-child(1) { transition-delay: 0.1s; }
-#mobileMenu.show li:nth-child(2) { transition-delay: 0.15s; }
-#mobileMenu.show li:nth-child(3) { transition-delay: 0.2s; }
-#mobileMenu.show li:nth-child(4) { transition-delay: 0.25s; }
-#mobileMenu.show li:nth-child(5) { transition-delay: 0.3s; }
-#mobileMenu.show li:nth-child(6) { transition-delay: 0.35s; }
-#mobileMenu.show li:nth-child(7) { transition-delay: 0.4s; }   
+   
 </style>
 </head>
 <body>
@@ -1135,38 +1324,84 @@ body {
   <div class="spinner"></div> <!-- Spinner or custom content -->
 </div>
 
-
-
-
-
-<!-- Navbar -->
-<nav class="w-full flex justify-between items-center px-4 py-4 glass fixed top-0 z-50">
-  <a href="index.html" class="text-2xl glow-text">
+<!-- Enhanced Navbar -->
+<nav class="w-full flex justify-between items-center px-4 py-4 glass fixed top-0 z-50 nav-enhanced">
+  <a href="index.html" class="text-2xl glow-text logo-enhanced">
     Xploreon<sup class="text-cyan-400 text-sm glow-tm">™</sup>
   </a>
-  <button id="menuToggle" class="md:hidden text-white text-2xl">☰</button>
-  <ul class="hidden md:flex space-x-6 text-white text-sm md:text-base">
-<li><a href="mission.html">Mission</a></li>
-      <li><a href="tech.html">Tech</a></li>
-      <li><a href="team.html">Team</a></li>
-      <li><a href="news.html">News</a></li>
-      <li><a href="tracker.html">Satellite Tracker</a></li>
-      <li><a href="competition.html">Competition</a></li>
-      <li><a href="contact.html">Contact</a></li>
+
+  <button id="menuToggle" class="md:hidden text-white text-2xl menu-toggle-btn">
+    <span class="hamburger-line"></span>
+    <span class="hamburger-line"></span>
+    <span class="hamburger-line"></span>
+  </button>
+  
+  <ul class="hidden md:flex space-x-6 text-white text-sm md:text-base desktop-menu">
+    <li><a href="mission.html" class="nav-link" data-text="Mission">Mission</a></li>
+    <li><a href="tech.html" class="nav-link" data-text="Tech">Tech</a></li>
+    <li><a href="team.html" class="nav-link" data-text="Team">Team</a></li>
+    <li><a href="news.html" class="nav-link" data-text="News">News</a></li>
+    <li><a href="tracker.html" class="nav-link" data-text="Tracker">Tracker</a></li>
+    <li><a href="competition.html" class="nav-link" data-text="Competition">Competition</a></li>
+    <li><a href="contact.html" class="nav-link" data-text="Contact">Contact</a></li>
   </ul>
 </nav>
 
-<!-- Mobile menu -->
-<ul id="mobileMenu" class="md:hidden flex-col bg-black bg-opacity-95 text-white p-4 fixed w-full top-16 left-0 z-50 backdrop-blur-lg border-b border-cyan-400">
-
-    <li><a href="mission.html" class="block py-3 px-2 hover:text-cyan-400 transition-colors">🎯 Mission</a></li>
-    <li><a href="tech.html" class="block py-3 px-2 hover:text-cyan-400 transition-colors">🔬 Tech</a></li>
-    <li><a href="team.html" class="block py-3 px-2 hover:text-cyan-400 transition-colors">👥 Team</a></li>
-    <li><a href="news.html" class="block py-3 px-2 hover:text-cyan-400 transition-colors">📰 News</a></li>
-    <li><a href="tracker.html" class="block py-3 px-2 hover:text-cyan-400 transition-colors">🛰️ Satellite Tracker</a></li>
-    <li><a href="competition.html" class="block py-3 px-2 hover:text-cyan-400 transition-colors">🏆 Competition</a></li>
-    <li><a href="contact.html" class="block py-3 px-2 hover:text-cyan-400 transition-colors">📞 Contact</a></li>
-</ul>
+<!-- Enhanced Mobile menu -->
+<div id="mobileMenu" class="mobile-menu-container">
+  <div class="mobile-menu-backdrop"></div>
+  <ul class="mobile-menu-content">
+    <li class="mobile-menu-item">
+      <a href="mission.html" class="mobile-nav-link">
+        <span class="menu-icon">🎯</span>
+        <span class="menu-text">Mission</span>
+        <span class="menu-arrow">→</span>
+      </a>
+    </li>
+    <li class="mobile-menu-item">
+      <a href="tech.html" class="mobile-nav-link">
+        <span class="menu-icon">🔬</span>
+        <span class="menu-text">Tech</span>
+        <span class="menu-arrow">→</span>
+      </a>
+    </li>
+    <li class="mobile-menu-item">
+      <a href="team.html" class="mobile-nav-link">
+        <span class="menu-icon">👥</span>
+        <span class="menu-text">Team</span>
+        <span class="menu-arrow">→</span>
+      </a>
+    </li>
+    <li class="mobile-menu-item">
+      <a href="news.html" class="mobile-nav-link">
+        <span class="menu-icon">📰</span>
+        <span class="menu-text">News</span>
+        <span class="menu-arrow">→</span>
+      </a>
+    </li>
+    <li class="mobile-menu-item">
+      <a href="tracker.html" class="mobile-nav-link">
+        <span class="menu-icon">🛰️</span>
+        <span class="menu-text">Tracker</span>
+        <span class="menu-arrow">→</span>
+      </a>
+    </li>
+    <li class="mobile-menu-item">
+      <a href="competition.html" class="mobile-nav-link">
+        <span class="menu-icon">🏆</span>
+        <span class="menu-text">Competition</span>
+        <span class="menu-arrow">→</span>
+      </a>
+    </li>
+    <li class="mobile-menu-item">
+      <a href="contact.html" class="mobile-nav-link">
+        <span class="menu-icon">📞</span>
+        <span class="menu-text">Contact</span>
+        <span class="menu-arrow">→</span>
+      </a>
+    </li>
+  </ul>
+</div>
 
 <!-- Main Content -->
 <main class="pt-32 px-6 max-w-7xl mx-auto">
@@ -1730,7 +1965,6 @@ body {
 </div>
 
 
-
 <script>
 // Popup functions
 function openPopup(popupId) {
@@ -1855,17 +2089,35 @@ document.querySelectorAll('.scroll-container').forEach(container => {
   });
 });
 
+// Enhanced navigation menu functionality
 const toggle = document.getElementById('menuToggle');
 const mobileMenu = document.getElementById('mobileMenu');
 
-toggle.addEventListener('click', () => {
+toggle.addEventListener('click', (e) => {
+  e.stopPropagation();
   mobileMenu.classList.toggle('show');
-  
-  // Change icon
-  if (mobileMenu.classList.contains('show')) {
-    toggle.textContent = '✕';
-  } else {
-    toggle.textContent = '☰';
+  toggle.classList.toggle('active');
+});
+
+// Close menu when clicking backdrop
+document.querySelector('.mobile-menu-backdrop')?.addEventListener('click', () => {
+  mobileMenu.classList.remove('show');
+  toggle.classList.remove('active');
+});
+
+// Close menu when clicking outside
+document.addEventListener('click', (e) => {
+  if (!toggle.contains(e.target) && !mobileMenu.contains(e.target)) {
+    mobileMenu.classList.remove('show');
+    toggle.classList.remove('active');
+  }
+});
+
+// Close menu on escape key
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    mobileMenu.classList.remove('show');
+    toggle.classList.remove('active');
   }
 });
 </script>
@@ -2162,8 +2414,6 @@ toggle.addEventListener('click', () => {
     ]
 },
 
-
-
 // In xploreonKnowledge
 "whatsapp community": {
     category: "Xploreon Community",
@@ -2179,7 +2429,7 @@ toggle.addEventListener('click', () => {
 "chaitanya": {
     category: "Xploreon Team",
     responses: [
-        "👩‍💻 <strong>Chaitanya Srivastava</strong>, our innovative Director, bridges her Computer Science Engineering background with a deep passion for space exploration at Xploreon.<br><br>Her expertise and core interest in space drive her leadership in key areas, including:<br>• System architecture for spacecraft designs<br>• Advanced propulsion systems<br>• Flight simulation and control systems<br>• Research in AI-powered space technologies<br><br>Chaitanya’s leadership ensures that Xploreon’s space missions are built on a solid foundation of cutting-edge technology and continuous innovation!"
+        "👩‍💻 <strong>Chaitanya Srivastava</strong>, our innovative Director, bridges her Computer Science Engineering background with a deep passion for space exploration at Xploreon.<br><br>Her expertise and core interest in space drive her leadership in key areas, including:<br>• System architecture for spacecraft designs<br>• Advanced propulsion systems<br>• Flight simulation and control systems<br>• Research in AI-powered space technologies<br><br>Chaitanya's leadership ensures that Xploreon's space missions are built on a solid foundation of cutting-edge technology and continuous innovation!"
       ]
 
 },
@@ -2189,7 +2439,7 @@ toggle.addEventListener('click', () => {
 "team": {
     category: "Xploreon Team",
     responses: [
-        "✨ <strong>Meet Our Amazing Team</strong> - the diverse group of visionaries, engineers, and scientists making Xploreon's mission possible!<br><br>Leadership & Innovation:<br>• <strong>Avikam Deol</strong> - Founder & CEO<br>• <strong>Chaitanya Srinivastav</strong> - Director<br>• <strong>Prayesi Agarwal</strong> - Chief Innovation Officer<br><br>Technology & Engineering:<br>• <strong>Omprakash Kumar</strong> - Technology Head<br>• <strong>Narayan Kataruka</strong> - Mission Systems<br>• <strong>Rishita Mishra</strong> - Software & Community<br><br>Aerospace Division:<br>• <strong>Vishard Makwana</strong>, <strong>Priyansh Patel</strong>, <strong>Harshil Purohit</strong>, and <strong>Neel Ghogil</strong> - Aerospace Engineers from Silver Oak<br><br>Research Division:<br>• <strong>Hemant Sharma</strong> - AI Research Lead<br>•<strong>Mehul Agarwal</strong> - Infrastructure Project Manager<br>•<strong>Mansi Pradyuman Shah</strong> - Market Researcher<br>•<strong>Utkarsh Tripathi</strong> - Mathematics Specialist<br><br>Together, this cross-disciplinary team combines cutting-edge expertise with boundless creativity to forge humanity's path to the stars! 🌠"
+        "✨ <strong>Meet Our Amazing Team</strong> - the diverse group of visionaries, engineers, and scientists making Xploreon's mission possible!<br><br>Leadership & Innovation:<br>• <strong>Avikam Deol</strong> - Founder & CEO<br>• <strong>Chaitanya Srivastava</strong> - Director<br>• <strong>Prayesi Agarwal</strong> - Chief Innovation Officer<br><br>Technology & Engineering:<br>• <strong>Omprakash Kumar</strong> - Technology Head<br>• <strong>Narayan Kataruka</strong> - Mission Systems<br>• <strong>Rishita Mishra</strong> - Software & Community<br><br>Aerospace Division:<br>• <strong>Vishard Makwana</strong>, <strong>Priyansh Patel</strong>, <strong>Harshil Purohit</strong>, and <strong>Neel Ghogil</strong> - Aerospace Engineers from Silver Oak<br><br>Research Division:<br>• <strong>Hemant Sharma</strong> - AI Research Lead<br>•<strong>Mehul Agarwal</strong> - Infrastructure Project Manager<br>•<strong>Mansi Pradyuman Shah</strong> - Market Researcher<br>•<strong>Utkarsh Tripathi</strong> - Mathematics Specialist<br><br>Together, this cross-disciplinary team combines cutting-edge expertise with boundless creativity to forge humanity's path to the stars! 🌠"
 
     ]
 },    
@@ -2447,8 +2697,6 @@ toggle.addEventListener('click', () => {
     ]
 },
 
-
-
  
 };
                 
@@ -2527,7 +2775,7 @@ this.allKnowledge = {
                         <div class="quick-action" onclick="sendQuickMessage('Our amazing team')">👥 Team</div>
                         <div class="quick-action" onclick="sendQuickMessage('Chronorider-X1')">🕰️ Time Travel</div>
                         <div class="quick-action" onclick="sendQuickMessage('Join WhatsApp community')">💬 Community</div>
-                        <div class="quick-action" onclick="sendQuickMessage('Chaitanya Srinivastav')">🎓 Director</div>
+                        <div class="quick-action" onclick="sendQuickMessage('Chaitanya Srivastava')">🎓 Director</div>
                     </div>
                 `;
                 
@@ -2818,8 +3066,6 @@ this.allKnowledge = {
                 }
             });
         });
-
-
 
     </script>
 
