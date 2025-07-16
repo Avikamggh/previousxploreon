@@ -1181,7 +1181,7 @@ function sendEmail(event) {
     formData.append('reply_to', userEmail);
 
     // Send the email via EmailJS
-    emailjs.sendForm('service_6reoxud', 'template_4rcdksk', formData)
+    emailjs.sendForm('service_6reoxud', 'template_4rcdksk', '#contact-form')
         .then(() => {
             alert('😄 Message sent successfully!');
             form.reset(); // Reset the form after successful submission
