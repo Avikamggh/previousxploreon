@@ -1162,7 +1162,6 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-
 function sendEmail(event) {
     event.preventDefault();
     
@@ -1172,14 +1171,23 @@ function sendEmail(event) {
     // Show loading state
     submitButton.innerHTML = 'Sending...';
     submitButton.disabled = true;
-    
-    emailjs.sendForm('service_6reoxud', 'template_4rcdksk', '#contact-form')
+
+    // Get the form and the user's email
+    const form = document.getElementById('contact-form');
+    const userEmail = form.querySelector('input[name="user_email"]').value;
+
+    // Add the reply_to field dynamically to the form data
+    const formData = new FormData(form);
+    formData.append('reply_to', userEmail);
+
+    // Send the email via EmailJS
+    emailjs.sendForm('service_6reoxud', 'template_4rcdksk', formData)
         .then(() => {
-            alert('Message sent successfully!');
-            document.getElementById('contact-form').reset();
+            alert('😄 Message sent successfully!');
+            form.reset(); // Reset the form after successful submission
         })
         .catch((error) => {
-            alert('Failed to send message. Please try again.');
+            alert('😞 Failed to send message. Please try again.');
             console.error('EmailJS error:', error);
         })
         .finally(() => {
@@ -1187,6 +1195,7 @@ function sendEmail(event) {
             submitButton.disabled = false;
         });
 }
+
 </script>
 
  <!-- chatbot-->  
