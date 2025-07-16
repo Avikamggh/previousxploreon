@@ -4,6 +4,9 @@
 <!-- Favicon -->
 <link rel="icon" href="x.webp" type="image/png">  
 
+<!-- Add this script tag -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
 <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Xploreon | Contact</title>
@@ -1090,7 +1093,7 @@
     <p class="text-lg text-cyan-200 mb-6">We'd love to hear from you. Fill out the form or reach us on social media!</p>
     
     <!-- Contact Form -->
-    <form action="mailto:xploreonteam@gmail.com" method="POST" enctype="multipart/form-data" class="glass p-6 rounded-xl space-y-4 text-left shadow-lg">
+    <form id="contact-form" onsubmit="sendEmail(event)" class="glass p-6 rounded-xl space-y-4 text-left shadow-lg">
       <input type="text" name="user_name" placeholder="Your Name" class="w-full bg-black text-white p-3 border border-cyan-400 rounded outline-none" required />
       <input type="email" name="user_email" placeholder="Your Email" class="w-full bg-black text-white p-3 border border-cyan-400 rounded outline-none" required />
       <textarea name="message" placeholder="Your Message" rows="5" class="w-full bg-black text-white p-3 border border-cyan-400 rounded outline-none" required></textarea>
@@ -1158,6 +1161,32 @@ document.addEventListener('keydown', (e) => {
     toggle.classList.remove('active');
   }
 });
+
+
+function sendEmail(event) {
+    event.preventDefault();
+    
+    const submitButton = event.target.querySelector('button[type="submit"]');
+    const originalText = submitButton.innerHTML;
+    
+    // Show loading state
+    submitButton.innerHTML = 'Sending...';
+    submitButton.disabled = true;
+    
+    emailjs.sendForm('service_h8cgzpr', 'template_4rcdksk', '#contact-form')
+        .then(() => {
+            alert('Message sent successfully!');
+            document.getElementById('contact-form').reset();
+        })
+        .catch((error) => {
+            alert('Failed to send message. Please try again.');
+            console.error('EmailJS error:', error);
+        })
+        .finally(() => {
+            submitButton.innerHTML = originalText;
+            submitButton.disabled = false;
+        });
+}
 </script>
 
  <!-- chatbot-->  
@@ -2145,6 +2174,12 @@ window.onbeforeunload = function() {
 };
 </script> 
 
-
+<script type="text/javascript">
+(function(){
+    emailjs.init({
+        publicKey: "VzjIdSQ7MiqFI1T1A",
+    });
+})();
+</script>
 </body>
 </html>
