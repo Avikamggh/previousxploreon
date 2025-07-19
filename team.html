@@ -11,7 +11,7 @@
 body {
   font-family: 'Orbitron', sans-serif;
   margin: 0;
-  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+  
   color: white;
   min-height: 100vh;
   overflow-x: hidden;
@@ -293,20 +293,29 @@ body {
   }
 }
 
+/* REPLACE YOUR EXISTING .team-card CSS WITH THIS GOLDEN VERSION */
+
 .team-card {
-  background: linear-gradient(145deg, rgba(15, 25, 45, 0.9), rgba(25, 35, 65, 0.9));
-  border: 2px solid rgba(0, 255, 255, 0.3);
+  position: relative;
+  background: linear-gradient(145deg, 
+    rgba(26, 27, 58, 0.95), 
+    rgba(37, 39, 99, 0.9), 
+    rgba(255, 215, 0, 0.05)
+  );
+  border: 2px solid rgba(255, 215, 0, 0.4);
   border-radius: 20px;
   min-width: 320px;
   max-width: 320px;
   height: 450px;
   backdrop-filter: blur(15px);
-  transition: all 0.4s ease;
-  position: relative;
-  overflow: hidden;
+  transition: all 0.5s ease;
   scroll-snap-align: start;
   flex-shrink: 0;
-  cursor: pointer; /* Added cursor pointer for clickability */
+  cursor: pointer;
+  overflow: hidden;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    0 0 20px rgba(255, 215, 0, 0.1);
 }
 
 .team-card::before {
@@ -316,7 +325,11 @@ body {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.1), transparent);
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(255, 215, 0, 0.15), 
+    transparent
+  );
   transition: left 0.5s ease;
 }
 
@@ -326,19 +339,276 @@ body {
 
 .team-card:hover {
   transform: translateY(-10px) scale(1.02);
-  border-color: rgba(0, 255, 255, 0.6);
-  box-shadow: 0 20px 40px rgba(0, 255, 255, 0.2);
+  border-color: rgba(255, 215, 0, 0.7);
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.5),
+    0 0 40px rgba(255, 215, 0, 0.3);
 }
 
+/* Card Image Section */
+.card-image {
+  position: relative;
+  height: 180px;
+  overflow: hidden;
+  border-radius: 18px 18px 0 0;
+}
+
+.team-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+  border: none;
+  border-radius: 0;
+}
+
+.team-card:hover .team-image {
+  transform: scale(1.1);
+}
+
+.card-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, 
+    transparent 0%, 
+    rgba(26, 27, 58, 0.6) 70%, 
+    rgba(26, 27, 58, 0.9) 100%
+  );
+}
+
+/* Card Content */
+.card-content {
+  position: relative;
+  padding: 24px;
+  height: calc(100% - 180px);
+  display: flex;
+  flex-direction: column;
+}
+
+.team-card h3 {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.role-tag {
+  background: linear-gradient(45deg, 
+    rgba(255, 215, 0, 0.25), 
+    rgba(255, 237, 78, 0.2)
+  );
+  border: 1px solid rgba(255, 215, 0, 0.5);
+  border-radius: 20px;
+  padding: 6px 12px;
+  font-size: 12px;
+  margin-bottom: 12px;
+  display: inline-block;
+  color: #ffd700;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  width: fit-content;
+  text-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+}
+
+.team-card p {
+  color: #e0e0e0;
+  font-size: 13px;
+  line-height: 1.4;
+  margin-bottom: 16px;
+  flex-grow: 1;
+  text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+
+/* Card Accent Dots */
+.card-accent {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #ffd700;
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+  animation: goldenPulse 2s infinite;
+}
+
+/* Special Cards - Enhanced Golden Theme */
 .founder-card {
-  background: linear-gradient(145deg, rgba(255, 215, 0, 0.1), rgba(0, 255, 255, 0.1));
+  background: linear-gradient(145deg, 
+    rgba(255, 215, 0, 0.15), 
+    rgba(26, 27, 58, 0.95), 
+    rgba(255, 215, 0, 0.1)
+  );
   border: 3px solid #ffd700;
-  box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+  box-shadow: 
+    0 0 30px rgba(255, 215, 0, 0.4),
+    0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
 .founder-card:hover {
-  box-shadow: 0 0 50px rgba(255, 215, 0, 0.5);
-  border-color: #ffd700;
+  box-shadow: 
+    0 0 50px rgba(255, 215, 0, 0.6),
+    0 20px 40px rgba(0, 0, 0, 0.5);
+  border-color: #ffed4e;
+}
+
+.founder-card .card-accent {
+  background: #ffed4e;
+  box-shadow: 0 0 20px rgba(255, 237, 78, 0.9);
+}
+
+.director-card {
+  background: linear-gradient(145deg, 
+    rgba(192, 192, 192, 0.15), 
+    rgba(26, 27, 58, 0.95), 
+    rgba(255, 215, 0, 0.08)
+  );
+  border: 3px solid #c0c0c0;
+  box-shadow: 
+    0 0 30px rgba(192, 192, 192, 0.3),
+    0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.director-card:hover {
+  box-shadow: 
+    0 0 50px rgba(192, 192, 192, 0.5),
+    0 20px 40px rgba(0, 0, 0, 0.5);
+  border-color: #e0e0e0;
+}
+
+.director-card .card-accent {
+  background: #e0e0e0;
+  box-shadow: 0 0 15px rgba(224, 224, 224, 0.8);
+}
+
+.cio-card {
+  background: linear-gradient(145deg, 
+    rgba(0, 128, 255, 0.15), 
+    rgba(26, 27, 58, 0.95), 
+    rgba(255, 215, 0, 0.08)
+  );
+  border: 3px solid #00bfff;
+  box-shadow: 
+    0 0 30px rgba(0, 191, 255, 0.3),
+    0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.cio-card:hover {
+  box-shadow: 
+    0 0 50px rgba(0, 191, 255, 0.5),
+    0 20px 40px rgba(0, 0, 0, 0.5);
+  border-color: #1e90ff;
+}
+
+.cio-card .card-accent {
+  background: #1e90ff;
+  box-shadow: 0 0 15px rgba(30, 144, 255, 0.8);
+}
+
+/* Enhanced Animations */
+@keyframes goldenPulse {
+  0%, 100% { 
+    opacity: 1; 
+    transform: scale(1);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+  }
+  50% { 
+    opacity: 0.7; 
+    transform: scale(1.2);
+    box-shadow: 0 0 25px rgba(255, 215, 0, 1);
+  }
+}
+
+/* Mobile Responsive Updates */
+@media (max-width: 768px) {
+  .team-card {
+    min-width: 280px;
+    max-width: 280px;
+    height: 400px;
+  }
+  
+  .card-image {
+    height: 160px;
+  }
+  
+  .card-content {
+    height: calc(100% - 160px);
+    padding: 20px;
+  }
+  
+  .team-card h3 {
+    font-size: 18px;
+  }
+  
+  .team-card p {
+    font-size: 12px;
+    color: #d0d0d0;
+  }
+  
+  .role-tag {
+    font-size: 11px;
+    padding: 5px 10px;
+  }
+  
+ 
+}
+
+@media (max-width: 480px) {
+  .team-card {
+    min-width: 260px;
+    max-width: 260px;
+    height: 380px;
+  }
+  
+  .card-image {
+    height: 140px;
+  }
+  
+  .card-content {
+    padding: 18px;
+  }
+  
+  .team-card h3 {
+    font-size: 16px;
+  }
+  
+  .team-card p {
+    font-size: 11px;
+    color: #d0d0d0;
+  }
+}
+
+/* Additional Enhancement for Main Title */
+h1 {
+  color: #ffffff !important;
+  text-shadow: 
+    0 0 20px rgba(255, 215, 0, 0.6),
+    0 0 40px rgba(255, 215, 0, 0.4) !important;
+}
+
+@media (max-width: 480px) {
+  .team-card {
+    min-width: 260px;
+    max-width: 260px;
+    height: 380px;
+  }
+  
+  .card-image {
+    height: 140px;
+  }
+  
+  .card-content {
+    padding: 18px;
+  }
+  
+  
 }
 
 .scroll-container {
@@ -349,25 +619,19 @@ body {
   padding: 20px 0;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  justify-content: flex-start;
-}
-
-@media (min-width: 1024px) {
-  .scroll-container {
-    justify-content: center;
-  }
-  
-  .department-section:has(.scroll-container .team-card:nth-child(-n+3):last-child) .nav-button {
-    display: none;
-  }
-  
-  .scroll-container:has(.team-card:nth-child(4)) {
-    justify-content: flex-start;
-  }
+  /* Default to flex-start, will be overridden by JS for centering */
+  justify-content: flex-start; 
 }
 
 .scroll-container::-webkit-scrollbar {
   display: none;
+}
+
+.nav-button-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem; /* Adjust as needed */
 }
 
 .nav-button {
@@ -383,6 +647,7 @@ body {
   cursor: pointer;
   transition: all 0.3s ease;
   backdrop-filter: blur(10px);
+  flex-shrink: 0; /* Prevent buttons from shrinking */
 }
 
 .nav-button:hover {
@@ -397,11 +662,11 @@ body {
 
 .department-title {
   font-size: 2.5rem;
-  color: #00ffe0;
   text-align: center;
   margin-bottom: 30px;
   font-weight: 700;
   position: relative;
+  letter-spacing: 2px;
 }
 
 .department-title .emoji {
@@ -410,13 +675,18 @@ body {
   -webkit-background-clip: initial !important;
   -webkit-text-fill-color: initial !important;
   margin-right: 0.5rem;
+  filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.9));
 }
+
 .department-title .text-part {
-  background: linear-gradient(45deg, #00ffe0, #0080ff);
+  background: linear-gradient(45deg, #ffd700, #ffed4e, #ffd700);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  text-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
+  filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.6));
 }
+
 .department-title::after {
   content: '';
   position: absolute;
@@ -425,17 +695,19 @@ body {
   transform: translateX(-50%);
   width: 100px;
   height: 3px;
-  background: linear-gradient(45deg, #00ffe0, #0080ff);
+  background: linear-gradient(45deg, #ffd700, #ffffff);
   border-radius: 2px;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
 }
 
+
 .team-image {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  border: 3px solid rgba(0, 255, 255, 0.5);
-  transition: all 0.3s ease;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
+  transition: transform 0.5s ease;
+  border: none;
+  border-radius: 0;
 }
 
 .team-card:hover .team-image {
@@ -486,23 +758,14 @@ body {
     padding-right: 0.5rem;
   }
   
-  .team-image {
-    width: 100px;
-    height: 100px;
-  }
-  
   h1 {
     font-size: 2.5rem !important;
     margin-bottom: 2rem !important;
   }
   
-  .nav-button {
-    position: sticky;
-    z-index: 10;
-  }
-  
+  /* Ensure buttons are always visible on mobile if there's more than one card */
   .department-section .nav-button {
-    display: flex !important;
+    display: flex !important; 
   }
 }
 
@@ -537,11 +800,6 @@ body {
   main {
     padding-left: 0.25rem;
     padding-right: 0.25rem;
-  }
-  
-  .team-image {
-    width: 90px;
-    height: 90px;
   }
   
   .team-card h3 {
@@ -581,11 +839,6 @@ body {
     font-size: 1.2rem;
   }
   
-  .team-image {
-    width: 80px;
-    height: 80px;
-  }
-  
   .team-card h3 {
     font-size: 1rem;
   }
@@ -603,7 +856,7 @@ body {
 }
 
 
-<!-- chatbot--> 
+/* chatbot*/ 
         
         * {
             margin: 0;
@@ -1318,9 +1571,49 @@ body {
   100% { transform: rotate(360deg); }
 }
    
+
+/* Background Video Styles - ADD TO EXISTING STYLES */
+.video-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -2;
+  overflow: hidden;
+}
+
+.video-background video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: none;
+}
+
+.video-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  
+  z-index: 1;
+}
+
+
 </style>
 </head>
 <body>
+
+<!-- Background Video -->
+<div class="video-background">
+  <video autoplay muted loop id="bgVideo">
+    <source src="space-background.mp4" type="video/mp4">
+    <source src="space-background.webm" type="video/webm">
+    <!-- Fallback for browsers that don't support video -->
+  </video>
+  <div class="video-overlay"></div>
+</div>
 <!-- Loading Screen (Initially Hidden) -->
 <div id="loading-screen" class="loading-screen hidden">
   <div class="spinner"></div> <!-- Spinner or custom content -->
@@ -1421,100 +1714,120 @@ body {
   <div class="department-section">
     <h2 class="department-title">🌟 LEADERSHIP</h2>
     <div class="relative">
-      <div class="flex items-center justify-between mb-4">
+      <div class="nav-button-container">
         <button class="nav-button" onclick="scrollSection('leadership', -1)">‹</button>
         <button class="nav-button" onclick="scrollSection('leadership', 1)">›</button>
       </div>
       <div id="leadership" class="scroll-container">
-        <!-- Founder Card -->
-        <div class="team-card founder-card p-6 flex flex-col items-center text-center" onclick="openPopup('popup-avikam')">
-          <img src="a.png" alt="Avikam Deol" class="team-image mb-4" />
-          <h3 class="text-xl font-bold text-yellow-300 mb-2">Avikam Deol</h3>
-          <div class="role-tag text-yellow-300 border-yellow-400">Founder & CEO</div>
-          <p class="text-sm text-gray-300 mt-4 flex-1 leading-relaxed">
-            Visionary leader driving Xploreon's mission in space exploration and deep-tech innovation.
-          </p>
-        </div>
-
-
-
-        <!-- Director card -->
-        <!-- Director card -->
-<div class="team-card director-card p-6 flex flex-col items-center text-center" onclick="openPopup('popup-chaitanya')">
-
-          <img src="chaitanya.png" alt="Chaitanya Srivastava" class="team-image mb-4" />
-          <h3 class="text-xl font-bold text-cyan-300 mb-2">Chaitanya Srivastava</h3>
-          <div class="role-tag">Director</div>
-          <p class="text-sm text-gray-300 mt-4 flex-1 leading-relaxed">
-            AI Researcher with expertise in machine learning, web development, and cybersecurity.
-          </p>
-        </div>
-     
-
-      <!-- CIO Card -->
-<div class="team-card cio-card p-6 flex flex-col items-center text-center" onclick="openPopup('popup-prayesi')">
-
-          <img src="p.jpg" alt="Prayesi Agarwal" class="team-image mb-4" />
-          <h3 class="text-xl font-bold text-cyan-300 mb-2">Prayesi Agarwal</h3>
-          <div class="role-tag">Chief Innovation Officer</div>
-          <p class="text-sm text-gray-300 mt-4 flex-1 leading-relaxed">
-            Leading breakthroughs in AI, robotics, VR, and space exploration technologies.
-          </p>
-        </div>
-      </div>
-    </div>
+       <div class="team-card founder-card" onclick="openPopup('popup-avikam')">
+  <div class="card-image">
+    <img src="a.png" alt="Avikam Deol" class="team-image" />
+    <div class="card-overlay"></div>
   </div>
+  <div class="card-content">
+    <h3>Avikam Deol</h3>
+    <div class="role-tag">Founder & CEO</div>
+    <p>Visionary leader driving Xploreon's mission in space exploration and deep-tech innovation.</p>
+    
+  </div>
+  <div class="card-accent"></div>
+</div>
+
+<div class="team-card director-card" onclick="openPopup('popup-chaitanya')">
+  <div class="card-image">
+    <img src="chaitanya.png" alt="Chaitanya Srivastava" class="team-image" />
+    <div class="card-overlay"></div>
+  </div>
+  <div class="card-content">
+    <h3>Chaitanya Srivastava</h3>
+    <div class="role-tag">Director</div>
+    <p>AI Researcher with expertise in machine learning, web development, and cybersecurity.</p>
+    
+  </div>
+  <div class="card-accent"></div>
+</div>
+
+<div class="team-card cio-card" onclick="openPopup('popup-prayesi')">
+  <div class="card-image">
+    <img src="p.png" alt="Prayesi Agarwal" class="team-image" />
+    <div class="card-overlay"></div>
+  </div>
+  <div class="card-content">
+    <h3>Prayesi Agarwal</h3>
+    <div class="role-tag">Chief Innovation Officer</div>
+    <p>Leading breakthroughs in AI, robotics, VR, and space exploration technologies.</p>
+    
+  </div>
+  <div class="card-accent"></div>
+</div>
+</div>
+</div>
 
   <!-- Technology Department -->
   <div class="department-section">
     <h2 class="department-title">⚙️ TECHNOLOGY</h2>
     <div class="relative">
-      <div class="flex items-center justify-between mb-4">
+      <div class="nav-button-container">
         <button class="nav-button" onclick="scrollSection('technology', -1)">‹</button>
         <button class="nav-button" onclick="scrollSection('technology', 1)">›</button>
       </div>
       <div id="technology" class="scroll-container">
-        <!-- Head of Technology -->
-        <div class="team-card p-6 flex flex-col items-center text-center" onclick="openPopup('popup-om')">
-          <img src="om.jpg" alt="Omprakash Kumar" class="team-image mb-4" />
-          <h3 class="text-xl font-bold text-cyan-300 mb-2">Omprakash Kumar</h3>
-          <div class="role-tag">Head of Technology</div>
-          <p class="text-sm text-gray-300 mt-4 flex-1 leading-relaxed">
-            Spearheading engineering initiatives from propulsion systems to AI-powered mission control.
-          </p>
-        </div>
-
-
-      <!-- Add this card to the Technology Department section, after Rishita's card -->
-<div class="team-card p-6 flex flex-col items-center text-center" onclick="openPopup('popup-divanshi')">
-  <img src="divanshi.png" alt="Divanshi Manshani" class="team-image mb-4" />
-  <h3 class="text-xl font-bold text-cyan-300 mb-2">Divanshi Manshani</h3>
-  <div class="role-tag">CubeSat Systems Engineer</div>
-  <p class="text-sm text-gray-300 mt-4 flex-1 leading-relaxed">
-    Specializing in CubeSat development, embedded systems, and IoT platforms with hands-on satellite prototyping experience.
-  </p>
+      <!-- TECHNOLOGY SECTION - REPLACE EXISTING CARDS -->
+<div class="team-card" onclick="openPopup('popup-om')">
+  <div class="card-image">
+    <img src="om.png" alt="Omprakash Kumar" class="team-image" />
+    <div class="card-overlay"></div>
+  </div>
+  <div class="card-content">
+    <h3>Omprakash Kumar</h3>
+    <div class="role-tag">Head of Technology</div>
+    <p>Spearheading engineering initiatives from propulsion systems to AI-powered mission control.</p>
+    
+  </div>
+  <div class="card-accent"></div>
 </div>
-     
 
-        <!-- CAD Designer -->
-        <div class="team-card p-6 flex flex-col items-center text-center" onclick="openPopup('popup-narayan')">
-          <img src="n.jpg" alt="Narayan Kataruka" class="team-image mb-4" />
-          <h3 class="text-xl font-bold text-cyan-300 mb-2">Narayan Kataruka</h3>
-          <div class="role-tag">Mission Systems CAD Designer</div>
-          <p class="text-sm text-gray-300 mt-4 flex-1 leading-relaxed">
-            Developing precision CAD/CAM models and prototypes for next-generation aerospace systems.
-          </p>
-        </div>
+<div class="team-card" onclick="openPopup('popup-divanshi')">
+  <div class="card-image">
+    <img src="divanshi.png" alt="Divanshi Manshani" class="team-image" />
+    <div class="card-overlay"></div>
+  </div>
+  <div class="card-content">
+    <h3>Divanshi Manshani</h3>
+    <div class="role-tag">CubeSat Systems Engineer</div>
+    <p>Specializing in CubeSat development, embedded systems, and IoT platforms with hands-on satellite prototyping experience.</p>
+    
+  </div>
+  <div class="card-accent"></div>
+</div>
 
-        <!-- Software Engineer -->
-        <div class="team-card p-6 flex flex-col items-center text-center" onclick="openPopup('popup-rishita')">
-          <img src="rishita.png" alt="Rishita Mishra" class="team-image mb-4" />
-          <h3 class="text-xl font-bold text-cyan-300 mb-2">Rishita Mishra</h3>
-          <div class="role-tag">Software Engineer</div>
-          <p class="text-sm text-gray-300 mt-4 flex-1 leading-relaxed">
-            Managing Xploreon website, WhatsApp community, and educational content creation.
-          </p>
-        </div>
+<div class="team-card" onclick="openPopup('popup-narayan')">
+  <div class="card-image">
+    <img src="n.png" alt="Narayan Kataruka" class="team-image" />
+    <div class="card-overlay"></div>
+  </div>
+  <div class="card-content">
+    <h3>Narayan Kataruka</h3>
+    <div class="role-tag">Mission Systems CAD Designer</div>
+    <p>Developing precision CAD/CAM models and prototypes for next-generation aerospace systems.</p>
+    
+  </div>
+  <div class="card-accent"></div>
+</div>
+
+<div class="team-card" onclick="openPopup('popup-rishita')">
+  <div class="card-image">
+    <img src="rishita.png" alt="Rishita Mishra" class="team-image" />
+    <div class="card-overlay"></div>
+  </div>
+  <div class="card-content">
+    <h3>Rishita Mishra</h3>
+    <div class="role-tag">Software Engineer</div>
+    <p>Managing Xploreon website, WhatsApp community, and educational content creation.</p>
+    
+  </div>
+  <div class="card-accent"></div>
+</div>
       </div>
     </div>
   </div>
@@ -1524,20 +1837,25 @@ body {
 <div class="department-section">
   <h2 class="department-title">🏗️ INFRASTRUCTURE & FACILITIES</h2>
   <div class="relative">
-    <div class="flex items-center justify-between mb-4">
+    <div class="nav-button-container">
       <button class="nav-button" onclick="scrollSection('infrastructure', -1)">‹</button>
       <button class="nav-button" onclick="scrollSection('infrastructure', 1)">›</button>
     </div>
     <div id="infrastructure" class="scroll-container">
-      <!-- Mehul Agarwal Card -->
-      <div class="team-card p-6 flex flex-col items-center text-center" onclick="openPopup('popup-launchpad')">
-        <img src="mehul.png" alt="Mehul Agarwal" class="team-image mb-4" />
-        <h3 class="text-xl font-bold text-cyan-300 mb-2">Mehul Agarwal</h3>
-        <div class="role-tag">Project Manager – Launchpad & Facilities</div>
-        <p class="text-sm text-gray-300 mt-4 flex-1 leading-relaxed">
-          Civil Engineering student from IIT Roorkee overseeing all infrastructure development, including launchpad construction.
-        </p>
-      </div>
+     <!-- INFRASTRUCTURE & FACILITIES SECTION -->
+<div class="team-card" onclick="openPopup('popup-launchpad')">
+  <div class="card-image">
+    <img src="mehul.png" alt="Mehul Agarwal" class="team-image" />
+    <div class="card-overlay"></div>
+  </div>
+  <div class="card-content">
+    <h3>Mehul Agarwal</h3>
+    <div class="role-tag">Project Manager – Launchpad & Facilities</div>
+    <p>Civil Engineering student from IIT Roorkee overseeing all infrastructure development, including launchpad construction.</p>
+    
+  </div>
+  <div class="card-accent"></div>
+
     </div>
   </div>
 </div>
@@ -1548,20 +1866,25 @@ body {
  <h2 class="department-title">📊 BUSINESS DEVELOPMENT & RESEARCH</h2>
 
   <div class="relative">
-    <div class="flex items-center justify-between mb-4">
+    <div class="nav-button-container">
       <button class="nav-button" onclick="scrollSection('business-research', -1)">‹</button>
       <button class="nav-button" onclick="scrollSection('business-research', 1)">›</button>
     </div>
     <div id="business-research" class="scroll-container">
-      <!-- Mansi's Card -->
-      <div class="team-card p-6 flex flex-col items-center text-center" onclick="openPopup('popup-mansi')">
-        <img src="mansi.png" alt="Mansi Pradyuman Shah" class="team-image mb-4" />
-        <h3 class="text-xl font-bold text-cyan-300 mb-2">Mansi Pradyuman Shah</h3>
-        <div class="role-tag">Market Research Manager</div>
-        <p class="text-sm text-gray-300 mt-4 flex-1 leading-relaxed">
-          Experienced in market research, leading teams, and providing strategic insights for business growth across multiple industries.
-        </p>
-      </div>
+     <!-- BUSINESS DEVELOPMENT & RESEARCH SECTION -->
+<div class="team-card" onclick="openPopup('popup-mansi')">
+  <div class="card-image">
+    <img src="mansi.png" alt="Mansi Pradyuman Shah" class="team-image" />
+    <div class="card-overlay"></div>
+  </div>
+  <div class="card-content">
+    <h3>Mansi Pradyuman Shah</h3>
+    <div class="role-tag">Market Research Manager</div>
+    <p>Experienced in market research, leading teams, and providing strategic insights for business growth across multiple industries.</p>
+    
+  </div>
+  <div class="card-accent"></div>
+
     </div>
   </div>
 </div>
@@ -1574,50 +1897,67 @@ body {
   <div class="department-section">
     <h2 class="department-title">🚀 AEROSPACE ENGINEERS</h2>
     <div class="relative">
-      <div class="flex items-center justify-between mb-4">
+      <div class="nav-button-container">
         <button class="nav-button" onclick="scrollSection('aerospace', -1)">‹</button>
         <button class="nav-button" onclick="scrollSection('aerospace', 1)">›</button>
       </div>
       <div id="aerospace" class="scroll-container">
-        <!-- Vishard -->
-        <div class="team-card p-6 flex flex-col items-center text-center" onclick="openPopup('popup-vishard')">
-          <img src="vishard.png" alt="Vishard" class="team-image mb-4" />
-          <h3 class="text-xl font-bold text-cyan-300 mb-2">Vishard Makwana</h3>
-          <div class="role-tag">Aerospace Engineer</div>
-          <p class="text-sm text-gray-300 mt-4 flex-1 leading-relaxed">
-            Working on advanced rocket propulsion systems and launch vehicle design at Silver Oak University, Ahmedabad.
-          </p>
-        </div>
+        <!-- AEROSPACE ENGINEERS SECTION -->
+<div class="team-card" onclick="openPopup('popup-vishard')">
+  <div class="card-image">
+    <img src="vishard.png" alt="Vishard" class="team-image" />
+    <div class="card-overlay"></div>
+  </div>
+  <div class="card-content">
+    <h3>Vishard Makwana</h3>
+    <div class="role-tag">Aerospace Engineer</div>
+    <p>Working on advanced rocket propulsion systems and launch vehicle design at Silver Oak University, Ahmedabad.</p>
+    
+  </div>
+  <div class="card-accent"></div>
+</div>
 
-        <!-- Priyansh Patel -->
-        <div class="team-card p-6 flex flex-col items-center text-center" onclick="openPopup('popup-priyansh')">
-          <img src="priyansh.png" alt="Priyansh Patel" class="team-image mb-4" />
-          <h3 class="text-xl font-bold text-cyan-300 mb-2">Priyansh Patel</h3>
-          <div class="role-tag">Aerospace Engineer</div>
-          <p class="text-sm text-gray-300 mt-4 flex-1 leading-relaxed">
-            Developing spacecraft structural systems and mission trajectory analysis for next-generation launch projects.
-          </p>
-        </div>
+<div class="team-card" onclick="openPopup('popup-priyansh')">
+  <div class="card-image">
+    <img src="priyansh.png" alt="Priyansh Patel" class="team-image" />
+    <div class="card-overlay"></div>
+  </div>
+  <div class="card-content">
+    <h3>Priyansh Patel</h3>
+    <div class="role-tag">Aerospace Engineer</div>
+    <p>Developing spacecraft structural systems and mission trajectory analysis for next-generation launch projects.</p>
+    
+  </div>
+  <div class="card-accent"></div>
+</div>
 
-        <!-- Harshil Purohit -->
-        <div class="team-card p-6 flex flex-col items-center text-center" onclick="openPopup('popup-harshil')">
-          <img src="harshil.png" alt="Harshil Purohit" class="team-image mb-4" />
-          <h3 class="text-xl font-bold text-cyan-300 mb-2">Harshil Purohit</h3>
-          <div class="role-tag">Aerospace Engineer</div>
-          <p class="text-sm text-gray-300 mt-4 flex-1 leading-relaxed">
-            Contributing to rocket engine design and aerodynamics optimization for Xploreon's launch vehicle initiatives.
-          </p>
-        </div>
+<div class="team-card" onclick="openPopup('popup-harshil')">
+  <div class="card-image">
+    <img src="harshil.png" alt="Harshil Purohit" class="team-image" />
+    <div class="card-overlay"></div>
+  </div>
+  <div class="card-content">
+    <h3>Harshil Purohit</h3>
+    <div class="role-tag">Aerospace Engineer</div>
+    <p>Contributing to rocket engine design and aerodynamics optimization for Xploreon's launch vehicle initiatives.</p>
+   
+  </div>
+  <div class="card-accent"></div>
+</div>
 
-        <!-- Neil -->
-        <div class="team-card p-6 flex flex-col items-center text-center" onclick="openPopup('popup-neil')">
-          <img src="neil.png" alt="Neil" class="team-image mb-4" />
-          <h3 class="text-xl font-bold text-cyan-300 mb-2">Neel Ghoil</h3>
-          <div class="role-tag">Aerospace Engineer</div>
-          <p class="text-sm text-gray-300 mt-4 flex-1 leading-relaxed">
-            Focusing on space mission planning and satellite deployment systems for future aerospace projects.
-          </p>
-        </div>
+<div class="team-card" onclick="openPopup('popup-neil')">
+  <div class="card-image">
+    <img src="neil.png" alt="Neil" class="team-image" />
+    <div class="card-overlay"></div>
+  </div>
+  <div class="card-content">
+    <h3>Neel Ghoil</h3>
+    <div class="role-tag">Aerospace Engineer</div>
+    <p>Focusing on space mission planning and satellite deployment systems for future aerospace projects.</p>
+    
+  </div>
+  <div class="card-accent"></div>
+</div>
       </div>
     </div>
   </div>
@@ -1626,31 +1966,39 @@ body {
   <div class="department-section">
     <h2 class="department-title">🧠 AI & RESEARCH</h2>
     <div class="relative">
-      <div class="flex items-center justify-between mb-4">
+      <div class="nav-button-container">
         <button class="nav-button" onclick="scrollSection('ai-research', -1)">‹</button>
         <button class="nav-button" onclick="scrollSection('ai-research', 1)">›</button>
       </div>
       <div id="ai-research" class="scroll-container">
-        <!-- Head of AI & Research -->
-        <div class="team-card p-6 flex flex-col items-center text-center" onclick="openPopup('popup-hemant')">
-          <img src="hemant.webp" alt="Hemant Sharma" class="team-image mb-4" />
-          <h3 class="text-xl font-bold text-cyan-300 mb-2">Hemant Sharma</h3>
-          <div class="role-tag">Head of AI & Research</div>
-          <p class="text-sm text-gray-300 mt-4 flex-1 leading-relaxed">
-            Leading AI research and data-driven innovations for space exploration projects.
-          </p>
-        </div>
+       <!-- AI & RESEARCH SECTION -->
+<div class="team-card" onclick="openPopup('popup-hemant')">
+  <div class="card-image">
+    <img src="hemant.png" alt="Hemant Sharma" class="team-image" />
+    <div class="card-overlay"></div>
+  </div>
+  <div class="card-content">
+    <h3>Hemant Sharma</h3>
+    <div class="role-tag">Head of AI & Research</div>
+    <p>Leading AI research and data-driven innovations for space exploration projects.</p>
+    
+  </div>
+  <div class="card-accent"></div>
+</div>
 
-
-        <!-- Mathematics Department -->
-        <div class="team-card p-6 flex flex-col items-center text-center" onclick="openPopup('popup-utkarsh')">
-          <img src="u.jpg" alt="Utkarsh Tripathi" class="team-image mb-4" />
-          <h3 class="text-xl font-bold text-cyan-300 mb-2">Utkarsh Tripathi</h3>
-          <div class="role-tag">Mathematics Specialist</div>
-          <p class="text-sm text-gray-300 mt-4 flex-1 leading-relaxed">
-            Leveraging mathematical modeling and data science to optimize aerospace systems.
-          </p>
-        </div>
+<div class="team-card" onclick="openPopup('popup-utkarsh')">
+  <div class="card-image">
+    <img src="u.png" alt="Utkarsh Tripathi" class="team-image" />
+    <div class="card-overlay"></div>
+  </div>
+  <div class="card-content">
+    <h3>Utkarsh Tripathi</h3>
+    <div class="role-tag">Mathematics Specialist</div>
+    <p>Leveraging mathematical modeling and data science to optimize aerospace systems.</p>
+    
+  </div>
+  <div class="card-accent"></div>
+</div>
       </div>
     </div>
   </div>
@@ -1712,7 +2060,7 @@ body {
     
     <div class="relative z-10">
       <div class="flex items-center mb-6">
-        <img src="p.jpg" alt="Prayesi Agarwal" class="w-20 h-20 rounded-full border-3 border-cyan-400 mr-4 shadow-lg" />
+        <img src="p.png" alt="Prayesi Agarwal" class="w-20 h-20 rounded-full border-3 border-cyan-400 mr-4 shadow-lg" />
         <div>
           <h3 class="text-2xl font-bold mb-1 bg-gradient-to-r from-cyan-400 to-cyan-300 bg-clip-text text-transparent">Prayesi Agarwal</h3>
           <p class="text-cyan-300 font-semibold">Chief Innovation Officer</p>
@@ -1760,7 +2108,7 @@ body {
     
     <div class="relative z-10">
       <div class="flex items-center mb-6">
-        <img src="om.jpg" alt="Omprakash Kumar" class="w-20 h-20 rounded-full border-3 border-cyan-400 mr-4 shadow-lg" />
+        <img src="om.png" alt="Omprakash Kumar" class="w-20 h-20 rounded-full border-3 border-cyan-400 mr-4 shadow-lg" />
         <div>
           <h3 class="text-2xl font-bold mb-1 bg-gradient-to-r from-cyan-400 to-cyan-300 bg-clip-text text-transparent">Omprakash Kumar</h3>
           <p class="text-cyan-300 font-semibold">Head of Technology</p>
@@ -1783,7 +2131,7 @@ body {
     
     <div class="relative z-10">
       <div class="flex items-center mb-6">
-        <img src="hemant.webp" alt="Hemant Sharma" class="w-20 h-20 rounded-full border-3 border-cyan-400 mr-4 shadow-lg" />
+        <img src="hemant.png" alt="Hemant Sharma" class="w-20 h-20 rounded-full border-3 border-cyan-400 mr-4 shadow-lg" />
         <div>
           <h3 class="text-2xl font-bold mb-1 bg-gradient-to-r from-cyan-400 to-cyan-300 bg-clip-text text-transparent">Hemant Sharma</h3>
           <p class="text-cyan-300 font-semibold">Head of AI & Research</p>
@@ -1806,7 +2154,7 @@ body {
     
     <div class="relative z-10">
       <div class="flex items-center mb-6">
-        <img src="n.jpg" alt="Narayan Kataruka" class="w-20 h-20 rounded-full border-3 border-cyan-400 mr-4 shadow-lg" />
+        <img src="n.png" alt="Narayan Kataruka" class="w-20 h-20 rounded-full border-3 border-cyan-400 mr-4 shadow-lg" />
         <div>
           <h3 class="text-2xl font-bold mb-1 bg-gradient-to-r from-cyan-400 to-cyan-300 bg-clip-text text-transparent">Narayan Kataruka</h3>
           <p class="text-cyan-300 font-semibold">Mission Systems CAD Designer</p>
@@ -1829,7 +2177,7 @@ body {
     
     <div class="relative z-10">
       <div class="flex items-center mb-6">
-        <img src="u.jpg" alt="Utkarsh Tripathi" class="w-20 h-20 rounded-full border-3 border-cyan-400 mr-4 shadow-lg" />
+        <img src="u.png" alt="Utkarsh Tripathi" class="w-20 h-20 rounded-full border-3 border-cyan-400 mr-4 shadow-lg" />
         <div>
           <h3 class="text-2xl font-bold mb-1 bg-gradient-to-r from-cyan-400 to-cyan-300 bg-clip-text text-transparent">Utkarsh Tripathi</h3>
           <p class="text-cyan-300 font-semibold">Mathematics Specialist</p>
@@ -2170,6 +2518,72 @@ document.addEventListener('keydown', (e) => {
     toggle.classList.remove('active');
   }
 });
+
+// Function to update card display and arrow visibility
+function updateCardDisplay() {
+  document.querySelectorAll('.department-section').forEach(section => {
+    const scrollContainer = section.querySelector('.scroll-container');
+    const cards = scrollContainer.querySelectorAll('.team-card');
+    const navButtonContainer = section.querySelector('.nav-button-container');
+    const leftButton = navButtonContainer.children[0];
+    const rightButton = navButtonContainer.children[1];
+
+    if (!scrollContainer || !cards.length || !navButtonContainer) return;
+
+    const cardWidth = cards[0].offsetWidth; // Assuming all cards have same width
+    const gap = 20; // From .scroll-container gap
+    const totalCardWidth = cards.length * cardWidth + (cards.length - 1) * gap;
+    const containerWidth = scrollContainer.clientWidth;
+
+    // Determine if scrolling is needed
+    const needsScrolling = totalCardWidth > containerWidth;
+
+    if (needsScrolling) {
+      // If scrolling is needed, show arrows and allow scrolling
+      navButtonContainer.style.display = 'flex';
+      scrollContainer.style.overflowX = 'auto';
+      scrollContainer.style.justifyContent = 'flex-start'; // Allow scrolling from start
+      
+      // Update arrow visibility based on scroll position
+      const isAtStart = scrollContainer.scrollLeft === 0;
+      const isAtEnd = scrollContainer.scrollLeft + containerWidth >= scrollContainer.scrollWidth - 1; // -1 for minor floating point issues
+      
+      leftButton.style.opacity = isAtStart ? '0.5' : '1';
+      leftButton.style.pointerEvents = isAtStart ? 'none' : 'auto';
+      rightButton.style.opacity = isAtEnd ? '0.5' : '1';
+      rightButton.style.pointerEvents = isAtEnd ? 'none' : 'auto';
+
+    } else {
+      // If no scrolling is needed, hide arrows and center cards
+      navButtonContainer.style.display = 'none';
+      scrollContainer.style.overflowX = 'hidden';
+      scrollContainer.style.justifyContent = 'center';
+    }
+  });
+}
+
+// Run on load and resize
+window.addEventListener('load', updateCardDisplay);
+window.addEventListener('resize', updateCardDisplay);
+
+// Also update on scroll to handle arrow opacity
+document.querySelectorAll('.scroll-container').forEach(container => {
+  container.addEventListener('scroll', () => {
+    const navButtonContainer = container.parentElement.querySelector('.nav-button-container');
+    if (!navButtonContainer || navButtonContainer.style.display === 'none') return; // Only update if buttons are visible
+
+    const leftButton = navButtonContainer.children[0];
+    const rightButton = navButtonContainer.children[1];
+    const isAtStart = container.scrollLeft === 0;
+    const isAtEnd = container.scrollLeft + container.clientWidth >= container.scrollWidth - 1;
+
+    leftButton.style.opacity = isAtStart ? '0.5' : '1';
+    leftButton.style.pointerEvents = isAtStart ? 'none' : 'auto';
+    rightButton.style.opacity = isAtEnd ? '0.5' : '1';
+    rightButton.style.pointerEvents = isAtEnd ? 'none' : 'auto';
+  });
+});
+
 </script>
 
 
@@ -3158,5 +3572,39 @@ window.onbeforeunload = function() {
 };
 
 </script> 
+
+<script>
+// Enhanced card interactions - ADD TO EXISTING SCRIPT SECTION
+document.addEventListener('DOMContentLoaded', function() {
+  // Card hover effects
+  document.querySelectorAll('.team-card').forEach(card => {
+    card.addEventListener('mouseenter', function() {
+      this.style.transform = 'translateY(-10px) scale(1.02)';
+    });
+    
+    card.addEventListener('mouseleave', function() {
+      this.style.transform = 'translateY(0) scale(1)';
+    });
+  });
+
+  
+
+  // Loading animation for cards
+  document.querySelectorAll('.team-card').forEach((card, index) => {
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(50px)';
+    
+    setTimeout(() => {
+      card.style.transition = 'all 0.6s ease';
+      card.style.opacity = '1';
+      card.style.transform = 'translateY(0)';
+    }, index * 100);
+  });
+});
+</script>
+
+
+
+
 </body>
 </html>
