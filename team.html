@@ -1801,6 +1801,20 @@ h1 {
   <div class="card-accent"></div>
 </div>
 
+<div class="team-card" onclick="openPopup('popup-riya')">
+  <div class="card-image">
+    <img src="riya.png" alt="Riya Pallavi" class="team-image" />
+    <div class="card-overlay"></div>
+  </div>
+  <div class="card-content">
+    <h3>Riya Pallavi</h3>
+    <div class="role-tag">CI/CD Intern (Trial)</div>
+    <p>Currently interning in our DevOps team, Riya is helping build and automate CI/CD pipelines. She is on a 3-month trial and may be offered a full-time role based on performance.</p>
+  </div>
+  <div class="card-accent"></div>
+</div>
+
+
 <div class="team-card" onclick="openPopup('popup-narayan')">
   <div class="card-image">
     <img src="n.png" alt="Narayan Kataruka" class="team-image" />
@@ -2338,6 +2352,32 @@ h1 {
     </div>
   </div>
 </div>
+
+
+<div id="popup-riya" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 hidden backdrop-blur-sm">
+  <div class="bg-gradient-to-br from-gray-800 via-gray-900 to-black text-white p-8 rounded-3xl max-w-lg w-full mx-4 relative border-2 border-cyan-300 shadow-2xl shadow-cyan-500/20 backdrop-filter backdrop-blur-xl">
+    <div class="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-transparent to-blue-500/10 rounded-3xl"></div>
+    <button onclick="closePopup('popup-riya')" class="absolute top-4 right-4 text-cyan-300 text-3xl hover:text-white transition-all duration-300 hover:rotate-90 z-10">×</button>
+    
+    <div class="relative z-10">
+      <div class="flex items-center mb-6">
+        <img src="riya.png" alt="Riya Pallavi" class="w-20 h-20 rounded-full border-3 border-cyan-400 mr-4 shadow-lg" />
+        <div>
+          <h3 class="text-2xl font-bold mb-1 bg-gradient-to-r from-cyan-300 to-cyan-500 bg-clip-text text-transparent">Riya Pallavi</h3>
+          <p class="text-cyan-300 font-semibold">CI/CD Engineer (Trial)</p>
+        </div>
+      </div>
+      
+      <div class="bg-gradient-to-r from-cyan-500/20 to-blue-500/20 p-4 rounded-2xl border border-cyan-400/30">
+        <p class="text-sm text-gray-200 leading-relaxed">
+          Riya Pallavi is currently evaluating a 3-month trial role at Xploreon as a CI/CD Engineer. She plays a key role in maintaining our deployment architecture, automating build pipelines, and ensuring code delivery efficiency. If her performance continues to exceed expectations, she will be offered a full-time position.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 
 <div id="popup-launchpad" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 hidden backdrop-blur-sm">
   <div class="bg-gradient-to-br from-gray-800 via-gray-900 to-black text-white p-8 rounded-3xl max-w-lg w-full mx-4 relative border-2 border-cyan-300 shadow-2xl shadow-cyan-500/20 backdrop-filter backdrop-blur-xl">
