@@ -1,9 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
+<!-- Custom Cursor Styles -->
+<link rel="stylesheet" href="customcursor.css">
+
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Xploreon | Enhanced Satellite Tracker with Live TLE</title>
+  <title>Xploreon | Enhanced Satellite Tracker with Pass Predictions</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -308,6 +312,43 @@
       text-align: center;
     }
 
+    .pass-info {
+      background: rgba(255, 165, 0, 0.1);
+      border: 1px solid #ffa500;
+      color: #ffcc80;
+      padding: 8px;
+      border-radius: 6px;
+      font-size: 9px;
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    .pass-info.visible {
+      background: rgba(0, 255, 0, 0.1);
+      border-color: #00ff00;
+      color: #80ff80;
+    }
+
+    .pass-info.soon {
+      background: rgba(255, 255, 0, 0.1);
+      border-color: #ffff00;
+      color: #ffff80;
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0.6; }
+    }
+
+    .user-location-marker {
+      background: #ff4444;
+      border: 2px solid #ffffff;
+      border-radius: 50%;
+      width: 12px;
+      height: 12px;
+    }
+
     /* Mobile Responsive Styles */
     @media (max-width: 768px) {
       .control-panel {
@@ -394,6 +435,12 @@
       .info-row {
         margin-bottom: 6px;
         padding: 2px 0;
+      }
+
+      .pass-info {
+        padding: 6px;
+        font-size: 8px;
+        margin-top: 8px;
       }
     }
 
@@ -504,6 +551,8 @@
     📡 TLE Age: <span id="tleAge">--</span>
     <br>
     🛰️ Satellites: <span id="satCount">0</span>
+    <br>
+    📍 Location: <span id="locationStatus">Detecting location...</span>
   </div>
 
   <div class="satellite-info" id="satelliteInfo">
@@ -520,7 +569,15 @@
     POSITION_UPDATE_INTERVAL: 1000, // 1 second
     AUTO_UPDATE_ENABLED: true,
     MAX_SATELLITES: 50, // Limit for performance
-    ORBIT_POINTS: 90 // Number of points for orbit visualization
+    ORBIT_POINTS: 90, // Number of points for orbit visualization
+    USER_LOCATION: {
+      lat: 0, // Global center as fallback
+      lng: 0,
+      elevation: 0.1, // km above sea level
+      name: "Location not set"
+    },
+    MIN_ELEVATION: 10, // Minimum elevation angle for visibility (degrees)
+    PASS_PREDICTION_HOURS: 24 // Hours ahead to predict passes
   };
 
   // CORS Proxy Services (Multiple fallbacks)
@@ -582,6 +639,161 @@
   let workingProxy = null;
   let isMobile = window.innerWidth <= 768;
   let mobileMenuOpen = false;
+  let userLocationMarker = null;
+  let locationStatus = "Detecting location...";
+  let hasRealLocation = false;
+
+  // Geolocation functions
+  function requestUserLocation() {
+    updateLocationStatus("🌍 Requesting your location...");
+    
+    if (!navigator.geolocation) {
+      console.warn('Geolocation not supported by this browser');
+      updateLocationStatus("❌ Geolocation not supported");
+      return;
+    }
+
+    const options = {
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 300000 // 5 minutes
+    };
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        const accuracy = position.coords.accuracy;
+        
+        // Update config with real location
+        CONFIG.USER_LOCATION.lat = lat;
+        CONFIG.USER_LOCATION.lng = lng;
+        CONFIG.USER_LOCATION.elevation = 0.1; // Assume close to sea level
+        
+        hasRealLocation = true;
+        
+        // Get location name via reverse geocoding (optional)
+        getLocationName(lat, lng);
+        
+        // Update marker position and add to map
+        if (userLocationMarker) {
+          userLocationMarker.setLatLng([lat, lng]);
+          userLocationMarker.addTo(map);
+          userLocationMarker.bindPopup(`📍 Your Location<br>Lat: ${lat.toFixed(4)}°<br>Lng: ${lng.toFixed(4)}°<br>Accuracy: ±${Math.round(accuracy)}m`, {
+            offset: [0, -12]
+          });
+        }
+        
+        // Center map on user location
+        map.setView([lat, lng], 6);
+        
+        updateLocationStatus(`📍 Location acquired (±${Math.round(accuracy)}m)`);
+        console.log(`✅ Location: ${lat.toFixed(4)}, ${lng.toFixed(4)} (±${Math.round(accuracy)}m)`);
+      },
+      (error) => {
+        console.error('Geolocation error:', error);
+        let errorMsg = "❌ Location denied";
+        
+        switch(error.code) {
+          case error.PERMISSION_DENIED:
+            errorMsg = "❌ Location permission denied";
+            updateLocationStatus("📍 Location access denied");
+            break;
+          case error.POSITION_UNAVAILABLE:
+            errorMsg = "❌ Location unavailable";
+            updateLocationStatus("📍 Location unavailable");
+            break;
+          case error.TIMEOUT:
+            errorMsg = "❌ Location timeout";
+            updateLocationStatus("📍 Location request timed out");
+            break;
+        }
+        
+        console.warn(errorMsg);
+        // Keep using fallback location
+        CONFIG.USER_LOCATION.name = "Location not available";
+      },
+      options
+    );
+  }
+
+  // Optional: Get location name from coordinates using multiple services
+  async function getLocationName(lat, lng) {
+    try {
+      // Try multiple geocoding services for better accuracy
+      const services = [
+        {
+          name: "Nominatim",
+          url: `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=12&addressdetails=1`,
+          parser: (data) => {
+            if (data.address) {
+              // Prefer smaller localities over major cities
+              const city = data.address.village || data.address.town || data.address.city || data.address.county;
+              const country = data.address.country_code?.toUpperCase();
+              return city && country ? `${city}, ${country}` : null;
+            }
+            return null;
+          }
+        },
+        {
+          name: "BigDataCloud",
+          url: `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=en`,
+          parser: (data) => {
+            if (data.locality && data.countryCode) {
+              return `${data.locality}, ${data.countryCode}`;
+            } else if (data.city && data.countryCode) {
+              return `${data.city}, ${data.countryCode}`;
+            }
+            return null;
+          }
+        }
+      ];
+
+      for (const service of services) {
+        try {
+          console.log(`Trying ${service.name} for location...`);
+          const response = await fetch(service.url, {
+            headers: {
+              'User-Agent': 'SatelliteTracker/1.0'
+            }
+          });
+          const data = await response.json();
+          const locationName = service.parser(data);
+          
+          if (locationName) {
+            // Check if we're getting a more specific location than just "Meerut"
+            if (locationName.includes('Meerut') && service.name === "Nominatim") {
+              console.log('Checking for more specific locality...');
+              continue; // Try next service for more specific location
+            }
+            
+            CONFIG.USER_LOCATION.name = locationName;
+            updateLocationStatus(`📍 ${locationName}`);
+            console.log(`✅ Location from ${service.name}: ${locationName}`);
+            return;
+          }
+        } catch (error) {
+          console.warn(`${service.name} failed:`, error.message);
+          continue;
+        }
+      }
+      
+      // If all services fail or return generic locations, use a simple name
+      CONFIG.USER_LOCATION.name = "Your Location";
+      updateLocationStatus("📍 Location detected");
+      
+    } catch (error) {
+      console.warn('All reverse geocoding failed:', error);
+      CONFIG.USER_LOCATION.name = hasRealLocation ? "Your Location" : "Location not available";
+      updateLocationStatus(CONFIG.USER_LOCATION.name);
+    }
+  }
+
+  // Update location status in UI
+  function updateLocationStatus(status) {
+    locationStatus = status;
+    // Update status will be called by updateStatusIndicators
+  }
 
   // Mobile panel toggle function
   function toggleMobilePanel() {
@@ -608,7 +820,6 @@
     const waseMobile = isMobile;
     isMobile = window.innerWidth <= 768;
     
-    // If switching from mobile to desktop, ensure panel is visible
     if (waseMobile && !isMobile) {
       document.getElementById('controlPanel').classList.remove('mobile-open');
       mobileMenuOpen = false;
@@ -621,7 +832,7 @@
 
   // Initialize map
   function initializeMap() {
-    map = L.map('map').setView([0, 0], 2);
+    map = L.map('map').setView([20, 0], 2); // Global view initially
     
     // Map layers
     satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
@@ -634,6 +845,150 @@
     
     // Start with satellite view
     satelliteLayer.addTo(map);
+    
+    // Add user location marker (hidden initially, will show when location is obtained)
+    userLocationMarker = L.marker([CONFIG.USER_LOCATION.lat, CONFIG.USER_LOCATION.lng], {
+      icon: L.divIcon({
+        className: 'user-location-marker',
+        html: '📍',
+        iconSize: [24, 24],
+        iconAnchor: [12, 12]
+      }),
+      title: 'Your Location'
+    }); // Not added to map initially
+    
+    // Request real location
+    setTimeout(requestUserLocation, 1000); // Small delay to let map load first
+  }
+
+  // Calculate look angles (azimuth, elevation) from observer to satellite
+  function calculateLookAngles(observerLat, observerLng, observerAlt, satellitePos) {
+    const observerLatRad = observerLat * Math.PI / 180;
+    const observerLngRad = observerLng * Math.PI / 180;
+    const earthRadius = 6371; // km
+    
+    // Observer position in ECEF
+    const observerECEF = {
+      x: (earthRadius + observerAlt) * Math.cos(observerLatRad) * Math.cos(observerLngRad),
+      y: (earthRadius + observerAlt) * Math.cos(observerLatRad) * Math.sin(observerLngRad),
+      z: (earthRadius + observerAlt) * Math.sin(observerLatRad)
+    };
+    
+    // Vector from observer to satellite
+    const dx = satellitePos.x - observerECEF.x;
+    const dy = satellitePos.y - observerECEF.y;
+    const dz = satellitePos.z - observerECEF.z;
+    
+    // Range
+    const range = Math.sqrt(dx*dx + dy*dy + dz*dz);
+    
+    // Local coordinate system (ENU - East, North, Up)
+    const east = -Math.sin(observerLngRad) * dx + Math.cos(observerLngRad) * dy;
+    const north = -Math.sin(observerLatRad) * Math.cos(observerLngRad) * dx - 
+                   Math.sin(observerLatRad) * Math.sin(observerLngRad) * dy + 
+                   Math.cos(observerLatRad) * dz;
+    const up = Math.cos(observerLatRad) * Math.cos(observerLngRad) * dx + 
+               Math.cos(observerLatRad) * Math.sin(observerLngRad) * dy + 
+               Math.sin(observerLatRad) * dz;
+    
+    // Calculate azimuth (0 = North, 90 = East)
+    let azimuth = Math.atan2(east, north) * 180 / Math.PI;
+    if (azimuth < 0) azimuth += 360;
+    
+    // Calculate elevation
+    const elevation = Math.atan2(up, Math.sqrt(east*east + north*north)) * 180 / Math.PI;
+    
+    return {
+      azimuth: azimuth,
+      elevation: elevation,
+      range: range
+    };
+  }
+
+  // Predict next satellite pass
+  function predictNextPass(satrec, hoursAhead = 24) {
+    const startTime = new Date();
+    const endTime = new Date(startTime.getTime() + hoursAhead * 60 * 60 * 1000);
+    const stepMinutes = 1;
+    let passes = [];
+    let currentPass = null;
+    let wasVisible = false;
+    
+    try {
+      for (let time = new Date(startTime); time <= endTime; time.setMinutes(time.getMinutes() + stepMinutes)) {
+        const position = satellite.propagate(satrec, time);
+        
+        if (!position.position || position.error) continue;
+        
+        const lookAngles = calculateLookAngles(
+          CONFIG.USER_LOCATION.lat,
+          CONFIG.USER_LOCATION.lng,
+          CONFIG.USER_LOCATION.elevation,
+          position.position
+        );
+        
+        const isVisible = lookAngles.elevation >= CONFIG.MIN_ELEVATION;
+        
+        // Pass start
+        if (isVisible && !wasVisible) {
+          currentPass = {
+            startTime: new Date(time),
+            maxElevation: lookAngles.elevation,
+            maxElevationTime: new Date(time)
+          };
+        }
+        
+        // Update max elevation during pass
+        if (isVisible && currentPass && lookAngles.elevation > currentPass.maxElevation) {
+          currentPass.maxElevation = lookAngles.elevation;
+          currentPass.maxElevationTime = new Date(time);
+        }
+        
+        // Pass end
+        if (!isVisible && wasVisible && currentPass) {
+          currentPass.endTime = new Date(time.getTime() - stepMinutes * 60 * 1000);
+          currentPass.duration = (currentPass.endTime - currentPass.startTime) / 1000 / 60; // minutes
+          
+          if (currentPass.duration > 1) { // Only include passes longer than 1 minute
+            passes.push(currentPass);
+          }
+          currentPass = null;
+        }
+        
+        wasVisible = isVisible;
+        
+        // Limit to first 3 passes for performance
+        if (passes.length >= 3) break;
+      }
+    } catch (error) {
+      console.error('Pass prediction error:', error);
+    }
+    
+    return passes;
+  }
+
+  // Format time for display
+  function formatTime(date) {
+    return date.toLocaleTimeString('en-US', { 
+      hour: '2-digit', 
+      minute: '2-digit',
+      hour12: false 
+    });
+  }
+
+  // Format date for display
+  function formatDate(date) {
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    
+    if (date.toDateString() === today.toDateString()) {
+      return 'Today';
+    } else if (date.toDateString() === tomorrow.toDateString()) {
+      return 'Tomorrow';
+    } else {
+      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    }
   }
 
   // Update TLE status display
@@ -651,6 +1006,9 @@
       const ageHours = Math.floor((Date.now() - lastTLEUpdate.getTime()) / (1000 * 60 * 60));
       document.getElementById('tleAge').textContent = `${ageHours}h`;
     }
+    
+    // Update location status
+    document.getElementById('locationStatus').textContent = locationStatus;
   }
 
   // Fetch TLE data with CORS proxy fallback
@@ -677,7 +1035,6 @@
 
         const data = await response.text();
         
-        // Validate TLE data
         if (data && data.includes('1 ') && data.includes('2 ') && data.length > 100) {
           console.log(`✅ Success with ${proxy.name}`);
           workingProxy = proxy;
@@ -705,13 +1062,10 @@
         const tle1 = lines[i + 1];
         const tle2 = lines[i + 2];
         
-        // Extract NORAD ID
         const noradMatch = tle1.match(/^1 (\d+)/);
         if (!noradMatch) continue;
         
         const noradId = parseInt(noradMatch[1]);
-        
-        // Check if this is a featured satellite or important one
         const featured = FEATURED_SATELLITES[noradId];
         
         if (featured || name.includes('ISS') || name.includes('NOAA') || 
@@ -740,8 +1094,6 @@
     
     try {
       const allSatellites = [];
-      
-      // Fetch from primary sources
       const primarySources = ['stations', 'weather', 'noaa', 'visual'];
       
       for (const source of primarySources) {
@@ -756,12 +1108,10 @@
       }
       
       if (allSatellites.length > 0) {
-        // Remove duplicates by NORAD ID
         const uniqueSatellites = allSatellites.filter((sat, index, arr) => 
           arr.findIndex(s => s.noradId === sat.noradId) === index
         );
         
-        // Sort by importance (featured satellites first)
         uniqueSatellites.sort((a, b) => {
           const aFeatured = FEATURED_SATELLITES[a.noradId] ? 1 : 0;
           const bFeatured = FEATURED_SATELLITES[b.noradId] ? 1 : 0;
@@ -776,7 +1126,6 @@
         clearAllMarkers();
         updateStatusIndicators();
         
-        // Store in localStorage
         localStorage.setItem('satelliteTLEData', JSON.stringify({
           data: tleData,
           timestamp: lastTLEUpdate.getTime(),
@@ -790,8 +1139,6 @@
     } catch (error) {
       console.error('TLE update failed:', error);
       updateTLEStatus('error', `❌ Update failed: ${error.message}`);
-      
-      // Try to load from localStorage as fallback
       loadStoredTLEData();
     } finally {
       document.getElementById('updateBtn').disabled = false;
@@ -903,6 +1250,27 @@
     return points;
   }
 
+  // Check if satellite is currently visible
+  function isCurrentlyVisible(satrec) {
+    try {
+      const now = new Date();
+      const position = satellite.propagate(satrec, now);
+      
+      if (!position.position || position.error) return false;
+      
+      const lookAngles = calculateLookAngles(
+        CONFIG.USER_LOCATION.lat,
+        CONFIG.USER_LOCATION.lng,
+        CONFIG.USER_LOCATION.elevation,
+        position.position
+      );
+      
+      return lookAngles.elevation >= CONFIG.MIN_ELEVATION;
+    } catch (error) {
+      return false;
+    }
+  }
+
   // Update satellite positions
   function updateSatellites() {
     if (tleData.length === 0) return;
@@ -926,12 +1294,10 @@
 
         activeCount++;
 
-        // Update existing marker
         if (markers[i]) {
           markers[i].icon.setLatLng([lat, lon]);
           markers[i].label.setLatLng([lat - 1.5, lon]);
           
-          // Update orbit path if showing orbits
           if (showOrbits && orbitPaths[i]) {
             const orbitPoints = getOrbitPoints(satrec);
             if (orbitPoints.length > 0) {
@@ -939,7 +1305,6 @@
             }
           }
         } else {
-          // Create new marker
           const iconMarker = L.marker([lat, lon], {
             icon: L.divIcon({
               className: 'satellite-icon',
@@ -959,7 +1324,6 @@
             interactive: false
           });
 
-          // Create orbit path
           const orbitPoints = getOrbitPoints(satrec);
           const orbitPath = L.polyline(orbitPoints, {
             color: '#00ffe0',
@@ -972,7 +1336,6 @@
           orbitPaths.push(orbitPath);
         }
         
-        // Update info if this satellite is selected
         if (selectedSatellite === i) {
           updateSatelliteInfo(sat, i);
         }
@@ -982,7 +1345,6 @@
       }
     });
     
-    // Update active satellite count
     document.getElementById('updateStatus').textContent = `Active (${activeCount})`;
   }
 
@@ -1017,10 +1379,47 @@
       }
       
       const speed = calculateSpeed(satrec, now);
+      const currentlyVisible = isCurrentlyVisible(satrec);
+      const passes = predictNextPass(satrec, CONFIG.PASS_PREDICTION_HOURS);
       
-      // Calculate pass information
-      const isVisible = alt > 200 && alt < 2000; // Rough visibility check
+      // Calculate current look angles
+      const lookAngles = calculateLookAngles(
+        CONFIG.USER_LOCATION.lat,
+        CONFIG.USER_LOCATION.lng,
+        CONFIG.USER_LOCATION.elevation,
+        position.position
+      );
+      
       const passType = alt > 35000 ? 'Geostationary' : 'Low Earth Orbit';
+      
+      // Generate pass information HTML
+      let passInfoHTML = '';
+      if (currentlyVisible) {
+        passInfoHTML = `
+          <div class="pass-info visible">
+            ✨ CURRENTLY VISIBLE!
+            <br>Elevation: ${lookAngles.elevation.toFixed(1)}° | Az: ${lookAngles.azimuth.toFixed(0)}°
+          </div>
+        `;
+      } else if (passes.length > 0) {
+        const nextPass = passes[0];
+        const minutesToPass = Math.round((nextPass.startTime - now) / 1000 / 60);
+        const isSoon = minutesToPass < 60;
+        
+        passInfoHTML = `
+          <div class="pass-info ${isSoon ? 'soon' : ''}">
+            ${isSoon ? '⏰' : '📅'} Next Pass: ${formatDate(nextPass.startTime)} ${formatTime(nextPass.startTime)}
+            <br>Duration: ${Math.round(nextPass.duration)}min | Max El: ${nextPass.maxElevation.toFixed(0)}°
+            ${isSoon ? `<br>🚀 In ${minutesToPass} minutes!` : ''}
+          </div>
+        `;
+      } else {
+        passInfoHTML = `
+          <div class="pass-info">
+            🌌 No visible passes in next 24h
+          </div>
+        `;
+      }
       
       const infoPanel = document.getElementById('satelliteInfo');
       infoPanel.innerHTML = `
@@ -1052,13 +1451,10 @@
           <span class="info-value">${passType}</span>
         </div>
         <div class="info-row">
-          <span class="info-label">Visibility:</span>
-          <span class="info-value" style="color: ${isVisible ? '#00ff00' : '#ffaa00'}">${isVisible ? 'Potentially Visible' : 'Not Visible'}</span>
-        </div>
-        <div class="info-row">
           <span class="info-label">Last Update:</span>
           <span class="info-value">${now.toLocaleTimeString()}</span>
         </div>
+        ${passInfoHTML}
       `;
     } catch (error) {
       console.error(`Info update failed for ${sat.name}: ${error.message}`);
@@ -1093,11 +1489,15 @@
         if (showOrbits && orbitPaths[i]) orbitPaths[i].addTo(map);
       }
     });
-    map.setView([0, 0], 2);
+    // Center map appropriately
+    if (hasRealLocation) {
+      map.setView([CONFIG.USER_LOCATION.lat, CONFIG.USER_LOCATION.lng], 3);
+    } else {
+      map.setView([20, 0], 2); // Global view if no location
+    }
     document.getElementById('satelliteInfo').innerHTML = 
-      `<div style="text-align: center; color: #00ffe0; margin: 20px 0;">Showing ${tleData.length} satellites</div>`;
+      `<div style="text-align: center; color: #00ffe0; margin: 20px 0;">Showing ${tleData.length} satellites<br>📍 Tracking passes over ${CONFIG.USER_LOCATION.name || locationStatus}</div>`;
     
-    // Auto-close mobile menu
     if (isMobile && mobileMenuOpen) {
       toggleMobilePanel();
     }
@@ -1114,9 +1514,8 @@
       }
     });
     document.getElementById('satelliteInfo').innerHTML = 
-      '<div style="text-align: center; color: #00ffe0; margin: 20px 0;">Select a satellite to view details</div>';
+      '<div style="text-align: center; color: #00ffe0; margin: 20px 0;">Select a satellite to view details<br>📍 Location: ' + (CONFIG.USER_LOCATION.name || locationStatus) + '</div>';
     
-    // Auto-close mobile menu
     if (isMobile && mobileMenuOpen) {
       toggleMobilePanel();
     }
@@ -1148,10 +1547,8 @@
 
   // Setup automatic updates
   function setupAutoUpdates() {
-    // Position updates every second
     updateInterval = setInterval(updateSatellites, CONFIG.POSITION_UPDATE_INTERVAL);
     
-    // TLE updates every 6 hours
     if (CONFIG.AUTO_UPDATE_ENABLED) {
       tleUpdateInterval = setInterval(() => {
         console.log('🔄 Auto-updating TLE data...');
@@ -1159,38 +1556,30 @@
       }, CONFIG.TLE_UPDATE_INTERVAL);
     }
     
-    // Status updates every minute
     setInterval(updateStatusIndicators, 60000);
   }
 
   // Initialize application
   async function initialize() {
-    console.log('🛰️ Initializing CORS-Enabled Satellite Tracker...');
+    console.log('🛰️ Initializing Enhanced Satellite Tracker with Real Location and Pass Predictions...');
     
-    // Initialize map
     initializeMap();
     
-    // Try to load cached data first for faster startup
     const hasStoredData = loadStoredTLEData();
     
-    // Always fetch fresh data in background
     if (hasStoredData) {
-      // Check if cached data is old (more than 12 hours)
       const dataAge = Date.now() - lastTLEUpdate.getTime();
       if (dataAge > 12 * 60 * 60 * 1000) {
-        setTimeout(() => updateTLEData(), 2000); // Fetch fresh data after 2 seconds
+        setTimeout(() => updateTLEData(), 2000);
       }
     } else {
-      // No cached data, fetch immediately
       await updateTLEData();
     }
     
-    // Setup dropdown event listener
     document.getElementById('satDropdown').addEventListener('change', (e) => {
       const selectedIndex = parseInt(e.target.value);
       selectedSatellite = isNaN(selectedIndex) ? null : selectedIndex;
       
-      // Auto-close mobile menu when satellite is selected
       if (isMobile && mobileMenuOpen) {
         toggleMobilePanel();
       }
@@ -1215,25 +1604,21 @@
       
       if (isNaN(selectedIndex)) {
         document.getElementById('satelliteInfo').innerHTML = 
-          '<div style="text-align: center; color: #00ffe0; margin: 20px 0;">Select a satellite to view details</div>';
+          '<div style="text-align: center; color: #00ffe0; margin: 20px 0;">Select a satellite to view details<br>📍 Location: ' + (CONFIG.USER_LOCATION.name || locationStatus) + '</div>';
       }
     });
     
-    // Add window resize listener
     window.addEventListener('resize', handleResize);
-    
-    // Start automatic updates
     setupAutoUpdates();
     
-    console.log('✅ CORS-Enabled Satellite Tracker Initialized Successfully');
+    console.log('✅ Enhanced Satellite Tracker Initialized Successfully');
     console.log(`📡 Working Proxy: ${workingProxy?.name || 'None'}`);
     console.log(`🛰️ Satellites Loaded: ${tleData.length}`);
+    console.log(`📍 Real Location Tracking: Enabled`);
   }
 
-  // Start the application
   window.addEventListener('DOMContentLoaded', initialize);
 
-  // Handle page visibility changes (pause updates when tab is hidden)
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) {
       document.getElementById('updateStatus').textContent = 'Paused';
@@ -1242,8 +1627,12 @@
     }
   });
 
-  console.log('🚀 Satellite Tracker Script Loaded - Ready for CORS-free TLE fetching!');
+  console.log('🚀 Enhanced Satellite Tracker Script Loaded - Ready for real location tracking and pass predictions!');
 </script>
+
+
+<!-- Custom Cursor Script (before closing </body> tag) -->
+<script src="customcursor.js"></script>
 
 </body>
 </html>
